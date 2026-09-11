@@ -16,7 +16,11 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   const [imgError, setImgError] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+    // Save last clicked channel in session storage
+    try {
+      sessionStorage.setItem('satv_last_channel', channel.name);
+    } catch {}
+    // If inside app or customized handling, call onSelect
     onSelect(channel);
   };
 
