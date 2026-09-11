@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/* Base hardware-accelerated video & dark TV theme styling */
+html,
+body {
+  background-color: #0b0f19;
+  color: #f8fafc;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Force hardware compositing and pure black background to prevent white screen flashes on video decoders */
+video,
+iframe,
+embed {
+  background-color: #000000 !important;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* TV focus states and smooth D-Pad remote navigation */
+.tv-card-focus:focus,
+.tv-card-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px #ef4444, 0 8px 20px -2px rgba(239, 68, 68, 0.55) !important;
+  transform: scale(1.04) !important;
+  border-color: #ef4444 !important;
+  background-color: #1e293b !important;
+  z-index: 30;
+}
+
+.tv-nav-focus:focus,
+.tv-nav-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2.5px #ef4444, 0 4px 14px rgba(239, 68, 68, 0.45) !important;
+  transform: scale(1.05) !important;
+  border-color: #ef4444 !important;
+  z-index: 30;
+}
+
+/* Hide scrollbar for TV view */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
