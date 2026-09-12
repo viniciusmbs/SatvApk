@@ -354,10 +354,10 @@ https://alerquina54105.embedtv.lat/globo
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
 https://rdcanais.net/globoes
 
-#EXTINF:-1 group-title="ABERTAS",GLOBO MG TV INTEGRAÇÃO JUIZ DE FORA F
+#EXTINF:-1 group-title="ABERTAS", INTEGRAÇÃO JUIZ DE FORA F
 http://up.kiwi/351921603109/34939156/296737
 
-#EXTINF:-1 group-title="ABERTAS",GLOBO MG TV INTEGRAÇÃO JUIZ DE FORA 
+#EXTINF:-1 group-title="ABERTAS",INTEGRAÇÃO JUIZ DE FORA 
 http://up.kiwi/351921603109/34939156/296738
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
