@@ -22,6 +22,7 @@ import { CustomLogosMap } from '../types';
 
 const TV_LOGO_BR = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/brazil/';
 const TV_LOGO_US = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/united-states/';
+const TV_LOGO_BR = 'https://raw.githubusercontent.com/viniciusmbs/SatvApk/refs/heads/main/src/'; 
 
 // SVG Data URIs for channels without external image files
 const CAZE_TV_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%"><rect width="120" height="120" rx="20" fill="%23182234"/><rect x="12" y="12" width="96" height="96" rx="14" fill="%230f172a" stroke="%2338bdf8" stroke-width="4"/><text x="60" y="74" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="%23ffffff" text-anchor="middle" letter-spacing="-1">CT</text></svg>`;
@@ -231,7 +232,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'GNT': `${TV_LOGO_BR}gnt-br.png`,
   'BIS': `${TV_LOGO_BR}bis-br.png`,
   'OFF': `${TV_LOGO_BR}canal-off-br.png`,
-  'VIVA': `${TV_LOGO_BR}gnt-br.png`,
+  'VIVA': `${TV_LOGO_BR}20200529-canal-viva.png`,
   'MTV': `${TV_LOGO_US}mtv-us.png`,
   'MTV LIVE': `${TV_LOGO_US}mtv-live-us.png`,
   'VH1': `${TV_LOGO_US}vh1-us.png`,
