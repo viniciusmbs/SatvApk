@@ -354,6 +354,12 @@ https://alerquina54105.embedtv.lat/globo
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
 https://rdcanais.net/globoes
 
+#EXTINF:-1 group-title="ABERTAS",GLOBO MG TV INTEGRAÇÃO JUIZ DE FORA F
+http://up.kiwi/351921603109/34939156/296737
+
+#EXTINF:-1 group-title="ABERTAS",GLOBO MG TV INTEGRAÇÃO JUIZ DE FORA 
+http://up.kiwi/351921603109/34939156/296738
+
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
 https://rdcanais.net/globomg
 
@@ -366,6 +372,9 @@ https://alerquina54105.embedtv.lat/globosp
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Futura
 https://rdcanais.net/futura
 
+#EXTINF:-1 group-title="ABERTAS",RECORD MG MINAS 
+http://up.kiwi/351921603109/34939156/296665
+
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record MG
 https://alerquina54105.embedtv.lat/recordmg
 
@@ -374,6 +383,9 @@ https://alerquina54105.embedtv.lat/record
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Rede TV
 https://alerquina54105.embedtv.lat/redetv
+
+#EXTINF:-1 group-title="ABERTAS",SBT MG ALTEROSA 
+http://up.kiwi/351921603109/34939156/296876
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT
 https://alerquina54105.embedtv.lat/sbt
