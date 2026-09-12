@@ -6,22 +6,6 @@ import { useTvNavigation } from './services/useTvNavigation';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import ChannelGrid from './components/ChannelGrid';
-import { NativeHlsPlayer } from './components/NativeHlsPlayer';
-
-// Helper to identify direct media stream URLs (IPTV, m3u8, ts, direct IP/server streams)
-export const isDirectStream = (url: string): boolean => {
-  const lower = url.toLowerCase();
-  return (
-    lower.includes('.m3u8') ||
-    lower.includes('.ts') ||
-    lower.includes('.mp4') ||
-    lower.includes('up.kiwi') ||
-    lower.includes(':8080/') ||
-    lower.includes(':8000/') ||
-    lower.includes(':2095/') ||
-    lower.includes('/live/')
-  );
-};
 
 export function App() {
   // Parse static initial playlist
@@ -74,21 +58,12 @@ export function App() {
     enabled: true,
   });
 
-  const [activeDirectChannel, setActiveDirectChannel] = useState<Channel | null>(null);
-
   // Direct channel navigation for Mi TV Android WebView
   const handleSelectChannel = useCallback((channel: Channel) => {
     try {
       sessionStorage.setItem('satv_last_channel', channel.name);
     } catch {}
-
-    if (isDirectStream(channel.url)) {
-      // Stream direto (m3u8, ts, up.kiwi, mp4) -> Toca no player nativo HLS sem propaganda
-      setActiveDirectChannel(channel);
-    } else {
-      // Stream de site de terceiros (EmbedTV, RedeCanais) -> Abre o link externo diretamente
-      window.location.href = channel.url;
-    }
+    window.location.href = channel.url;
   }, []);
 
   const handleClearFilters = useCallback(() => {
@@ -119,14 +94,6 @@ export function App() {
           onClearFilters={handleClearFilters}
         />
       </main>
-
-      {/* Fullscreen HLS Player for direct IPTV streams (zero ads) */}
-      {activeDirectChannel && (
-        <NativeHlsPlayer
-          channel={activeDirectChannel}
-          onClose={() => setActiveDirectChannel(null)}
-        />
-      )}
     </div>
   );
 }
