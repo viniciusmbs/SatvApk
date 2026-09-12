@@ -92,8 +92,8 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
               </div>
             </div>
 
-            {/* Channels Grid - 8 columns on TV/desktop, 6 on tablets/720p, 3-4 on phones */}
-            <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8 2xl:grid-cols-8 gap-2 sm:gap-2.5 lg:gap-3">
+            {/* Channels Grid - Exatamente 8 colunas no Fire TV e telas widescreen */}
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-8 xl:grid-cols-8 gap-2">
               {channels.map((channel) => {
                 const currentIndex = globalIndex++;
                 return (

@@ -4,7 +4,7 @@ export const m3uPlaylist = `#EXTM3U
 https://alerquina54105.embedtv.lat/agromais
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Animal Planet
-https://alerquina54105.embedtv.lat/animalplanet
+http://up.kiwi/351921603109/34939156/30
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Arte 1
 https://rdcanais.net/arte1
