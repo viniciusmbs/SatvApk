@@ -348,12 +348,6 @@ https://v1.rdse.buzz/bandsp
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band SP
 https://alerquina54105.embedtv.lat/bandsp
 
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
-https://alerquina54105.embedtv.lat/globo
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
-https://rdcanais.net/globoes
-
 #EXTINF:-1 group-title="ABERTAS", INTEGRAÇÃO JUIZ DE FORA F
 http://up.kiwi/351921603109/34939156/296737
 
@@ -362,6 +356,12 @@ http://up.kiwi/351921603109/34939156/296738
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
 https://rdcanais.net/globomg
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
+https://alerquina54105.embedtv.lat/globo
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
+https://rdcanais.net/globoes
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo RJ
 https://alerquina54105.embedtv.lat/globorj
