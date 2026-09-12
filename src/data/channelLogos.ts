@@ -51,7 +51,9 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'GLOBO CE': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO DF': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO GAZETA': `${TV_LOGO_BR}globo-br.png`,
-  'GLOBO INTEGRAÇÃO': 'https://raw.githubusercontent.com/viniciusmbs/SatvApk/refs/heads/main/src/globo-br.png',
+  'GLOBO INTEGRAÇÃO': `${TV_LOGO_BR}globo-br.png`,
+  'INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
+  'GLOBO INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
   'SBT': `${TV_LOGO_BR}sbt-br.png`,
   'SBT SP': `${TV_LOGO_BR}sbt-br.png`,
   'SBT RJ': `${TV_LOGO_BR}sbt-br.png`,
@@ -325,6 +327,7 @@ export const getChannelLogo = (
   if (upper.includes('TOUCH')) return `${TV_LOGO_BR}tele-cine-touch-br.png`;
 
   // TV Aberta
+  if (upper.includes('INTEGRAÇÃO') || upper.includes('INTEGRACAO')) return `${TV_LOGO_BR}globo-br.png`;
   if (upper.includes('GLOBO') && !upper.includes('NEWS') && !upper.includes('GLOOB')) return `${TV_LOGO_BR}globo-br.png`;
   if (upper.includes('SBT')) return `${TV_LOGO_BR}sbt-br.png`;
   if (upper.includes('BAND') && !upper.includes('NEWS') && !upper.includes('SPORTS')) return `${TV_LOGO_BR}band-br.png`;
