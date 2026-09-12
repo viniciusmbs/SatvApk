@@ -232,7 +232,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'GNT': `${TV_LOGO_BR}gnt-br.png`,
   'BIS': `${TV_LOGO_BR}bis-br.png`,
   'OFF': `${TV_LOGO_BR}canal-off-br.png`,
-  'VIVA': `${TV_LOGO_BR}20200529-canal-viva.png`,
+  'VIVA': 'https://raw.githubusercontent.com/viniciusmbs/SatvApk/refs/heads/main/src/20200529-canal-viva.png',
   'MTV': `${TV_LOGO_US}mtv-us.png`,
   'MTV LIVE': `${TV_LOGO_US}mtv-live-us.png`,
   'VH1': `${TV_LOGO_US}vh1-us.png`,
