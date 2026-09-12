@@ -51,7 +51,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'GLOBO CE': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO DF': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO GAZETA': `${TV_LOGO_BR}globo-br.png`,
-  'GLOBO INTEGRAÇÃO': `${TV_LOGO_BR}globo-br.png`,
+  'GLOBO INTEGRAÇÃO': 'https://raw.githubusercontent.com/viniciusmbs/SatvApk/refs/heads/main/src/globo-br.png',
   'SBT': `${TV_LOGO_BR}sbt-br.png`,
   'SBT SP': `${TV_LOGO_BR}sbt-br.png`,
   'SBT RJ': `${TV_LOGO_BR}sbt-br.png`,
