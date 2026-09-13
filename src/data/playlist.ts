@@ -348,9 +348,6 @@ https://alerquina54105.embedtv.lat/bandsp
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band SP
 https://alerquina54105.embedtv.lat/bandsp
 
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA F
-http://up.kiwi/351921603109/34939156/296737
-
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA 
 http://up.kiwi/351921603109/34939156/296738
 
