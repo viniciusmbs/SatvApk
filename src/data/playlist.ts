@@ -385,9 +385,6 @@ https://alerquina54105.embedtv.lat/tntnovelas
 #EXTINF:-1 group-title="VARIEDADES",Viva
 https://alerquina54105.embedtv.lat/viva
 
-#EXTINF:-1 group-title="VARIEDADES",Chef
-//w7.embedtv.lat/masterchef
-
 #EXTINF:-1 group-title="VARIEDADES",Woohoo
 https://alerquina54105.embedtv.lat/woohoo`;
 
