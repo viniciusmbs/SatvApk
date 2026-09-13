@@ -16,7 +16,7 @@ http://tjtor8411.com:80/Osiel123/Felicidade321/178515.ts
 http://tjtor8411.com:80/Osiel123/Felicidade321/71821.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Curta!
-http://tjtor8411.com:80/Osiel123/Felicidade321/71856.ts
+http://tjtor8411.com:80/Osiel123/Felicidade321/71857.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Channel
 https://alerquina54105.embedtv.lat/discoverychannel
@@ -38,6 +38,9 @@ https://alerquina54105.embedtv.lat/discoveryworld
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Dog TV
 http://up.kiwi/351921603109/34939156/297461
+
+#EXTINF:-1 group-title="DOCUMENTÁRIOS",Fish TV
+http://tjtor8411.com:80/Osiel123/Felicidade321/71930.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Food Network
 https://alerquina54105.embedtv.lat/foodnetwork
@@ -67,13 +70,13 @@ https://alerquina54105.embedtv.lat/natgeo
 https://alerquina54105.embedtv.lat/nhk
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Red Bull TV
-https://www.cxtv.com.br/tv-ao-vivo/red-bull-tv
+https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/20260825T185611/master_1660/00091/master_1660_00674.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",TLC
 https://alerquina54105.embedtv.lat/tlc
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Travel Box Brasil
-https://alerquina54105.embedtv.lat/travelboxbrasil
+http://tjtor8411.com:80/Osiel123/Felicidade321/72392.ts
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Band Sports
 https://alerquina54105.embedtv.lat/bandsports
@@ -381,6 +384,9 @@ https://alerquina54105.embedtv.lat/tntnovelas
 
 #EXTINF:-1 group-title="VARIEDADES",Viva
 https://alerquina54105.embedtv.lat/viva
+
+#EXTINF:-1 group-title="VARIEDADES",Chef
+//w7.embedtv.lat/masterchef
 
 #EXTINF:-1 group-title="VARIEDADES",Woohoo
 https://alerquina54105.embedtv.lat/woohoo`;
