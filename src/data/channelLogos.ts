@@ -222,7 +222,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'DISCOVERY': `${TV_LOGO_US}discovery-channel-us.png`,
   'DISCOVERY TURBO': `${TV_LOGO_BR}discovery-turbo-br.png`,
   'DISCOVERY SCIENCE': `${TV_LOGO_US}discovery-science-us.png`,
-  'DISCOVERY THEATER': `${TV_LOGO_US}discovery-theater-us.png`,
+  'DISCOVERY THEATER': `https://raw.githubusercontent.com/viniciusmbs/SatvApk/refs/heads/main/src/discovery-hd-theater-vector-logo-200x200.png`,
   'DISCOVERY WORLD': `${TV_LOGO_US}discovery-world-us.png`,
   'DISCOVERY H&H': `${TV_LOGO_US}tlc-us.png`,
   'ANIMAL PLANET': `${TV_LOGO_US}animal-planet-us.png`,
