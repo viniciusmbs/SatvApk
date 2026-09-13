@@ -16,7 +16,7 @@ http://tjtor8411.com:80/Osiel123/Felicidade321/178515.ts
 http://tjtor8411.com:80/Osiel123/Felicidade321/71821.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Curta!
-http://tjtor8411.com:80/Osiel123/Felicidade321/71857.ts
+http://tjtor8411.com:80/Osiel123/Felicidade321/71856.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Channel
 https://alerquina54105.embedtv.lat/discoverychannel
