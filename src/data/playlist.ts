@@ -158,7 +158,7 @@ https://alerquina54105.embedtv.lat/amc
 https://alerquina54105.embedtv.lat/axn
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Canal Brasil
-http://tjtor8411.com:80/Osiel123/Felicidade321/71818.ts
+https://rdcanais.net/canalbrasil
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Cinemax
 https://alerquina54105.embedtv.lat/cinemax
