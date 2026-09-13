@@ -85,19 +85,16 @@ https://alerquina54105.embedtv.lat/bandsports
 https://alerquina54105.embedtv.lat/combate
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN
-https://alerquina54105.embedtv.lat/dazn
+http://tjtor8411.com:80/Osiel123/Felicidade321/184551.ts
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN 2
-https://alerquina54105.embedtv.lat/dazn2
+http://tjtor8411.com:80/Osiel123/Felicidade321/184554.ts
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN 3
 https://alerquina54105.embedtv.lat/dazn3
 
-#EXTINF:-1 group-title="ESPORTES & PPV",DAZN 4
-https://alerquina54105.embedtv.lat/dazn4
-
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN
-https://alerquina54105.embedtv.lat/espn
+//w7.embedtv.lat/espn
 
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN 2
 https://alerquina54105.embedtv.lat/espn2
@@ -108,17 +105,8 @@ https://alerquina54105.embedtv.lat/espn3
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN 4
 https://alerquina54105.embedtv.lat/espn4
 
-#EXTINF:-1 group-title="ESPORTES & PPV",ESPN Extra
-https://alerquina54105.embedtv.lat/espnextra
-
-#EXTINF:-1 group-title="ESPORTES & PPV",Fox Sports
-https://alerquina54105.embedtv.lat/foxsports
-
-#EXTINF:-1 group-title="ESPORTES & PPV",Fox Sports 2
-https://alerquina54105.embedtv.lat/foxsports2
-
-#EXTINF:-1 group-title="ESPORTES & PPV",Pluto TV Esportes
-https://alerquina54105.embedtv.lat/plutoesportes
+#EXTINF:-1 group-title="ESPORTES & PPV",ESPN BR
+https://alerquina54105.embedtv.lat/espn
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere
 https://alerquina54105.embedtv.lat/premiere
@@ -136,7 +124,7 @@ https://alerquina54105.embedtv.lat/premiere4
 https://alerquina54105.embedtv.lat/premiere5
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere 6
-https://alerquina54105.embedtv.lat/premiere6
+https://rdcanais.net/premiere6
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere 7
 https://alerquina54105.embedtv.lat/premiere7
@@ -145,16 +133,20 @@ https://alerquina54105.embedtv.lat/premiere7
 https://alerquina54105.embedtv.lat/premiereclubes
 
 #EXTINF:-1 group-title="ESPORTES & PPV",SportTV
-https://alerquina54105.embedtv.lat/sporttv
+https://alerquina54105.embedtv.lat/sportv
 
 #EXTINF:-1 group-title="ESPORTES & PPV",SportTV 2
-https://alerquina54105.embedtv.lat/sporttv2
+https://alerquina54105.embedtv.lat/sportv2
+//w7.embedtv.lat/sportv2
 
 #EXTINF:-1 group-title="ESPORTES & PPV",SportTV 3
-https://alerquina54105.embedtv.lat/sporttv3
+https://alerquina54105.embedtv.lat/sportv2
+
+#EXTINF:-1 group-title="ESPORTES & PPV",Sport Net
+//w7.embedtv.lat/sportynet
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Off
-https://alerquina54105.embedtv.lat/canaloff
+https://alerquina54105.embedtv.lat/off
 
 #EXTINF:-1 group-title="ESPORTES & PPV",UFC Fight Pass
 https://alerquina54105.embedtv.lat/ufcfightpass
@@ -201,11 +193,8 @@ https://alerquina54105.embedtv.lat/hboplus
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Pop
 https://alerquina54105.embedtv.lat/hbopop
 
-#EXTINF:-1 group-title="FILMES & SÉRIES",HBO Signature
-https://alerquina54105.embedtv.lat/hbosignature
-
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Xtreme
-https://alerquina54105.embedtv.lat/hboxtreme
+http://tjtor8411.com:80/Osiel123/Felicidade321/72139.ts
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Megapix
 https://alerquina54105.embedtv.lat/megapix
