@@ -241,9 +241,6 @@ https://alerquina54105.embedtv.lat/universaltv
 #EXTINF:-1 group-title="FILMES & SÉRIES",Warner Channel
 https://alerquina54105.embedtv.lat/warnerchannel
 
-#EXTINF:-1 group-title="INFANTIS",Baby TV
-https://alerquina54105.embedtv.lat/babytv
-
 #EXTINF:-1 group-title="INFANTIS",Cartoon Network
 https://alerquina54105.embedtv.lat/cartoonnetwork
 
@@ -256,23 +253,14 @@ https://alerquina54105.embedtv.lat/discoverykids
 #EXTINF:-1 group-title="INFANTIS",Disney Channel
 https://alerquina54105.embedtv.lat/disney
 
-#EXTINF:-1 group-title="INFANTIS",Disney Junior
-https://alerquina54105.embedtv.lat/disneyjunior
-
 #EXTINF:-1 group-title="INFANTIS",Gloob
 https://alerquina54105.embedtv.lat/gloob
 
-#EXTINF:-1 group-title="INFANTIS",Gloobinho
-https://alerquina54105.embedtv.lat/gloob
-
-#EXTINF:-1 group-title="INFANTIS",Nickelodeon
-https://alerquina54105.embedtv.lat/nickelodeon
-
 #EXTINF:-1 group-title="INFANTIS",Tooncast
-https://alerquina54105.embedtv.lat/tooncast
+http://up.kiwi/351921603109/34939156/1255534
 
 #EXTINF:-1 group-title="INFANTIS",Zoomoo
-https://alerquina54105.embedtv.lat/zoomoo
+http://tjtor8411.com:80/Osiel123/Felicidade321/104935.ts
 
 #EXTINF:-1 group-title="MÚSICA",Bis
 https://alerquina54105.embedtv.lat/bis
@@ -281,10 +269,10 @@ https://alerquina54105.embedtv.lat/bis
 https://alerquina54105.embedtv.lat/mtv
 
 #EXTINF:-1 group-title="MÚSICA",MTV Live
-https://alerquina54105.embedtv.lat/mtvlive
+http://up.kiwi/351921603109/34939156/739
 
 #EXTINF:-1 group-title="MÚSICA",Music Box Brasil
-https://alerquina54105.embedtv.lat/musicboxbrasil
+http://tjtor8411.com:80/Osiel123/Felicidade321/72186.ts
 
 #EXTINF:-1 group-title="NOTÍCIAS",BandNews
 https://alerquina54105.embedtv.lat/bandnews
@@ -296,7 +284,7 @@ https://alerquina54105.embedtv.lat/cnnbrasil
 https://alerquina54105.embedtv.lat/globonews
 
 #EXTINF:-1 group-title="NOTÍCIAS",Jovem Pan News
-https://alerquina54105.embedtv.lat/jovempan
+http://tjtor8411.com:80/Osiel123/Felicidade321/134024.ts
 
 #EXTINF:-1 group-title="NOTÍCIAS",Record News
 https://alerquina54105.embedtv.lat/recordnews
@@ -305,16 +293,16 @@ https://alerquina54105.embedtv.lat/recordnews
 https://alerquina54105.embedtv.lat/cancaonova
 
 #EXTINF:-1 group-title="RELIGIOSOS",Gospel Movies
-https://alerquina54105.embedtv.lat/gospelmovies
+http://tjtor8411.com:80/Osiel123/Felicidade321/104930.ts
 
 #EXTINF:-1 group-title="RELIGIOSOS",Novo Tempo
-https://alerquina54105.embedtv.lat/novotempo
+http://tjtor8411.com:80/Osiel123/Felicidade321/72410.ts
 
 #EXTINF:-1 group-title="RELIGIOSOS",RIT
 https://alerquina54105.embedtv.lat/rit
 
 #EXTINF:-1 group-title="RELIGIOSOS",Rede Gospel
-https://alerquina54105.embedtv.lat/redegospel
+https://cdn.live.br1.jmvstream.com/w/LVW-8719/LVW8719_AcLVAxWy5J/media-u4s9zzxof_92086.ts
 
 #EXTINF:-1 group-title="RELIGIOSOS",Rede Século 21
 https://alerquina54105.embedtv.lat/redeseculo21
@@ -329,7 +317,7 @@ https://alerquina54105.embedtv.lat/redevida
 https://alerquina54105.embedtv.lat/aparecida
 
 #EXTINF:-1 group-title="RELIGIOSOS",TV Pai Eterno
-https://alerquina54105.embedtv.lat/tvpaieerno
+//w7.embedtv.lat/tvpaieterno
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band
 https://alerquina54105.embedtv.lat/bandsp
@@ -396,6 +384,9 @@ https://alerquina54105.embedtv.lat/tntnovelas
 
 #EXTINF:-1 group-title="VARIEDADES",Viva
 https://alerquina54105.embedtv.lat/viva
+
+#EXTINF:-1 group-title="VARIEDADES",Chef
+//w7.embedtv.lat/masterchef
 
 #EXTINF:-1 group-title="VARIEDADES",Woohoo
 https://alerquina54105.embedtv.lat/woohoo`;
