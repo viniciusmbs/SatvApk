@@ -39,9 +39,6 @@ https://alerquina54105.embedtv.lat/discoveryworld
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Dog TV
 http://up.kiwi/351921603109/34939156/297461
 
-#EXTINF:-1 group-title="DOCUMENTÁRIOS",Fish TV
-http://tjtor8411.com:80/Osiel123/Felicidade321/71930.ts
-
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Food Network
 https://alerquina54105.embedtv.lat/foodnetwork
 
