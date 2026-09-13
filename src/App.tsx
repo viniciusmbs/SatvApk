@@ -10,11 +10,10 @@ import Footer from './components/Footer';
 
 export function App() {
   // Parse static initial playlist
-  const initialChannels = useMemo(() => {
+  const channels = useMemo(() => {
     return parseM3U(DEFAULT_PLAYLIST);
   }, []);
 
-  const [channels] = useState<Channel[]>(initialChannels);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('TODOS');
 

@@ -1,46 +1,46 @@
 export const m3uPlaylist = `#EXTM3U
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Agro+
-https://alerquina54105.embedtv.lat/agromais
+http://tjtor8411.com:80/Osiel123/Felicidade321/71766.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Animal Planet
-http://up.kiwi/351921603109/34939156/30
+//w7.embedtv.lat/animalplanet
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Arte 1
 https://alerquina54105.embedtv.lat/arte1
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Canal Rural
-https://alerquina54105.embedtv.lat/canalrural
+http://up.kiwi/351921603109/34939156/305211
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Canal do Boi
-https://alerquina54105.embedtv.lat/canaldoboi
+http://up.kiwi/351921603109/34939156/192
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Curta!
-https://alerquina54105.embedtv.lat/curta
+http://up.kiwi/351921603109/34939156/292
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Channel
-https://alerquina54105.embedtv.lat/discovery
+https://alerquina54105.embedtv.lat/discoverychannel
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery H&H
-https://alerquina54105.embedtv.lat/discoveryhh
+//w7.embedtv.lat/discoveryhh
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Science
-https://alerquina54105.embedtv.lat/discoveryscience
+//w7.embedtv.lat/discoverychannel
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Theater
-https://alerquina54105.embedtv.lat/discoverytheater
+//w7.embedtv.lat/discoverytheather
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Turbo
-https://alerquina54105.embedtv.lat/turbo
+https://v1.rdse.rest/discoveryturbo
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery World
 https://alerquina54105.embedtv.lat/discoveryworld
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Dog TV
-https://alerquina54105.embedtv.lat/dogtv
+http://up.kiwi/351921603109/34939156/297461
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Fish TV
-https://alerquina54105.embedtv.lat/fishtv
+http://up.kiwi/351921603109/34939156/515
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Food Network
 https://alerquina54105.embedtv.lat/foodnetwork
@@ -55,7 +55,7 @@ https://alerquina54105.embedtv.lat/history2
 https://alerquina54105.embedtv.lat/history
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Investigação Discovery
-https://alerquina54105.embedtv.lat/investigacaodiscovery
+https://v1.rdse.buzz/discoveryid
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Love Nature
 https://alerquina54105.embedtv.lat/lovenature
@@ -172,7 +172,7 @@ https://alerquina54105.embedtv.lat/arte1
 https://alerquina54105.embedtv.lat/axn
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Canal Brasil
-https://alerquina54105.embedtv.lat/canalbrasil
+http://tjtor8411.com:80/Osiel123/Felicidade321/71818.ts
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Cinemax
 https://alerquina54105.embedtv.lat/cinemax
@@ -354,9 +354,6 @@ http://up.kiwi/351921603109/34939156/296738
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo Minas
 https://rdcanais.net/globomg
 
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
-https://alerquina54105.embedtv.lat/globo
-
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
 https://alerquina54105.embedtv.lat/globoes
 
@@ -367,10 +364,7 @@ https://alerquina54105.embedtv.lat/globorj
 https://alerquina54105.embedtv.lat/globosp
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Futura
-https://alerquina54105.embedtv.lat/futura
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",RECORD MG MINAS 
-http://up.kiwi/351921603109/34939156/296665
+http://tjtor8411.com:80/Osiel123/Felicidade321/71964.ts
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record MG
 https://alerquina54105.embedtv.lat/recordmg
@@ -381,17 +375,17 @@ https://alerquina54105.embedtv.lat/record
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Rede TV
 https://alerquina54105.embedtv.lat/redetv
 
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT MG ALTEROSA 
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",ALTEROSA 
 http://tjtor8411.com:80/Osiel123/Felicidade321/72621.ts
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT
 https://alerquina54105.embedtv.lat/sbt
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Brasil
-https://alerquina54105.embedtv.lat/tvbrasil
+https://rdcanais.net/tvbrasil
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Cultura
-https://alerquina54105.embedtv.lat/tvcultura
+https://rdcanais.net/tvcultura
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Gazeta
 https://alerquina54105.embedtv.lat/tvgazeta
