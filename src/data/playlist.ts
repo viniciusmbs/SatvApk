@@ -352,7 +352,7 @@ https://alerquina54105.embedtv.lat/bandsp
 http://up.kiwi/351921603109/34939156/296738
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
-https://alerquina54105.embedtv.lat/globomg
+https://rdcanais.net/globomg
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
 https://alerquina54105.embedtv.lat/globo
