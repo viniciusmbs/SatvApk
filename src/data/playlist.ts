@@ -400,7 +400,7 @@ https://alerquina54105.embedtv.lat/tvgazeta
 https://alerquina54105.embedtv.lat/comedycentral
 
 #EXTINF:-1 group-title="VARIEDADES",E!
-https://alerquina54105.embedtv.lat/e
+http://tjtor8411.com:80/Osiel123/Felicidade321/71902.ts
 
 #EXTINF:-1 group-title="VARIEDADES",GNT
 https://alerquina54105.embedtv.lat/gnt
