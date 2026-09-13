@@ -382,7 +382,7 @@ https://alerquina54105.embedtv.lat/record
 https://alerquina54105.embedtv.lat/redetv
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT MG ALTEROSA 
-http://up.kiwi/351921603109/34939156/296876
+http://tjtor8411.com:80/Osiel123/Felicidade321/72621.ts
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT
 https://alerquina54105.embedtv.lat/sbt
