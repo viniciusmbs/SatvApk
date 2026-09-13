@@ -157,7 +157,7 @@ https://alerquina54105.embedtv.lat/amc
 #EXTINF:-1 group-title="FILMES & SÉRIES",AXN
 https://alerquina54105.embedtv.lat/axn
 
-#EXTINF:-1 group-title="FILMES & SÉRIES",Canal Brasil
+#EXTINF:-1 group-title="FILMES & SÉRIES",Canal Brasi
 https://rdcanais.net/canalbrasil
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Cinemax
