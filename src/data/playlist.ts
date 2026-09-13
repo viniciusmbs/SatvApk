@@ -392,4 +392,3 @@ https://alerquina54105.embedtv.lat/viva
 https://alerquina54105.embedtv.lat/woohoo`;
 
 export const DEFAULT_PLAYLIST = m3uPlaylist;
-
