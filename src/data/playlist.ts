@@ -10,13 +10,13 @@ http://tjtor8411.com:80/Osiel123/Felicidade321/71766.ts
 https://alerquina54105.embedtv.lat/arte1
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Canal Rural
-http://up.kiwi/351921603109/34939156/305211
+http://tjtor8411.com:80/Osiel123/Felicidade321/178515.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Canal do Boi
-http://up.kiwi/351921603109/34939156/192
+http://tjtor8411.com:80/Osiel123/Felicidade321/71821.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Curta!
-http://up.kiwi/351921603109/34939156/292
+http://tjtor8411.com:80/Osiel123/Felicidade321/71857.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Channel
 https://alerquina54105.embedtv.lat/discoverychannel
@@ -40,7 +40,7 @@ https://alerquina54105.embedtv.lat/discoveryworld
 http://up.kiwi/351921603109/34939156/297461
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Fish TV
-http://up.kiwi/351921603109/34939156/515
+http://tjtor8411.com:80/Osiel123/Felicidade321/71930.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Food Network
 https://alerquina54105.embedtv.lat/foodnetwork
