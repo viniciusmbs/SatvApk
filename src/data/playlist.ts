@@ -283,7 +283,7 @@ https://rdcanais.net/cnnbrasil
 #EXTINF:-1 group-title="NOTÍCIAS",GloboNews
 https://rdcanais.net/globonews
 
-#EXTINF:-1 group-title="NOTÍCIAS",Jovem Pan News
+#EXTINF:-1 group-title="NOTÍCIAS",Jovem Pan New
 http://tjtor8411.com:80/Osiel123/Felicidade321/134024.ts
 
 #EXTINF:-1 group-title="NOTÍCIAS",Record News
