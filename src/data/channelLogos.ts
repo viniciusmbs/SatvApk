@@ -22,7 +22,7 @@ import { CustomLogosMap } from '../types';
 
 const TV_LOGO_BR = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/brazil/';
 const TV_LOGO_US = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/united-states/';
-const ghit = 'https://raw.githubusercontent.com/viniciusmbs/SatvApk/refs/heads/main/src/'; 
+const TV_LOGO = 'https://raw.githubusercontent.com/viniciusmbs/SatvApk/refs/heads/main/src/'; 
 
 // SVG Data URIs for channels without external image files
 const CAZE_TV_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%"><rect width="120" height="120" rx="20" fill="%23182234"/><rect x="12" y="12" width="96" height="96" rx="14" fill="%230f172a" stroke="%2338bdf8" stroke-width="4"/><text x="60" y="74" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="%23ffffff" text-anchor="middle" letter-spacing="-1">CT</text></svg>`;
@@ -137,7 +137,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'CAZETV': CAZE_TV_SVG,
   'UFC FIGHT PASS': `${TV_LOGO_US}ufc-fight-pass-us.png`,
   'UFC': `${TV_LOGO_US}ufc-fight-pass-us.png`,
-  'Sport Net': `${ghit}Sportsnet-Logo.wine.png`,
+  'Sport Net': `https://download.logo.wine/logo/Sportsnet/Sportsnet-Logo.wine.png`,
 
 
   // FILMES & SÉRIES
