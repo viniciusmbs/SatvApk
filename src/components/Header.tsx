@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ totalChannels }) => {
                   SATV
                 </span>
                 <h1 className="text-xs sm:text-sm font-bold tracking-wide text-white truncate">
-                  SATV - Vini©¿©ius Mendes ®
+                  SATV - Vinicius Mendes ®
                 </h1>
               </div>
             </div>

@@ -6,6 +6,7 @@ import { useTvNavigation } from './services/useTvNavigation';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import ChannelGrid from './components/ChannelGrid';
+import Footer from './components/Footer';
 
 export function App() {
   // Parse static initial playlist
@@ -94,6 +95,9 @@ export function App() {
           onClearFilters={handleClearFilters}
         />
       </main>
+
+      {/* Footer / Rodapé */}
+      <Footer />
     </div>
   );
 }

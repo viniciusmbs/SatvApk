@@ -53,10 +53,12 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'GLOBO GAZETA': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO INTEGRAÇÃO': `${TV_LOGO_BR}globo-br.png`,
   'INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
+  'INTEGRAÇÃO JUIZ DE FORA F': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
   'SBT': `${TV_LOGO_BR}sbt-br.png`,
   'SBT SP': `${TV_LOGO_BR}sbt-br.png`,
   'SBT RJ': `${TV_LOGO_BR}sbt-br.png`,
+  'SBT MG ALTEROSA': `${TV_LOGO_BR}sbt-br.png`,
   'BAND': `${TV_LOGO_BR}band-br.png`,
   'BAND SP': `${TV_LOGO_BR}band-br.png`,
   'BAND RJ': `${TV_LOGO_BR}band-br.png`,
@@ -64,6 +66,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'RECORD SP': `${TV_LOGO_BR}record-br.png`,
   'RECORD RJ': `${TV_LOGO_BR}record-br.png`,
   'RECORD MG': `${TV_LOGO_BR}record-br.png`,
+  'RECORD MG MINAS': `${TV_LOGO_BR}record-br.png`,
   'RECORD MINAS': `${TV_LOGO_BR}record-br.png`,
   'RECORD TV': `${TV_LOGO_BR}record-br.png`,
   'RECORD TV MINAS': `${TV_LOGO_BR}record-br.png`,
@@ -329,7 +332,7 @@ export const getChannelLogo = (
   // TV Aberta
   if (upper.includes('INTEGRAÇÃO') || upper.includes('INTEGRACAO')) return `${TV_LOGO_BR}globo-br.png`;
   if (upper.includes('GLOBO') && !upper.includes('NEWS') && !upper.includes('GLOOB')) return `${TV_LOGO_BR}globo-br.png`;
-  if (upper.includes('SBT')) return `${TV_LOGO_BR}sbt-br.png`;
+  if (upper.includes('SBT') || upper.includes('ALTEROSA')) return `${TV_LOGO_BR}sbt-br.png`;
   if (upper.includes('BAND') && !upper.includes('NEWS') && !upper.includes('SPORTS')) return `${TV_LOGO_BR}band-br.png`;
   if (upper.includes('RECORD') && !upper.includes('NEWS')) return `${TV_LOGO_BR}record-br.png`;
   if (upper.includes('REDE TV') || upper.includes('REDETV')) return `${TV_LOGO_BR}rede-tv-br.png`;

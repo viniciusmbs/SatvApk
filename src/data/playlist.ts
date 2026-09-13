@@ -7,7 +7,7 @@ https://alerquina54105.embedtv.lat/agromais
 http://up.kiwi/351921603109/34939156/30
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Arte 1
-https://rdcanais.net/arte1
+https://alerquina54105.embedtv.lat/arte1
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Canal Rural
 https://alerquina54105.embedtv.lat/canalrural
@@ -40,7 +40,7 @@ https://alerquina54105.embedtv.lat/discoveryworld
 https://alerquina54105.embedtv.lat/dogtv
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Fish TV
-https://rdcanais.net/fishtv
+https://alerquina54105.embedtv.lat/fishtv
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Food Network
 https://alerquina54105.embedtv.lat/foodnetwork
@@ -154,7 +154,7 @@ https://alerquina54105.embedtv.lat/sporttv2
 https://alerquina54105.embedtv.lat/sporttv3
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Off
-https://rdcanais.net/canaloff
+https://alerquina54105.embedtv.lat/canaloff
 
 #EXTINF:-1 group-title="ESPORTES & PPV",UFC Fight Pass
 https://alerquina54105.embedtv.lat/ufcfightpass
@@ -166,13 +166,13 @@ https://v1.rdse.buzz/ae
 https://alerquina54105.embedtv.lat/amc
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Art 1
-https://rdcanais.net/arte1
+https://alerquina54105.embedtv.lat/arte1
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",AXN
 https://alerquina54105.embedtv.lat/axn
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Canal Brasil
-https://rdcanais.net/canalbrasil
+https://alerquina54105.embedtv.lat/canalbrasil
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Cinemax
 https://alerquina54105.embedtv.lat/cinemax
@@ -184,7 +184,7 @@ https://alerquina54105.embedtv.lat/fx
 https://alerquina54105.embedtv.lat/fxm
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO
-https://rdcanais.net/hbo
+https://alerquina54105.embedtv.lat/hbo
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO 2
 https://w1.rdse.buzz/hbo2
@@ -229,25 +229,25 @@ https://alerquina54105.embedtv.lat/tnt
 https://alerquina54105.embedtv.lat/tntseries
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Action
-https://rdcanais.net/telecineaction
+https://alerquina54105.embedtv.lat/telecineaction
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Cult
-https://rdcanais.net/telecinecult
+https://alerquina54105.embedtv.lat/telecinecult
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Fun
-https://rdcanais.net/telecinefum
+https://alerquina54105.embedtv.lat/telecinefun
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Pipoca
-https://rdcanais.net/telecinepipoca
+https://alerquina54105.embedtv.lat/telecinepipoca
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Premium
 https://alerquina54105.embedtv.lat/telecinepremium
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Touch
-https://rdcanais.net/telecinetouch
+https://alerquina54105.embedtv.lat/telecinetouch
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Universal TV
-https://rdcanais.net/universaltv
+https://alerquina54105.embedtv.lat/universaltv
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Warner Channel
 https://alerquina54105.embedtv.lat/warnerchannel
@@ -262,7 +262,7 @@ https://alerquina54105.embedtv.lat/cartoonnetwork
 https://alerquina54105.embedtv.lat/cartoonito
 
 #EXTINF:-1 group-title="INFANTIS",Discovery Kids
-https://rdcanais.net/discoverykids
+https://alerquina54105.embedtv.lat/discoverykids
 
 #EXTINF:-1 group-title="INFANTIS",Disney Channel
 https://alerquina54105.embedtv.lat/disney
@@ -298,7 +298,7 @@ https://alerquina54105.embedtv.lat/mtvlive
 https://alerquina54105.embedtv.lat/musicboxbrasil
 
 #EXTINF:-1 group-title="NOTÍCIAS",BandNews
-https://rdcanais.net/bandnews
+https://alerquina54105.embedtv.lat/bandnews
 
 #EXTINF:-1 group-title="NOTÍCIAS",CNN Brasil
 https://alerquina54105.embedtv.lat/cnnbrasil
@@ -337,7 +337,7 @@ https://alerquina54105.embedtv.lat/redesuper
 https://alerquina54105.embedtv.lat/redevida
 
 #EXTINF:-1 group-title="RELIGIOSOS",TV Aparecida
-https://rdcanais.net/aparecida
+https://alerquina54105.embedtv.lat/aparecida
 
 #EXTINF:-1 group-title="RELIGIOSOS",TV Pai Eterno
 https://alerquina54105.embedtv.lat/tvpaieerno
@@ -348,20 +348,20 @@ https://v1.rdse.buzz/bandsp
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band SP
 https://alerquina54105.embedtv.lat/bandsp
 
-#EXTINF:-1 group-title="ABERTAS", INTEGRAÇÃO JUIZ DE FORA F
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA F
 http://up.kiwi/351921603109/34939156/296737
 
-#EXTINF:-1 group-title="ABERTAS",INTEGRAÇÃO JUIZ DE FORA 
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA 
 http://up.kiwi/351921603109/34939156/296738
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
-https://rdcanais.net/globomg
+https://alerquina54105.embedtv.lat/globomg
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
 https://alerquina54105.embedtv.lat/globo
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
-https://rdcanais.net/globoes
+https://alerquina54105.embedtv.lat/globoes
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo RJ
 https://alerquina54105.embedtv.lat/globorj
@@ -370,9 +370,9 @@ https://alerquina54105.embedtv.lat/globorj
 https://alerquina54105.embedtv.lat/globosp
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Futura
-https://rdcanais.net/futura
+https://alerquina54105.embedtv.lat/futura
 
-#EXTINF:-1 group-title="ABERTAS",RECORD MG MINAS 
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",RECORD MG MINAS 
 http://up.kiwi/351921603109/34939156/296665
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record MG
@@ -384,14 +384,14 @@ https://alerquina54105.embedtv.lat/record
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Rede TV
 https://alerquina54105.embedtv.lat/redetv
 
-#EXTINF:-1 group-title="ABERTAS",SBT MG ALTEROSA 
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT MG ALTEROSA 
 http://up.kiwi/351921603109/34939156/296876
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT
 https://alerquina54105.embedtv.lat/sbt
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Brasil
-https://rdcanais.net/tvbrasil
+https://alerquina54105.embedtv.lat/tvbrasil
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Cultura
 https://alerquina54105.embedtv.lat/tvcultura
