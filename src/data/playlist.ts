@@ -351,7 +351,7 @@ https://alerquina54105.embedtv.lat/bandsp
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA 
 http://up.kiwi/351921603109/34939156/296738
 
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo Minas
 https://rdcanais.net/globomg
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
