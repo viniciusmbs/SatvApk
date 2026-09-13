@@ -157,9 +157,6 @@ https://alerquina54105.embedtv.lat/ae
 #EXTINF:-1 group-title="FILMES & SÉRIES",AMC
 https://alerquina54105.embedtv.lat/amc
 
-#EXTINF:-1 group-title="FILMES & SÉRIES",Art 1
-https://alerquina54105.embedtv.lat/arte1
-
 #EXTINF:-1 group-title="FILMES & SÉRIES",AXN
 https://alerquina54105.embedtv.lat/axn
 
