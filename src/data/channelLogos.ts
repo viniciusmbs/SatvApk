@@ -137,6 +137,8 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'CAZETV': CAZE_TV_SVG,
   'UFC FIGHT PASS': `${TV_LOGO_US}ufc-fight-pass-us.png`,
   'UFC': `${TV_LOGO_US}ufc-fight-pass-us.png`,
+  'Sport Net': `https://download.logo.wine/logo/Sportsnet/Sportsnet-Logo.wine.png`,
+
 
   // FILMES & SÉRIES
   'TELECINE ACTION': `${TV_LOGO_BR}tele-cine-action-br.png`,
@@ -231,9 +233,15 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'HISTORY 2': `${TV_LOGO_US}history-channel-us.png`,
   'NATIONAL GEOGRAPHIC': `${TV_LOGO_US}national-geographic-us.png`,
   'NATGEO WILD': `${TV_LOGO_US}national-geographic-us.png`,
+  'NATGEO WILD': `https://i.imgur.com/esyuVVc.png`,
+  'Red Bull TV': `blob:https://imgur.com/4309cc28-da2f-4337-a523-ce613a333259`,  
+  'Fish TV': `https://i.imgur.com/bbwaRva.png`,
+  'Dog TV': `https://dr56wvhu2c8zo.cloudfront.net/dogtv6/assets/b8817023-ccd9-4ca5-b06d-26e554915561.png`,
   'TLC': `${TV_LOGO_US}tlc-us.png`,
   'HGTV': `${TV_LOGO_US}hgtv-us.png`,
+  'Travel Box Brasil': `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeXspOQAcbuBxArlr23muzV--dcYW_M0jKGaJlrEMhdA&s=10`,
   'INVESTIGAÇÃO DISCOVERY': `${TV_LOGO_US}investigation-discovery-us.png`,
+  'Food Network': `https://www.clipartmax.com/png/middle/139-1391060_food-network-2-logo-png-transparent-food-network-canada-logo.png`,
 
   // MÚSICA & VARIEDADES
   'MULTISHOW': `${TV_LOGO_BR}multishow-br.png`,
