@@ -160,7 +160,7 @@ https://alerquina54105.embedtv.lat/canaloff
 https://alerquina54105.embedtv.lat/ufcfightpass
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",A&E
-https://v1.rdse.buzz/ae
+https://alerquina54105.embedtv.lat/ae
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",AMC
 https://alerquina54105.embedtv.lat/amc
@@ -187,31 +187,31 @@ https://alerquina54105.embedtv.lat/fxm
 https://alerquina54105.embedtv.lat/hbo
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO 2
-https://w1.rdse.buzz/hbo2
+https://alerquina54105.embedtv.lat/hbo2
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Family
-https://v1.rdse.buzz/hbofamily
+https://alerquina54105.embedtv.lat/hbofamily
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Mundi
-https://v1.rdse.buzz/hbomundi
+https://alerquina54105.embedtv.lat/hbomundi
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Plus
-https://v1.rdse.buzz/hboplus
+https://alerquina54105.embedtv.lat/hboplus
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Pop
-https://v1.rdse.buzz/hbopop
+https://alerquina54105.embedtv.lat/hbopop
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Signature
-https://v1.rdse.buzz/hbosignature
+https://alerquina54105.embedtv.lat/hbosignature
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Xtreme
-https://v1.rdse.buzz/hboxtreme
+https://alerquina54105.embedtv.lat/hboxtreme
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Megapix
 https://alerquina54105.embedtv.lat/megapix
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Paramount
-https://v1.rdse.buzz/paramount
+https://alerquina54105.embedtv.lat/paramount
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Sony Channel
 https://alerquina54105.embedtv.lat/sonychannel
@@ -343,7 +343,7 @@ https://alerquina54105.embedtv.lat/aparecida
 https://alerquina54105.embedtv.lat/tvpaieerno
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band
-https://v1.rdse.buzz/bandsp
+https://alerquina54105.embedtv.lat/bandsp
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band SP
 https://alerquina54105.embedtv.lat/bandsp
@@ -409,16 +409,16 @@ https://alerquina54105.embedtv.lat/e
 https://alerquina54105.embedtv.lat/gnt
 
 #EXTINF:-1 group-title="VARIEDADES",Multishow
-https://v1.rdse.buzz/multishow
+https://alerquina54105.embedtv.lat/multishow
 
 #EXTINF:-1 group-title="VARIEDADES",TNT Novelas
 https://alerquina54105.embedtv.lat/tntnovelas
 
 #EXTINF:-1 group-title="VARIEDADES",Viva
-https://v1.rdse.buzz/globoplaynovelas
+https://alerquina54105.embedtv.lat/viva
 
 #EXTINF:-1 group-title="VARIEDADES",Woohoo
-https://v1.rdse.buzz/woohoo`;
+https://alerquina54105.embedtv.lat/woohoo`;
 
 export const DEFAULT_PLAYLIST = m3uPlaylist;
 

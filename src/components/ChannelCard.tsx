@@ -16,17 +16,19 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   const [imgError, setImgError] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
-    // Save last clicked channel in session storage
+    e.preventDefault();
     try {
       sessionStorage.setItem('satv_last_channel', channel.name);
     } catch {}
-    // If inside app or customized handling, call onSelect
     onSelect(channel);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
+      try {
+        sessionStorage.setItem('satv_last_channel', channel.name);
+      } catch {}
       onSelect(channel);
     }
   };
@@ -43,13 +45,6 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
       className="tv-card-focus group relative flex flex-col items-center justify-between p-1.5 sm:p-2 rounded-xl bg-[#141a29] hover:bg-[#1b2438] border border-slate-800 hover:border-red-500/80 transition-all duration-150 cursor-pointer shadow-md hover:shadow-red-950/20 select-none outline-none focus:outline-none no-underline text-inherit"
       title={`Assistir ${channel.name} (${channel.group})`}
     >
-      {/* Channel Number Badge */}
-      <div className="absolute top-1 left-1 z-10">
-        <span className="inline-flex items-center px-1 py-0.2 rounded text-[8px] sm:text-[9px] font-bold font-mono bg-black/75 text-slate-300 border border-slate-700/50 group-focus:border-red-400 group-focus:text-white">
-          #{index + 1}
-        </span>
-      </div>
-
       {/* Logo Container - Compact & Lightweight for TV Decoders */}
       <div className="w-full aspect-[16/10] rounded-lg bg-black/60 border border-slate-800/70 flex items-center justify-center p-1 my-1 overflow-hidden relative group-hover:border-slate-600 transition-colors">
         {!imgError && channel.logo ? (

@@ -80,7 +80,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
         {/* Tabulated Category Pills - Compact & Fast Scroll */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 no-scrollbar">
-          {/* Category 0: Todos */}
+          {/* Category: Todos */}
           <button
             data-tv-nav="category"
             data-category-index={0}
@@ -92,10 +92,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/60'
             }`}
           >
-            [0] Todos
+            Todos
           </button>
 
-          {/* Categories 1..N starting with CANAL, DOCUMENTÁRIOS, etc. */}
+          {/* Categories starting with CANAL, DOCUMENTÁRIOS, etc. */}
           {sortedCategories.map((category, idx) => {
             const catIndex = idx + 1;
             const isSelected = selectedCategory === category;
@@ -112,7 +112,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/60'
                 }`}
               >
-                [{catIndex}] {category}
+                {category}
               </button>
             );
           })}

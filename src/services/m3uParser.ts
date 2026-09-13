@@ -215,6 +215,37 @@ export const toHttpsIfPossible = (u?: string): string => {
 };
 
 /**
+ * Converts third-party web embeds (such as v1.rdse.buzz, w1.rdse.buzz, rdcanais)
+ * into direct embedtv.lat autoplay links so that Smart TVs start playing immediately
+ * without requiring mouse clicks or user interaction.
+ */
+export const normalizeEmbedUrl = (rawUrl?: string): string => {
+  if (!rawUrl) return '';
+  const url = rawUrl.trim();
+
+  // If already embedtv.lat, return as is
+  if (url.includes('embedtv.lat')) {
+    return url;
+  }
+
+  // Handle rdse.buzz (e.g., https://v1.rdse.buzz/bandsp -> https://alerquina54105.embedtv.lat/bandsp)
+  const rdseMatch = url.match(/(?:https?:\/\/)?(?:[a-z0-9]+\.)?rdse\.buzz\/([a-zA-Z0-9_-]+)/i);
+  if (rdseMatch && rdseMatch[1]) {
+    const slug = rdseMatch[1];
+    return `https://alerquina54105.embedtv.lat/${slug}`;
+  }
+
+  // Handle rdcanais (e.g., rdcanais.net/canal/bandsp or rdcanais.link/slug)
+  const rdcanaisMatch = url.match(/rdcanais\.[a-z.]+(?:\/canal|\/assistir|\/tv)?\/([a-zA-Z0-9_-]+)/i);
+  if (rdcanaisMatch && rdcanaisMatch[1]) {
+    const slug = rdcanaisMatch[1];
+    return `https://alerquina54105.embedtv.lat/${slug}`;
+  }
+
+  return url;
+};
+
+/**
  * Checks if a channel URL is a direct media stream (.m3u8, .ts, .mp4, mp2t).
  */
 export const isDirectMediaStream = (url: string): boolean => {
@@ -341,12 +372,14 @@ export const parseM3U = (m3uContent: string, customLogos?: CustomLogosMap): Chan
           || toHttpsIfPossible(rawLogo)
           || getChannelLogo(name, customLogos);
 
+        const effectiveUrl = normalizeEmbedUrl(urlLine);
+
         const channel: Channel = {
           id: (idMatch && idMatch[1]) ? idMatch[1] : `ch-${channels.length + 1}`,
           name: name,
           logo: secureLogo,
           group: finalGroup,
-          url: urlLine,
+          url: effectiveUrl,
           originalUrl: urlLine,
         };
 

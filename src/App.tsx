@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Channel, GroupedChannels } from './types';
 import { DEFAULT_PLAYLIST } from './data/playlist';
-import { parseM3U } from './services/m3uParser';
+import { parseM3U, normalizeEmbedUrl } from './services/m3uParser';
 import { useTvNavigation } from './services/useTvNavigation';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
@@ -64,7 +64,8 @@ export function App() {
     try {
       sessionStorage.setItem('satv_last_channel', channel.name);
     } catch {}
-    window.location.href = channel.url;
+    const destinationUrl = normalizeEmbedUrl(channel.url);
+    window.location.href = destinationUrl;
   }, []);
 
   const handleClearFilters = useCallback(() => {

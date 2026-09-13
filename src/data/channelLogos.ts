@@ -33,6 +33,8 @@ const UOL_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"
 
 const CANAL_DO_BOI_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 80" width="100%" height="100%"><rect width="180" height="80" rx="10" fill="%23111827"/><circle cx="50" cy="40" r="22" fill="none" stroke="%2322c55e" stroke-width="5"/><path d="M40 32 Q50 20 60 32 Q55 52 40 32" fill="%2322c55e"/><text x="125" y="36" font-family="system-ui, sans-serif" font-weight="bold" font-size="14" fill="%23ffffff">CANAL</text><text x="125" y="54" font-family="system-ui, sans-serif" font-weight="900" font-size="16" fill="%2322c55e">DO BOI</text></svg>`;
 
+const AGRO_MAIS_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 80" width="100%" height="100%"><rect width="160" height="80" rx="12" fill="%23064e3b"/><text x="65" y="48" font-family="system-ui, sans-serif" font-weight="900" font-size="28" fill="%2334d399">AGRO</text><text x="130" y="48" font-family="system-ui, sans-serif" font-weight="900" font-size="34" fill="%23fbbf24">+</text></svg>`;
+
 const TV_DIARIO_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 80" width="100%" height="100%"><rect width="160" height="80" rx="12" fill="%230f172a"/><polygon points="35,22 65,40 35,58" fill="%2338bdf8"/><text x="110" y="38" font-family="system-ui, sans-serif" font-weight="bold" font-size="15" fill="%23ffffff">TV</text><text x="110" y="56" font-family="system-ui, sans-serif" font-weight="bold" font-size="15" fill="%2338bdf8">DIÁRIO</text></svg>`;
 
 const TV_JUSTICA_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 80" width="100%" height="100%"><rect width="160" height="80" rx="12" fill="%230f172a"/><circle cx="45" cy="40" r="18" fill="none" stroke="%23ffffff" stroke-width="4"/><line x1="45" y1="28" x2="45" y2="52" stroke="%23ffffff" stroke-width="3"/><text x="105" y="38" font-family="system-ui, sans-serif" font-weight="bold" font-size="13" fill="%23ffffff">TV</text><text x="105" y="55" font-family="system-ui, sans-serif" font-weight="900" font-size="13" fill="%23f59e0b">JUSTIÇA</text></svg>`;
@@ -85,7 +87,8 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'TV RA TIM BUM': `${TV_LOGO_BR}tv-ra-tim-bum-br.png`,
   'CANAL DO BOI': CANAL_DO_BOI_SVG,
   'CANAL RURAL': `${TV_LOGO_BR}canal-rural-br.png`,
-  'AGRO+': `${TV_LOGO_BR}agro-mais-br.png`,
+  'AGRO+': AGRO_MAIS_SVG,
+  'AGRO MAIS': AGRO_MAIS_SVG,
   'TV DIÁRIO': TV_DIARIO_SVG,
   'TV DIARIO': TV_DIARIO_SVG,
   'TV JUSTIÇA': TV_JUSTICA_SVG,
