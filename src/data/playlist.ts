@@ -90,9 +90,6 @@ http://tjtor8411.com:80/Osiel123/Felicidade321/184551.ts
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN 2
 http://tjtor8411.com:80/Osiel123/Felicidade321/184554.ts
 
-#EXTINF:-1 group-title="ESPORTES & PPV",DAZN 3
-https://alerquina54105.embedtv.lat/dazn3
-
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN
 //w7.embedtv.lat/espn
 
