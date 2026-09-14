@@ -1,389 +1,429 @@
 export const m3uPlaylist = `#EXTM3U
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Agro+
-http://tjtor8411.com:80/Osiel123/Felicidade321/71766.ts
+https://alerquina54105.embedtv.lat/agromais
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Animal Planet
-https://alerquina54105.embedtv.lat/animalplanet
+http://up.kiwi/351921603109/34939156/30
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Arte 1
-https://rdcanais.net/arte1
+https://alerquina54105.embedtv.lat/arte1
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Canal Rural
-http://tjtor8411.com:80/Osiel123/Felicidade321/178515.ts
+https://alerquina54105.embedtv.lat/canalrural
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Canal do Boi
-http://tjtor8411.com:80/Osiel123/Felicidade321/71821.ts
+https://alerquina54105.embedtv.lat/canaldoboi
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Curta!
-http://tjtor8411.com:80/Osiel123/Felicidade321/71857.ts
+https://alerquina54105.embedtv.lat/curta
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Channel
-https://rdcanais.net/discoverychannel
+https://alerquina54105.embedtv.lat/discovery
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery H&H
-https://rdcanais.net/discoveryhh
+https://alerquina54105.embedtv.lat/discoveryhh
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Science
-https://rdcanais.net/discoverychannel
+https://alerquina54105.embedtv.lat/discoveryscience
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Theater
-https://rdcanais.net/discoverytheather
+https://alerquina54105.embedtv.lat/discoverytheater
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery Turbo
-https://v1.rdse.rest/discoveryturbo
+https://alerquina54105.embedtv.lat/turbo
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Discovery World
-https://rdcanais.net/discoveryworld
+https://alerquina54105.embedtv.lat/discoveryworld
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Dog TV
-http://tjtor8411.com:80/Osiel123/Felicidade321/76923.ts
+https://alerquina54105.embedtv.lat/dogtv
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Fish TV
-http://tjtor8411.com:80/Osiel123/Felicidade321/71930.ts
+https://alerquina54105.embedtv.lat/fishtv
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Food Network
-https://rdcanais.net/foodnetwork
+https://alerquina54105.embedtv.lat/foodnetwork
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",HGTV
-https://rdcanais.net/hgtv
+https://alerquina54105.embedtv.lat/hgtv
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",History 2
-https://rdcanais.net/history2
+https://alerquina54105.embedtv.lat/history2
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",History Channel
-https://rdcanais.net/history
+https://alerquina54105.embedtv.lat/history
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Investigação Discovery
-https://v1.rdse.buzz/discoveryid
+https://alerquina54105.embedtv.lat/investigacaodiscovery
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Love Nature
-https://rdcanais.net/lovenature
+https://alerquina54105.embedtv.lat/lovenature
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",NatGeo Wild
-https://rdcanais.net/natgeowild
+https://alerquina54105.embedtv.lat/natgeowild
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",National Geographic
-https://rdcanais.net/natgeo
+https://alerquina54105.embedtv.lat/natgeo
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",NHK
-https://rdcanais.net/nhk
+https://alerquina54105.embedtv.lat/nhk
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Red Bull TV
-https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/20260825T185611/master_1660/00091/master_1660_00674.ts
+https://www.cxtv.com.br/tv-ao-vivo/red-bull-tv
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",TLC
-https://rdcanais.net/tlc
+https://alerquina54105.embedtv.lat/tlc
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Travel Box Brasil
-http://tjtor8411.com:80/Osiel123/Felicidade321/72392.ts
+https://alerquina54105.embedtv.lat/travelboxbrasil
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Band Sports
-https://rdcanais.net/bandsports
+https://alerquina54105.embedtv.lat/bandsports
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Combate
-https://rdcanais.net/combate
+https://alerquina54105.embedtv.lat/combate
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN
-https://v1.rdse.rest/dazn
+https://alerquina54105.embedtv.lat/dazn
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN 2
-https://v1.rdse.rest/dazn2
+https://alerquina54105.embedtv.lat/dazn2
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN 3
-https://v1.rdse.rest/dazn3
+https://alerquina54105.embedtv.lat/dazn3
+
+#EXTINF:-1 group-title="ESPORTES & PPV",DAZN 4
+https://alerquina54105.embedtv.lat/dazn4
 
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN
-https://rdcanais.net/espn
+https://alerquina54105.embedtv.lat/espn
 
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN 2
-https://rdcanais.net/espn2
+https://alerquina54105.embedtv.lat/espn2
 
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN 3
-https://rdcanais.net/espn3
+https://alerquina54105.embedtv.lat/espn3
 
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN 4
-https://rdcanais.net/espn4
+https://alerquina54105.embedtv.lat/espn4
 
-#EXTINF:-1 group-title="ESPORTES & PPV",ESPN BR
-https://rdcanais.net/espn
+#EXTINF:-1 group-title="ESPORTES & PPV",ESPN Extra
+https://alerquina54105.embedtv.lat/espnextra
+
+#EXTINF:-1 group-title="ESPORTES & PPV",Fox Sports
+https://alerquina54105.embedtv.lat/foxsports
+
+#EXTINF:-1 group-title="ESPORTES & PPV",Fox Sports 2
+https://alerquina54105.embedtv.lat/foxsports2
+
+#EXTINF:-1 group-title="ESPORTES & PPV",Pluto TV Esportes
+https://alerquina54105.embedtv.lat/plutoesportes
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere
-https://rdcanais.net/premiere
+https://alerquina54105.embedtv.lat/premiere
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere 2
-https://rdcanais.net/premiere2
+https://alerquina54105.embedtv.lat/premiere2
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere 3
-https://rdcanais.net/premiere3
+https://alerquina54105.embedtv.lat/premiere3
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere 4
-https://rdcanais.net/premiere4
+https://alerquina54105.embedtv.lat/premiere4
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere 5
-https://rdcanais.net/premiere5
+https://alerquina54105.embedtv.lat/premiere5
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere 6
-https://rdcanais.net/premiere6
+https://alerquina54105.embedtv.lat/premiere6
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere 7
-https://rdcanais.net/premiere7
+https://alerquina54105.embedtv.lat/premiere7
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Premiere Clubes
-https://rdcanais.net/premiereclubes
+https://alerquina54105.embedtv.lat/premiereclubes
 
 #EXTINF:-1 group-title="ESPORTES & PPV",SportTV
-https://rdcanais.net/sportv
+https://alerquina54105.embedtv.lat/sporttv
 
 #EXTINF:-1 group-title="ESPORTES & PPV",SportTV 2
-https://rdcanais.net/sportv2
+https://alerquina54105.embedtv.lat/sporttv2
 
 #EXTINF:-1 group-title="ESPORTES & PPV",SportTV 3
-https://rdcanais.net/sportv2
-
-#EXTINF:-1 group-title="ESPORTES & PPV",Sport Net
-https://rdcanais.net/sportynet
+https://alerquina54105.embedtv.lat/sporttv3
 
 #EXTINF:-1 group-title="ESPORTES & PPV",Off
-https://rdcanais.net/off
+https://alerquina54105.embedtv.lat/canaloff
 
 #EXTINF:-1 group-title="ESPORTES & PPV",UFC Fight Pass
-https://rdcanais.net/ufcfightpass
+https://alerquina54105.embedtv.lat/ufcfightpass
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",A&E
-https://rdcanais.net/ae
+https://alerquina54105.embedtv.lat/ae
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",AMC
-https://rdcanais.net/amc
+https://alerquina54105.embedtv.lat/amc
+
+#EXTINF:-1 group-title="FILMES & SÉRIES",Art 1
+https://alerquina54105.embedtv.lat/arte1
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",AXN
-https://rdcanais.net/axn
+https://alerquina54105.embedtv.lat/axn
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Canal Brasil
-https://rdcanais.net/canalbrasil
+https://alerquina54105.embedtv.lat/canalbrasil
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Cinemax
-https://rdcanais.net/cinemax
+https://alerquina54105.embedtv.lat/cinemax
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",FX
-https://rdcanais.net/fx
+https://alerquina54105.embedtv.lat/fx
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",FXM
-https://rdcanais.net/fxm
+https://alerquina54105.embedtv.lat/fxm
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO
-https://rdcanais.net/hbo
+https://alerquina54105.embedtv.lat/hbo
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO 2
-https://rdcanais.net/hbo2
+https://alerquina54105.embedtv.lat/hbo2
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Family
-https://rdcanais.net/hbofamily
+https://alerquina54105.embedtv.lat/hbofamily
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Mundi
-https://rdcanais.net/hbomundi
+https://alerquina54105.embedtv.lat/hbomundi
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Plus
-https://rdcanais.net/hboplus
+https://alerquina54105.embedtv.lat/hboplus
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Pop
-https://rdcanais.net/hbopop
+https://alerquina54105.embedtv.lat/hbopop
+
+#EXTINF:-1 group-title="FILMES & SÉRIES",HBO Signature
+https://alerquina54105.embedtv.lat/hbosignature
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Xtreme
 https://alerquina54105.embedtv.lat/hboxtreme
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Megapix
-https://rdcanais.net/megapix
+https://alerquina54105.embedtv.lat/megapix
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Paramount
-http://up.kiwi/351921603109/34939156/836
+https://alerquina54105.embedtv.lat/paramount
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Sony Channel
-https://rdcanais.net/sonychannel
+https://alerquina54105.embedtv.lat/sonychannel
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Space
-https://rdcanais.net/space
+https://alerquina54105.embedtv.lat/space
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",TCM
-https://rdcanais.net/tcm
+https://alerquina54105.embedtv.lat/tcm
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",TNT
-https://rdcanais.net/tnt
+https://alerquina54105.embedtv.lat/tnt
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",TNT Series
-https://rdcanais.net/tntseries
+https://alerquina54105.embedtv.lat/tntseries
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Action
-https://rdcanais.net/telecineaction
+https://alerquina54105.embedtv.lat/telecineaction
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Cult
-https://rdcanais.net/telecinecult
+https://alerquina54105.embedtv.lat/telecinecult
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Fun
-https://rdcanais.net/telecinefun
+https://alerquina54105.embedtv.lat/telecinefun
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Pipoca
-https://rdcanais.net/telecinepipoca
+https://alerquina54105.embedtv.lat/telecinepipoca
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Premium
-https://rdcanais.net/telecinepremium
+https://alerquina54105.embedtv.lat/telecinepremium
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Telecine Touch
-https://rdcanais.net/telecinetouch
+https://alerquina54105.embedtv.lat/telecinetouch
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Universal TV
-https://rdcanais.net/universaltv
+https://alerquina54105.embedtv.lat/universaltv
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Warner Channel
-https://rdcanais.net/warnerchannel
+https://alerquina54105.embedtv.lat/warnerchannel
+
+#EXTINF:-1 group-title="INFANTIS",Baby TV
+https://alerquina54105.embedtv.lat/babytv
 
 #EXTINF:-1 group-title="INFANTIS",Cartoon Network
-https://rdcanais.net/cartoonnetwork
+https://alerquina54105.embedtv.lat/cartoonnetwork
 
 #EXTINF:-1 group-title="INFANTIS",Cartoonito
-https://rdcanais.net/cartoonito
+https://alerquina54105.embedtv.lat/cartoonito
 
 #EXTINF:-1 group-title="INFANTIS",Discovery Kids
-https://rdcanais.net/discoverykids
+https://alerquina54105.embedtv.lat/discoverykids
 
 #EXTINF:-1 group-title="INFANTIS",Disney Channel
-https://rdcanais.net/disney
+https://alerquina54105.embedtv.lat/disney
+
+#EXTINF:-1 group-title="INFANTIS",Disney Junior
+https://alerquina54105.embedtv.lat/disneyjunior
 
 #EXTINF:-1 group-title="INFANTIS",Gloob
-https://rdcanais.net/gloob
+https://alerquina54105.embedtv.lat/gloob
+
+#EXTINF:-1 group-title="INFANTIS",Gloobinho
+https://alerquina54105.embedtv.lat/gloob
+
+#EXTINF:-1 group-title="INFANTIS",Nickelodeon
+https://alerquina54105.embedtv.lat/nickelodeon
 
 #EXTINF:-1 group-title="INFANTIS",Tooncast
-http://up.kiwi/351921603109/34939156/1255534
+https://alerquina54105.embedtv.lat/tooncast
 
 #EXTINF:-1 group-title="INFANTIS",Zoomoo
-http://tjtor8411.com:80/Osiel123/Felicidade321/104935.ts
+https://alerquina54105.embedtv.lat/zoomoo
 
 #EXTINF:-1 group-title="MÚSICA",Bis
-https://rdcanais.net/bis
+https://alerquina54105.embedtv.lat/bis
 
 #EXTINF:-1 group-title="MÚSICA",MTV
 https://alerquina54105.embedtv.lat/mtv
 
+#EXTINF:-1 group-title="MÚSICA",MTV Live
+https://alerquina54105.embedtv.lat/mtvlive
+
 #EXTINF:-1 group-title="MÚSICA",Music Box Brasil
-http://tjtor8411.com:80/Osiel123/Felicidade321/72186.ts
+https://alerquina54105.embedtv.lat/musicboxbrasil
 
 #EXTINF:-1 group-title="NOTÍCIAS",BandNews
-https://rdcanais.net/bandnews
+https://alerquina54105.embedtv.lat/bandnews
 
 #EXTINF:-1 group-title="NOTÍCIAS",CNN Brasil
-https://rdcanais.net/cnnbrasil
+https://alerquina54105.embedtv.lat/cnnbrasil
 
 #EXTINF:-1 group-title="NOTÍCIAS",GloboNews
-https://rdcanais.net/globonews
+https://alerquina54105.embedtv.lat/globonews
 
 #EXTINF:-1 group-title="NOTÍCIAS",Jovem Pan News
-http://tjtor8411.com:80/Osiel123/Felicidade321/134024.ts
+https://alerquina54105.embedtv.lat/jovempan
 
 #EXTINF:-1 group-title="NOTÍCIAS",Record News
-https://rdcanais.net/recordnews
+https://alerquina54105.embedtv.lat/recordnews
 
 #EXTINF:-1 group-title="RELIGIOSOS",Canção Nova
-https://rdcanais.net/cancaonova
+https://alerquina54105.embedtv.lat/cancaonova
 
 #EXTINF:-1 group-title="RELIGIOSOS",Gospel Movies
-http://tjtor8411.com:80/Osiel123/Felicidade321/104930.ts
+https://alerquina54105.embedtv.lat/gospelmovies
 
 #EXTINF:-1 group-title="RELIGIOSOS",Novo Tempo
-http://tjtor8411.com:80/Osiel123/Felicidade321/72410.ts
+https://alerquina54105.embedtv.lat/novotempo
 
 #EXTINF:-1 group-title="RELIGIOSOS",RIT
-https://rdcanais.net/rit
+https://alerquina54105.embedtv.lat/rit
 
 #EXTINF:-1 group-title="RELIGIOSOS",Rede Gospel
-https://cdn.live.br1.jmvstream.com/w/LVW-8719/LVW8719_AcLVAxWy5J/media-u4s9zzxof_92086.ts
+https://alerquina54105.embedtv.lat/redegospel
 
 #EXTINF:-1 group-title="RELIGIOSOS",Rede Século 21
-https://rdcanais.net/redeseculo21
+https://alerquina54105.embedtv.lat/redeseculo21
 
 #EXTINF:-1 group-title="RELIGIOSOS",Rede Super
-https://rdcanais.net/redesuper
+https://alerquina54105.embedtv.lat/redesuper
 
 #EXTINF:-1 group-title="RELIGIOSOS",Rede Vida
-https://rdcanais.net/redevida
+https://alerquina54105.embedtv.lat/redevida
 
 #EXTINF:-1 group-title="RELIGIOSOS",TV Aparecida
-https://rdcanais.net/aparecida
+https://alerquina54105.embedtv.lat/aparecida
 
 #EXTINF:-1 group-title="RELIGIOSOS",TV Pai Eterno
-https://rdcanais.net/tvpaieterno
+https://alerquina54105.embedtv.lat/tvpaieerno
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band
-https://rdcanais.net/bandsp
+https://alerquina54105.embedtv.lat/bandsp
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band SP
-https://rdcanais.net/bandsp
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA  
-http://up.kiwi/351921603109/34939156/296736
+https://alerquina54105.embedtv.lat/bandsp
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",w7.
+https://w7.embedtv.lat/bandrj
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",v1.rdse
+https://v1.rdse.rest/sbt
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",rdcanais.
+https://rdcanais.net/canalbrasil
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA 
-http://tjtor8411.com:80/Osiel123/Felicidade321/72068.ts
+http://up.kiwi/351921603109/34939156/296738
 
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo Minas
-https://rdcanais.net/globomg
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
+https://alerquina54105.embedtv.lat/globomg
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
+https://alerquina54105.embedtv.lat/globo
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
-https://rdcanais.net/globoes
+https://alerquina54105.embedtv.lat/globoes
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo RJ
-https://rdcanais.net/globorj
+https://alerquina54105.embedtv.lat/globorj
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo SP
-https://rdcanais.net/globosp
+https://alerquina54105.embedtv.lat/globosp
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Futura
-https://rdcanais.net/futura
+https://alerquina54105.embedtv.lat/futura
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",RECORD MG MINAS 
+http://up.kiwi/351921603109/34939156/296665
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record MG
-https://rdcanais.net/recordmg
+https://alerquina54105.embedtv.lat/recordmg
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record TV
-https://rdcanais.net/record
+https://alerquina54105.embedtv.lat/record
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Rede TV
-https://rdcanais.net/redetv
+https://alerquina54105.embedtv.lat/redetv
 
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",ALTEROSA 
-http://tjtor8411.com:80/Osiel123/Felicidade321/72621.ts
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT MG ALTEROSA 
+http://up.kiwi/351921603109/34939156/296876
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT
-https://rdcanais.net/sbt
+https://alerquina54105.embedtv.lat/sbt
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Brasil
-https://rdcanais.net/tvbrasil
+https://alerquina54105.embedtv.lat/tvbrasil
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Cultura
-https://rdcanais.net/tvcultura
+https://alerquina54105.embedtv.lat/tvcultura
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Gazeta
-https://rdcanais.net/tvgazeta
+https://alerquina54105.embedtv.lat/tvgazeta
 
 #EXTINF:-1 group-title="VARIEDADES",Comedy Central
-https://rdcanais.net/comedycentral
+https://alerquina54105.embedtv.lat/comedycentral
 
 #EXTINF:-1 group-title="VARIEDADES",E!
-http://tjtor8411.com:80/Osiel123/Felicidade321/71902.ts
+https://alerquina54105.embedtv.lat/e
 
 #EXTINF:-1 group-title="VARIEDADES",GNT
-https://rdcanais.net/gnt
+https://alerquina54105.embedtv.lat/gnt
 
 #EXTINF:-1 group-title="VARIEDADES",Multishow
-https://rdcanais.net/multishow
+https://alerquina54105.embedtv.lat/multishow
 
 #EXTINF:-1 group-title="VARIEDADES",TNT Novelas
-https://rdcanais.net/tntnovelas
+https://alerquina54105.embedtv.lat/tntnovelas
 
 #EXTINF:-1 group-title="VARIEDADES",Viva
-https://rdcanais.net/viva
-
-#EXTINF:-1 group-title="VARIEDADES",Chef
-https://rdcanais.net/masterchef
+https://alerquina54105.embedtv.lat/viva
 
 #EXTINF:-1 group-title="VARIEDADES",Woohoo
-https://rdcanais.net/woohoo`;
+https://alerquina54105.embedtv.lat/woohoo`;
 
 export const DEFAULT_PLAYLIST = m3uPlaylist;
