@@ -163,7 +163,7 @@ https://rdcanais.net/arte1
 https://rdcanais.net/axn
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Canal Brasil
-http://up.kiwi/351921603109/34939156/186
+http://up.kiwi/351921603109/34939156/296115
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Cinemax
 https://rdcanais.net/cinemax
