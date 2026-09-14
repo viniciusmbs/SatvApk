@@ -431,6 +431,105 @@ async function startServer() {
     }
   });
 
+  // Cached in-memory Brazil EPG data
+  let cachedEpgData: any = null;
+  let lastEpgFetch = 0;
+  const EPG_CACHE_TTL = 30 * 60 * 1000; // 30 minutos
+
+  app.get('/api/epg', async (req, res) => {
+    const now = Date.now();
+    if (cachedEpgData && now - lastEpgFetch < EPG_CACHE_TTL) {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.json(cachedEpgData);
+      return;
+    }
+
+    try {
+      const epgUrl = 'https://raw.githubusercontent.com/limaalef/BrazilTVEPG/main/claro.xml';
+      const upstream = await fetch(epgUrl, {
+        signal: AbortSignal.timeout(15000),
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Accept': 'text/xml, application/xml, */*',
+        },
+      });
+
+      if (!upstream.ok) {
+        if (cachedEpgData) {
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.json(cachedEpgData);
+          return;
+        }
+        res.status(502).json({ error: 'Failed to fetch upstream BrazilTVEPG' });
+        return;
+      }
+
+      const xmlText = await upstream.text();
+      const programmes: Record<string, any[]> = {};
+      const progRegex = /<programme\s+start="([^"]+)"\s+stop="([^"]+)"\s+channel="([^"]+)">([\s\S]*?)<\/programme>/g;
+
+      const parseTime = (str: string): number => {
+        try {
+          const clean = str.trim();
+          const year = parseInt(clean.slice(0, 4), 10);
+          const month = parseInt(clean.slice(4, 6), 10) - 1;
+          const day = parseInt(clean.slice(6, 8), 10);
+          const hour = parseInt(clean.slice(8, 10), 10);
+          const min = parseInt(clean.slice(10, 12), 10);
+          const sec = parseInt(clean.slice(12, 14), 10) || 0;
+          let offsetMinutes = -180;
+          const match = clean.match(/([+-])(\d{2})(\d{2})$/);
+          if (match) {
+            const sign = match[1] === '+' ? 1 : -1;
+            offsetMinutes = sign * (parseInt(match[2], 10) * 60 + parseInt(match[3], 10));
+          }
+          return Date.UTC(year, month, day, hour, min, sec) - offsetMinutes * 60 * 1000;
+        } catch {
+          return 0;
+        }
+      };
+
+      const minRelevantTime = now - 6 * 60 * 60 * 1000;
+      const maxRelevantTime = now + 24 * 60 * 60 * 1000;
+
+      let match;
+      while ((match = progRegex.exec(xmlText)) !== null) {
+        const startMs = parseTime(match[1]);
+        const stopMs = parseTime(match[2]);
+        const rawChannel = match[3];
+        const inner = match[4];
+
+        if (stopMs < minRelevantTime || startMs > maxRelevantTime) continue;
+
+        const titleMatch = inner.match(/<title[^>]*>([\s\S]*?)<\/title>/);
+        const descMatch = inner.match(/<desc[^>]*>([\s\S]*?)<\/desc>/);
+        const catMatch = inner.match(/<category[^>]*>([\s\S]*?)<\/category>/);
+
+        const title = titleMatch ? titleMatch[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
+        const desc = descMatch ? descMatch[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
+        const category = catMatch ? catMatch[1].trim() : '';
+        const chKey = rawChannel.replace(/&amp;/g, '&').trim();
+
+        if (!programmes[chKey]) programmes[chKey] = [];
+        programmes[chKey].push({ start: startMs, stop: stopMs, title, desc, category });
+      }
+
+      cachedEpgData = { updatedAt: now, channelCount: Object.keys(programmes).length, programmes };
+      lastEpgFetch = now;
+
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.json(cachedEpgData);
+    } catch (err: any) {
+      if (cachedEpgData) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.json(cachedEpgData);
+        return;
+      }
+      res.status(500).json({ error: err.message || 'Error processing EPG' });
+    }
+  });
+
   // Vite middleware for development vs static for production
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

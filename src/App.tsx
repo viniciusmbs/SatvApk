@@ -1,11 +1,12 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Channel, GroupedChannels } from './types';
+import { Channel, GroupedChannels, ViewMode } from './types';
 import { DEFAULT_PLAYLIST } from './data/playlist';
 import { parseM3U, normalizeEmbedUrl } from './services/m3uParser';
 import { useTvNavigation } from './services/useTvNavigation';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import ChannelGrid from './components/ChannelGrid';
+import EpgGrid from './components/EpgGrid';
 import Footer from './components/Footer';
 
 export function App() {
@@ -16,6 +17,7 @@ export function App() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('TODOS');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   // Extract unique categories in playlist
   const categories = useMemo(() => {
@@ -77,8 +79,12 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#0b0f19] text-gray-100 flex flex-col selection:bg-red-500 selection:text-white">
-      {/* Header */}
-      <Header totalChannels={channels.length} />
+      {/* Header com seletor de Canais vs Guia EPG */}
+      <Header
+        totalChannels={channels.length}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+      />
 
       {/* Search & Category Filter Navigation */}
       <SearchBar
@@ -90,13 +96,21 @@ export function App() {
         filteredCount={filteredChannels.length}
       />
 
-      {/* Main Channel Grid */}
+      {/* Main Channel View: Grid ou EPG */}
       <main className="flex-1 pb-16">
-        <ChannelGrid
-          groupedChannels={groupedChannels}
-          onSelectChannel={handleSelectChannel}
-          onClearFilters={handleClearFilters}
-        />
+        {viewMode === 'grid' ? (
+          <ChannelGrid
+            groupedChannels={groupedChannels}
+            onSelectChannel={handleSelectChannel}
+            onClearFilters={handleClearFilters}
+          />
+        ) : (
+          <EpgGrid
+            groupedChannels={groupedChannels}
+            onSelectChannel={handleSelectChannel}
+            onClearFilters={handleClearFilters}
+          />
+        )}
       </main>
 
       {/* Footer / Rodapé */}
