@@ -234,7 +234,7 @@ const EpgGrid: React.FC<EpgGridProps> = ({
 
                       {/* Program Title */}
                       <h4 className="text-sm font-bold text-white group-hover:text-red-300 group-focus:text-red-300 line-clamp-1">
-                        {current?.title || `Programação Ao Vivo &bull; ${channel.name}`}
+                        {current?.title || `Programação Ao Vivo • ${channel.name}`}
                       </h4>
 
                       {/* Program Description / Sinopse */}

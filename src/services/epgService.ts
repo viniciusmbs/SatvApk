@@ -238,18 +238,18 @@ export class EpgService {
     this.isLoading = true;
     try {
       // 1. Try local /api/epg (for Web / Node server)
-      // 2. If it fails (e.g. running as APK on Android phone/Fire TV without local Node),
-      //    fetch from the hosted production Cloud server or directly from BrazilTVEPG raw
-      const candidates = [
+      // 2. If running as APK on Android phone/Fire TV without local Node,
+      //    fetch from the hosted Cloud server or directly from BrazilTVEPG raw GitHub
+      const jsonCandidates = [
         '/api/epg',
         'https://ais-pre-xglaorf2rmn4d6ex3zhhcx-169975259431.us-west2.run.app/api/epg',
         'https://ais-dev-xglaorf2rmn4d6ex3zhhcx-169975259431.us-west2.run.app/api/epg',
       ];
 
       let rawJson: any = null;
-      for (const url of candidates) {
+      for (const url of jsonCandidates) {
         try {
-          const res = await fetch(url);
+          const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
           if (res.ok) {
             rawJson = await res.json();
             if (rawJson && rawJson.programmes && Object.keys(rawJson.programmes).length > 0) {
@@ -279,6 +279,83 @@ export class EpgService {
         this.isLoaded = true;
         this.lastFetchTime = now;
         return true;
+      }
+
+      // 3. Fallback for standalone APK (Android / Fire TV): Fetch XML directly from GitHub
+      // raw.githubusercontent.com supports CORS (access-control-allow-origin: *)
+      try {
+        const rawXmlRes = await fetch(
+          'https://raw.githubusercontent.com/limaalef/BrazilTVEPG/main/claro.xml',
+          { signal: AbortSignal.timeout(10000) }
+        );
+        if (rawXmlRes.ok) {
+          const xmlText = await rawXmlRes.text();
+          const progRegex = /<programme\s+start="([^"]+)"\s+stop="([^"]+)"\s+channel="([^"]+)">([\s\S]*?)<\/programme>/g;
+
+          const parseXmltvTime = (str: string): number => {
+            try {
+              const clean = str.trim();
+              const year = parseInt(clean.slice(0, 4), 10);
+              const month = parseInt(clean.slice(4, 6), 10) - 1;
+              const day = parseInt(clean.slice(6, 8), 10);
+              const hour = parseInt(clean.slice(8, 10), 10);
+              const min = parseInt(clean.slice(10, 12), 10);
+              const sec = parseInt(clean.slice(12, 14), 10) || 0;
+              let offsetMinutes = -180;
+              const match = clean.match(/([+-])(\d{2})(\d{2})$/);
+              if (match) {
+                const sign = match[1] === '+' ? 1 : -1;
+                offsetMinutes = sign * (parseInt(match[2], 10) * 60 + parseInt(match[3], 10));
+              }
+              return Date.UTC(year, month, day, hour, min, sec) - offsetMinutes * 60 * 1000;
+            } catch {
+              return 0;
+            }
+          };
+
+          const minTime = now - 6 * 60 * 60 * 1000;
+          const maxTime = now + 24 * 60 * 60 * 1000;
+
+          this.programmesByChannel.clear();
+          let match;
+          while ((match = progRegex.exec(xmlText)) !== null) {
+            const startMs = parseXmltvTime(match[1]);
+            const stopMs = parseXmltvTime(match[2]);
+            if (stopMs < minTime || startMs > maxTime) continue;
+
+            const chKey = match[3].replace(/&amp;/g, '&').trim().toUpperCase();
+            const inner = match[4];
+            const titleM = inner.match(/<title[^>]*>([\s\S]*?)<\/title>/);
+            const descM = inner.match(/<desc[^>]*>([\s\S]*?)<\/desc>/);
+            const catM = inner.match(/<category[^>]*>([\s\S]*?)<\/category>/);
+
+            const title = titleM ? titleM[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
+            const desc = descM ? descM[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
+            const category = catM ? catM[1].trim() : '';
+
+            if (!this.programmesByChannel.has(chKey)) {
+              this.programmesByChannel.set(chKey, []);
+            }
+            this.programmesByChannel.get(chKey)!.push({
+              channel: chKey,
+              start: startMs,
+              stop: stopMs,
+              title,
+              desc,
+              category,
+            });
+          }
+
+          for (const list of this.programmesByChannel.values()) {
+            list.sort((a, b) => a.start - b.start);
+          }
+
+          this.isLoaded = true;
+          this.lastFetchTime = now;
+          return true;
+        }
+      } catch (xmlErr) {
+        console.warn('Direct XML EPG fetch error:', xmlErr);
       }
       return false;
     } catch (err) {
@@ -342,7 +419,7 @@ export class EpgService {
         channelName,
         epgChannelId: matchedId,
         currentProgram: {
-          title: `Transmissão Ao Vivo &bull; ${channelName}`,
+          title: `Transmissão Ao Vivo • ${channelName}`,
           desc: 'Programação contínua 24h em alta definição.',
           start: formatClockTime(currentStart),
           stop: formatClockTime(currentStop),
@@ -351,7 +428,7 @@ export class EpgService {
           progressPercent,
         },
         nextProgram: {
-          title: `Programação Especial &bull; ${channelName}`,
+          title: `Programação Especial • ${channelName}`,
           desc: 'A seguir na grade.',
           start: formatClockTime(currentStop),
           stop: formatClockTime(currentStop + 60 * 60 * 1000),
