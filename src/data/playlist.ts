@@ -85,13 +85,13 @@ https://rdcanais.net/bandsports
 https://rdcanais.net/combate
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN
-http://tjtor8411.com:80/Osiel123/Felicidade321/184551.ts
+https://v1.rdse.rest/dazn
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN 2
-http://tjtor8411.com:80/Osiel123/Felicidade321/184554.ts
+https://v1.rdse.rest/dazn2
 
 #EXTINF:-1 group-title="ESPORTES & PPV",DAZN 3
-https://rdcanais.net/dazn3
+https://v1.rdse.rest/dazn3
 
 #EXTINF:-1 group-title="ESPORTES & PPV",ESPN
 https://rdcanais.net/espn
@@ -336,7 +336,7 @@ https://rdcanais.net/globorj
 https://rdcanais.net/globosp
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Futura
-http://tjtor8411.com:80/Osiel123/Felicidade321/71964.ts
+https://rdcanais.net/futura
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record MG
 https://rdcanais.net/recordmg
