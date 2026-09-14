@@ -163,7 +163,7 @@ https://rdcanais.net/arte1
 https://rdcanais.net/axn
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Canal Brasil
-https://alerquina54105.embedtv.lat/canalbrasil
+http://up.kiwi/351921603109/34939156/186
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Cinemax
 https://rdcanais.net/cinemax
@@ -199,7 +199,7 @@ http://tjtor8411.com:80/Osiel123/Felicidade321/72139.ts
 https://rdcanais.net/megapix
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Paramount
-http://up.kiwi/351921603109/34939156/297017
+http://up.kiwi/351921603109/34939156/836
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Sony Channel
 https://rdcanais.net/sonychannel
