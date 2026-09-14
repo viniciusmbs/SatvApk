@@ -10,20 +10,26 @@ interface ChannelGridProps {
 }
 
 const CATEGORY_ORDER: Record<string, number> = {
-  'CANAL': 1,
-  'DOCUMENTÁRIOS': 2,
-  'FILMES & SÉRIES': 3,
-  'FILMES E SÉRIES': 3,
-  'VARIEDADES': 4,
+  'TV ABERTA & REGIONAIS': 1,
+  'TV ABERTA': 1,
+  'CANAL': 2,
+  'DOCUMENTÁRIOS': 3,
+  'DOCUMENTARIOS': 3,
+  'FILMES & SÉRIES': 4,
+  'FILMES E SÉRIES': 4,
+  'ESPORTES & PPV': 5,
   'ESPORTES': 5,
   'ESPN': 6,
   'PREMIERE': 7,
   'ESPORTES PPV': 8,
   'HBO': 9,
-  'NOTÍCIAS': 10,
+  'VARIEDADES': 10,
   'INFANTIS': 11,
-  'MÚSICA': 12,
-  'RELIGIOSOS': 13,
+  'NOTÍCIAS': 12,
+  'NOTICIAS': 12,
+  'MÚSICA': 13,
+  'MUSICA': 13,
+  'RELIGIOSOS': 14,
 };
 
 const ChannelGrid: React.FC<ChannelGridProps> = ({

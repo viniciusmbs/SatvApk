@@ -1,5 +1,59 @@
 export const m3uPlaylist = `#EXTM3U
 
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band
+https://alerquina54105.embedtv.lat/bandsp
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band SP
+https://alerquina54105.embedtv.lat/bandsp
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA 
+http://up.kiwi/351921603109/34939156/296738
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
+https://alerquina54105.embedtv.lat/globomg
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
+https://alerquina54105.embedtv.lat/globo
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
+https://alerquina54105.embedtv.lat/globoes
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo RJ
+https://alerquina54105.embedtv.lat/globorj
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo SP
+https://alerquina54105.embedtv.lat/globosp
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Futura
+https://alerquina54105.embedtv.lat/futura
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",RECORD MG MINAS 
+http://up.kiwi/351921603109/34939156/296665
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record MG
+https://alerquina54105.embedtv.lat/recordmg
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record TV
+https://alerquina54105.embedtv.lat/record
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Rede TV
+https://alerquina54105.embedtv.lat/redetv
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT MG ALTEROSA 
+http://up.kiwi/351921603109/34939156/296876
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT
+https://alerquina54105.embedtv.lat/sbt
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Brasil
+https://alerquina54105.embedtv.lat/tvbrasil
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Cultura
+https://alerquina54105.embedtv.lat/tvcultura
+
+#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Gazeta
+https://alerquina54105.embedtv.lat/tvgazeta
+
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Agro+
 https://alerquina54105.embedtv.lat/agromais
 
@@ -341,69 +395,6 @@ https://alerquina54105.embedtv.lat/aparecida
 
 #EXTINF:-1 group-title="RELIGIOSOS",TV Pai Eterno
 https://alerquina54105.embedtv.lat/tvpaieerno
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band
-https://alerquina54105.embedtv.lat/bandsp
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Band SP
-https://alerquina54105.embedtv.lat/bandsp
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",w7.
-https://w7.embedtv.lat/bandrj
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",v1.rdse
-https://v1.rdse.rest/sbt
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",rdcanais.
-https://rdcanais.net/canalbrasil
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA 
-http://up.kiwi/351921603109/34939156/296738
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo MG
-https://alerquina54105.embedtv.lat/globomg
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo
-https://alerquina54105.embedtv.lat/globo
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo ES
-https://alerquina54105.embedtv.lat/globoes
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo RJ
-https://alerquina54105.embedtv.lat/globorj
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo SP
-https://alerquina54105.embedtv.lat/globosp
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Futura
-https://alerquina54105.embedtv.lat/futura
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",RECORD MG MINAS 
-http://up.kiwi/351921603109/34939156/296665
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record MG
-https://alerquina54105.embedtv.lat/recordmg
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Record TV
-https://alerquina54105.embedtv.lat/record
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Rede TV
-https://alerquina54105.embedtv.lat/redetv
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT MG ALTEROSA 
-http://up.kiwi/351921603109/34939156/296876
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",SBT
-https://alerquina54105.embedtv.lat/sbt
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Brasil
-https://alerquina54105.embedtv.lat/tvbrasil
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Cultura
-https://alerquina54105.embedtv.lat/tvcultura
-
-#EXTINF:-1 group-title="TV ABERTA & REGIONAIS",TV Gazeta
-https://alerquina54105.embedtv.lat/tvgazeta
 
 #EXTINF:-1 group-title="VARIEDADES",Comedy Central
 https://alerquina54105.embedtv.lat/comedycentral
