@@ -300,8 +300,17 @@ export const getViewerEmbedUrl = (rawUrl?: string, mode: 'server' | 'direct' = '
     return getAutoplayUrl(cleanUrl);
   }
 
-  // Route through proxy to eliminate sandbox detection, ads, white screen, and trigger auto-play
-  return `/api/embed-frame?url=${encodeURIComponent(cleanUrl)}`;
+  // Tenta injetar o parâmetro de autoplay na URL para ajudar a disparar o player do site
+  try {
+    const parsed = new URL(cleanUrl);
+    if (!parsed.searchParams.has('autoplay')) {
+      parsed.searchParams.set('autoplay', '1');
+    }
+    return `/api/embed-frame?url=${encodeURIComponent(parsed.toString())}`;
+  } catch {
+    const sep = cleanUrl.includes('?') ? '&' : '?';
+    return `/api/embed-frame?url=${encodeURIComponent(`${cleanUrl}${sep}autoplay=1`)}`;
+  }
 };
 
 export const parseM3U = (m3uContent: string, customLogos?: CustomLogosMap): Channel[] => {
