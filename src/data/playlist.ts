@@ -190,7 +190,7 @@ https://rdcanais.net/hboplus
 https://rdcanais.net/hbopop
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",HBO Xtreme
-http://tjtor8411.com:80/Osiel123/Felicidade321/72139.ts
+https://alerquina54105.embedtv.lat/hboxtreme
 
 #EXTINF:-1 group-title="FILMES & SÉRIES",Megapix
 https://rdcanais.net/megapix
@@ -262,10 +262,7 @@ http://tjtor8411.com:80/Osiel123/Felicidade321/104935.ts
 https://rdcanais.net/bis
 
 #EXTINF:-1 group-title="MÚSICA",MTV
-https://rdcanais.net/mtv
-
-#EXTINF:-1 group-title="MÚSICA",MTV Live
-http://up.kiwi/351921603109/34939156/739
+https://alerquina54105.embedtv.lat/mtv
 
 #EXTINF:-1 group-title="MÚSICA",Music Box Brasil
 http://tjtor8411.com:80/Osiel123/Felicidade321/72186.ts
