@@ -156,9 +156,6 @@ https://rdcanais.net/ae
 #EXTINF:-1 group-title="FILMES & SÉRIES",AMC
 https://rdcanais.net/amc
 
-#EXTINF:-1 group-title="FILMES & SÉRIES",Art 1
-https://rdcanais.net/arte1
-
 #EXTINF:-1 group-title="FILMES & SÉRIES",AXN
 https://rdcanais.net/axn
 
