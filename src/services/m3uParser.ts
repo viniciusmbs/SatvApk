@@ -220,7 +220,13 @@ export const toHttpsIfPossible = (u?: string): string => {
  */
 export const normalizeEmbedUrl = (rawUrl?: string): string => {
   if (!rawUrl) return '';
-  return rawUrl.trim();
+  const url = rawUrl.trim();
+  const rdcanaisMatch = url.match(/rdcanais\.[a-z.]+(?:\/canal|\/assistir|\/tv)?\/([a-zA-Z0-9_-]+)/i);
+  if (rdcanaisMatch && rdcanaisMatch[1]) {
+    const slug = rdcanaisMatch[1];
+    return `https://alerquina54105.embedtv.lat/${slug}`;
+  }
+  return url;
 };
 
 /**
