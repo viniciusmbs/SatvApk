@@ -215,17 +215,19 @@ export const toHttpsIfPossible = (u?: string): string => {
 };
 
 /**
- * Retorna a URL limpa diretamente como cadastrada na playlist,
- * sem forçar redirecionamento para o domínio antigo da Alerquina.
+ * Normaliza URLs de transmissão e embeds web sem prender em um domínio fixo antigo.
+ * Mantém intactos os links colocados na playlist (como rdcanais.net, embedtv.lat, streams diretos ou outros servidores).
  */
 export const normalizeEmbedUrl = (rawUrl?: string): string => {
   if (!rawUrl) return '';
   const url = rawUrl.trim();
-  const rdcanaisMatch = url.match(/rdcanais\.[a-z.]+(?:\/canal|\/assistir|\/tv)?\/([a-zA-Z0-9_-]+)/i);
-  if (rdcanaisMatch && rdcanaisMatch[1]) {
-    const slug = rdcanaisMatch[1];
-    return `https://alerquina54105.embedtv.lat/${slug}`;
+  if (!url) return '';
+
+  // Garante protocolo https para links que começam com //
+  if (url.startsWith('//')) {
+    return 'https:' + url;
   }
+
   return url;
 };
 
