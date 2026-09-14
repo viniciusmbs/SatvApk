@@ -37,7 +37,7 @@ https://v1.rdse.rest/discoveryturbo
 https://rdcanais.net/discoveryworld
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Dog TV
-http://up.kiwi/351921603109/34939156/297461
+http://tjtor8411.com:80/Osiel123/Felicidade321/76923.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Fish TV
 http://tjtor8411.com:80/Osiel123/Felicidade321/71930.ts
@@ -136,7 +136,6 @@ https://rdcanais.net/premiereclubes
 https://rdcanais.net/sportv
 
 #EXTINF:-1 group-title="ESPORTES & PPV",SportTV 2
-https://rdcanais.net/sportv2
 https://rdcanais.net/sportv2
 
 #EXTINF:-1 group-title="ESPORTES & PPV",SportTV 3
