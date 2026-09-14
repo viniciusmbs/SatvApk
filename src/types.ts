@@ -11,25 +11,21 @@ export interface GroupedChannels {
   [groupName: string]: Channel[];
 }
 
-export type ProxyMode = 'server' | 'direct';
+export type ProxyMode = 'corsproxy' | 'direct' | 'server';
 
-export type PlayerMode = 'auto' | 'embed_proxy' | 'embed_direct' | 'hls_stream';
+export type ClickAction = 'fullscreen' | 'new_tab' | 'popup';
 
-export type ClickAction = 'fullscreen' | 'popup' | 'new_tab';
-
-export interface CustomLogosMap {
-  [key: string]: string;
-}
+export type CustomLogosMap = Record<string, string>;
 
 export interface EpgProgram {
   title: string;
   desc?: string;
   category?: string;
-  start: string;
-  stop: string;
-  startTime: number;
-  stopTime: number;
-  progressPercent?: number;
+  start: string; // HH:mm
+  stop: string;  // HH:mm
+  startTime: number; // timestamp in ms
+  stopTime: number;  // timestamp in ms
+  progressPercent?: number; // 0 to 100
 }
 
 export interface ChannelEpg {
@@ -40,4 +36,4 @@ export interface ChannelEpg {
   upcoming: EpgProgram[];
 }
 
-export type ViewMode = 'grid' | 'epg';
+export type ViewMode = 'grid' | 'rows' | 'epg';

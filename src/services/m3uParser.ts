@@ -29,7 +29,6 @@ export const normalizeCategory = (rawGroup: string, name: string): string => {
   ) {
     return 'ESPORTES';
   }
-
   if (
     upperGroup.includes('FILME') ||
     upperGroup.includes('SÉRIE') ||
@@ -57,7 +56,6 @@ export const normalizeCategory = (rawGroup: string, name: string): string => {
   ) {
     return 'FILMES E SÉRIES';
   }
-
   if (
     upperGroup.includes('INFANTIL') ||
     upperGroup.includes('DESENHO') ||
@@ -75,7 +73,6 @@ export const normalizeCategory = (rawGroup: string, name: string): string => {
   ) {
     return 'INFANTIS';
   }
-
   if (
     upperGroup.includes('NOTÍCIA') ||
     upperGroup.includes('NOTICIA') ||
@@ -88,7 +85,6 @@ export const normalizeCategory = (rawGroup: string, name: string): string => {
   ) {
     return 'NOTÍCIAS';
   }
-
   if (
     upperGroup.includes('DOCUMENT') ||
     upperName.includes('DISCOVERY') ||
@@ -101,7 +97,6 @@ export const normalizeCategory = (rawGroup: string, name: string): string => {
   ) {
     return 'DOCUMENTÁRIOS';
   }
-
   if (
     upperGroup.includes('RELIGIO') ||
     upperGroup.includes('GOSPEL') ||
@@ -120,7 +115,6 @@ export const normalizeCategory = (rawGroup: string, name: string): string => {
   ) {
     return 'RELIGIOSOS';
   }
-
   if (
     upperGroup.includes('MÚSICA') ||
     upperGroup.includes('MUSICA') ||
@@ -132,7 +126,6 @@ export const normalizeCategory = (rawGroup: string, name: string): string => {
   ) {
     return 'MÚSICA';
   }
-
   if (
     upperGroup.includes('VARIEDADES') ||
     upperName.includes('GNT') ||
@@ -142,7 +135,6 @@ export const normalizeCategory = (rawGroup: string, name: string): string => {
   ) {
     return 'VARIEDADES';
   }
-
   if (
     upperGroup.includes('ABERTA') ||
     upperGroup.includes('CANAIS') ||
@@ -215,45 +207,8 @@ export const toHttpsIfPossible = (u?: string): string => {
 };
 
 /**
- * Normaliza URLs de canais e embeds sem reescrever ou travar em domínios específicos.
- * Preserva o link exato definido pelo usuário (seja rdcanais.net, embedtv.lat, rdse ou outro),
- * apenas garantindo o protocolo https para URLs relativas.
- */
-export const normalizeEmbedUrl = (rawUrl?: string): string => {
-  if (!rawUrl) return '';
-  const url = rawUrl.trim();
-  if (!url) return '';
-
-  // Garante protocolo https para links que começam com //
-  if (url.startsWith('//')) {
-    return 'https:' + url;
-  }
-
-  return url;
-};
-
-/**
- * Checks if a channel URL is a direct media stream (.m3u8, .ts, .mp4, mp2t).
- */
-export const isDirectMediaStream = (url: string): boolean => {
-  if (!url) return false;
-  const clean = url.split('?')[0].toLowerCase();
-  return (
-    clean.endsWith('.m3u8') ||
-    clean.endsWith('.ts') ||
-    clean.endsWith('.mp4') ||
-    clean.endsWith('.mkv') ||
-    clean.endsWith('.webm') ||
-    clean.endsWith('.mpd') ||
-    url.includes('.m3u8?') ||
-    url.includes('/hls/') ||
-    url.includes(':80/') ||
-    url.includes(':8080/')
-  );
-};
-
-/**
- * Formats a channel stream/embed URL to enable automatic playback.
+ * Formats a channel stream/embed URL to enable automatic playback
+ * across iframes, popups, and new tab windows.
  */
 export const getAutoplayUrl = (rawUrl?: string): string => {
   if (!rawUrl) return '';
@@ -280,10 +235,12 @@ export const getAutoplayUrl = (rawUrl?: string): string => {
       return parsed.toString();
     }
 
+    // Handle general embed players (e.g., rdse, rdcanais, embedtv)
     // Add autoplay param if not explicitly present
     if (!parsed.searchParams.has('autoplay') && !parsed.searchParams.has('autoPlay')) {
       parsed.searchParams.set('autoplay', '1');
     }
+
     return parsed.toString();
   } catch {
     const sep = url.includes('?') ? '&' : '?';
@@ -293,8 +250,12 @@ export const getAutoplayUrl = (rawUrl?: string): string => {
 
 /**
  * Returns the optimized player URL for the internal FullscreenViewer iframe.
+ * Uses /api/embed-frame proxy so that:
+ * 1. Anti-sandbox scripts in embed providers are stripped/neutralized.
+ * 2. Nested frames are resolved to the actual video player page.
+ * 3. Autoplay triggers and center play buttons are automatically pressed.
  */
-export const getViewerEmbedUrl = (rawUrl?: string, mode: 'server' | 'direct' = 'server'): string => {
+export const getViewerEmbedUrl = (rawUrl?: string): string => {
   if (!rawUrl) return '';
   const cleanUrl = rawUrl.trim();
   if (!cleanUrl) return '';
@@ -304,22 +265,8 @@ export const getViewerEmbedUrl = (rawUrl?: string, mode: 'server' | 'direct' = '
     return getAutoplayUrl(cleanUrl);
   }
 
-  // If user explicitly chose direct mode
-  if (mode === 'direct') {
-    return getAutoplayUrl(cleanUrl);
-  }
-
-  // Tenta injetar o parâmetro de autoplay na URL para ajudar a disparar o player do site
-  try {
-    const parsed = new URL(cleanUrl);
-    if (!parsed.searchParams.has('autoplay')) {
-      parsed.searchParams.set('autoplay', '1');
-    }
-    return `/api/embed-frame?url=${encodeURIComponent(parsed.toString())}`;
-  } catch {
-    const sep = cleanUrl.includes('?') ? '&' : '?';
-    return `/api/embed-frame?url=${encodeURIComponent(`${cleanUrl}${sep}autoplay=1`)}`;
-  }
+  // Route through proxy to eliminate sandbox detection and trigger automatic play
+  return `/api/embed-frame?url=${encodeURIComponent(cleanUrl)}`;
 };
 
 export const parseM3U = (m3uContent: string, customLogos?: CustomLogosMap): Channel[] => {
@@ -332,7 +279,6 @@ export const parseM3U = (m3uContent: string, customLogos?: CustomLogosMap): Chan
       try {
         const infoLine = line;
         let urlLine = '';
-
         // Find next non-empty non-comment line for stream URL
         while (i + 1 < lines.length) {
           const next = lines[++i].trim();
@@ -363,14 +309,12 @@ export const parseM3U = (m3uContent: string, customLogos?: CustomLogosMap): Chan
           || toHttpsIfPossible(rawLogo)
           || getChannelLogo(name, customLogos);
 
-        const effectiveUrl = normalizeEmbedUrl(urlLine);
-
         const channel: Channel = {
           id: (idMatch && idMatch[1]) ? idMatch[1] : `ch-${channels.length + 1}`,
           name: name,
           logo: secureLogo,
           group: finalGroup,
-          url: effectiveUrl,
+          url: urlLine,
           originalUrl: urlLine,
         };
 

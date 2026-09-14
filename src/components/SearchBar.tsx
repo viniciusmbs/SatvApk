@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, Star } from 'lucide-react';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -8,6 +8,7 @@ interface SearchBarProps {
   selectedCategory: string;
   setSelectedCategory: (cat: string) => void;
   filteredCount: number;
+  favoritesCount?: number;
 }
 
 const CATEGORY_PRIORITY: Record<string, number> = {
@@ -34,6 +35,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   selectedCategory,
   setSelectedCategory,
   filteredCount,
+  favoritesCount = 0,
 }) => {
   // Sort categories strictly: CANAL, DOCUMENTÁRIOS, etc.
   const sortedCategories = [...categories].sort((a, b) => {
@@ -44,13 +46,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
   });
 
   return (
-    <div className="bg-[#10121a] border-b border-white/5 py-3 shadow-inner">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2.5">
+    <div className="bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-2 sm:py-2.5 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
         {/* Search input bar */}
-        <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-2.5 items-center justify-between">
           <div className="relative w-full max-w-xl">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-              <Search className="h-4 w-4" />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <Search className="h-3.5 w-3.5" />
             </div>
             <input
               id="channel-search-input"
@@ -59,7 +61,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar canal por nome ou categoria (ex: ESPN, Globo, Telecine)..."
-              className="w-full bg-[#171a23] text-gray-100 placeholder-slate-400 text-sm rounded-xl pl-10 pr-10 py-2 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500/80 focus:border-red-500 transition shadow-sm"
+              className="w-full bg-[#171a23] text-gray-100 placeholder-slate-400 text-xs sm:text-sm rounded-lg pl-9 pr-9 py-1.5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500/80 focus:border-red-500 transition shadow-sm"
             />
             {searchQuery && (
               <button
@@ -96,9 +98,35 @@ const SearchBar: React.FC<SearchBarProps> = ({
             Todos
           </button>
 
-          {/* Categories starting with DOCUMENTÁRIOS, ESPORTES, etc. */}
+          {/* Category: ⭐ Favoritos (sempre visível em destaque) */}
+          <button
+            data-tv-nav="category"
+            data-category-index={1}
+            tabIndex={0}
+            onClick={() => setSelectedCategory('FAVORITOS')}
+            className={`tv-nav-focus flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all outline-none cursor-pointer border ${
+              selectedCategory === 'FAVORITOS'
+                ? 'bg-amber-500 text-black border-amber-300 shadow-md ring-1 ring-amber-300'
+                : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
+            }`}
+            title="Ver somente os canais favoritos"
+          >
+            <Star className={`w-3.5 h-3.5 ${selectedCategory === 'FAVORITOS' ? 'fill-black' : 'fill-amber-400'}`} />
+            <span>Favoritos</span>
+            {favoritesCount > 0 && (
+              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                selectedCategory === 'FAVORITOS'
+                  ? 'bg-black text-amber-300'
+                  : 'bg-amber-400 text-black'
+              }`}>
+                {favoritesCount}
+              </span>
+            )}
+          </button>
+
+          {/* Categories starting with CANAL, DOCUMENTÁRIOS, ESPORTES, etc. */}
           {sortedCategories.map((category, idx) => {
-            const catIndex = idx + 1;
+            const catIndex = idx + 2;
             const isSelected = selectedCategory === category;
             return (
               <button

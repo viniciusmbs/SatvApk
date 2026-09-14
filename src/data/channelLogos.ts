@@ -35,10 +35,6 @@ const REDE_SUPER_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/20
 
 const VIVA_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 80" width="100%" height="100%"><rect width="160" height="80" rx="14" fill="%23e11d48"/><text x="80" y="53" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="34" fill="%23ffffff" text-anchor="middle" letter-spacing="2">viva</text></svg>`;
 
-const DISCOVERY_THEATER_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 80" width="100%" height="100%"><rect width="180" height="80" rx="12" fill="%230f172a"/><text x="90" y="35" font-family="system-ui, sans-serif" font-weight="900" font-size="18" fill="%23ffffff" text-anchor="middle">DISCOVERY</text><text x="90" y="58" font-family="system-ui, sans-serif" font-weight="800" font-size="14" fill="%2338bdf8" text-anchor="middle" letter-spacing="2">THEATER</text></svg>`;
-
-const DISCOVERY_WORLD_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 80" width="100%" height="100%"><rect width="180" height="80" rx="12" fill="%230f172a"/><text x="90" y="35" font-family="system-ui, sans-serif" font-weight="900" font-size="18" fill="%23ffffff" text-anchor="middle">DISCOVERY</text><text x="90" y="58" font-family="system-ui, sans-serif" font-weight="800" font-size="14" fill="%2322c55e" text-anchor="middle" letter-spacing="2">WORLD</text></svg>`;
-
 export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   // TV ABERTA / REGIONAIS
   'GLOBO': `${TV_LOGO_BR}globo-br.png`,
@@ -55,8 +51,8 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'GLOBO DF': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO GAZETA': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO INTEGRAÇÃO': `${TV_LOGO_BR}globo-br.png`,
-  'INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
-  'INTEGRAÇÃO JUIZ DE FORA F': `${TV_LOGO_BR}globo-br.png`,
+  'GLOBO ES TV GAZETA VITÓRIA': `${TV_LOGO_BR}globo-br.png`,
+  'GLOBO MG TV INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
   'SBT': `${TV_LOGO_BR}sbt-br.png`,
   'SBT SP': `${TV_LOGO_BR}sbt-br.png`,
   'SBT RJ': `${TV_LOGO_BR}sbt-br.png`,
@@ -91,9 +87,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'TV DIARIO': TV_DIARIO_SVG,
   'TV JUSTIÇA': TV_JUSTICA_SVG,
   'TV JUSTICA': TV_JUSTICA_SVG,
-  'ALTEROSA': `${TV_LOGO_BR}sbt-br.png`,
-  'TV ALTEROSA': `${TV_LOGO_BR}sbt-br.png`,
-  
+
   // ESPORTES & PPV
   'SPORTV': `${TV_LOGO_BR}sportv-br.png`,
   'SPORTTV': `${TV_LOGO_BR}sportv-br.png`,

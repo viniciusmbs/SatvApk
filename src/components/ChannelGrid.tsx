@@ -1,10 +1,12 @@
 import React from 'react';
-import { Tv } from 'lucide-react';
+import { Star, Tv } from 'lucide-react';
 import { Channel, GroupedChannels } from '../types';
 import ChannelCard from './ChannelCard';
 
 interface ChannelGridProps {
   groupedChannels: GroupedChannels;
+  favorites?: string[];
+  onToggleFavorite?: (channelName: string) => void;
   onSelectChannel: (channel: Channel) => void;
   onClearFilters: () => void;
 }
@@ -28,9 +30,14 @@ const CATEGORY_ORDER: Record<string, number> = {
 
 const ChannelGrid: React.FC<ChannelGridProps> = ({
   groupedChannels,
+  favorites = [],
+  onToggleFavorite,
   onSelectChannel,
   onClearFilters,
 }) => {
+  const allChannels: Channel[] = (Object.values(groupedChannels) as Channel[][]).flat();
+  const favoriteChannels = allChannels.filter((c) => favorites.includes(c.name));
+
   const sortedGroupNames = Object.keys(groupedChannels).sort((a, b) => {
     const upperA = a.toUpperCase();
     const upperB = b.toUpperCase();
@@ -42,7 +49,7 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
     return a.localeCompare(b, 'pt-BR');
   });
 
-  if (sortedGroupNames.length === 0) {
+  if (sortedGroupNames.length === 0 && favoriteChannels.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <div className="w-16 h-16 bg-slate-800/80 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-500 border border-slate-700/60">
@@ -69,6 +76,38 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 py-4 space-y-6">
+      {/* Top Favorite Row if any exist */}
+      {favoriteChannels.length > 0 && (
+        <section className="space-y-2.5">
+          <div className="flex items-center justify-between border-b border-amber-500/20 pb-2">
+            <div className="flex items-center space-x-2">
+              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+              <h2 className="text-xs sm:text-sm font-bold text-amber-300 tracking-wide uppercase">
+                Meus Favoritos
+              </h2>
+              <span className="text-[11px] text-amber-300/80 font-medium px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                {favoriteChannels.length} canais
+              </span>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-2 sm:gap-2.5">
+            {favoriteChannels.map((channel) => {
+              const currentIndex = globalIndex++;
+              return (
+                <ChannelCard
+                  key={`fav-${channel.name}-${channel.url}`}
+                  channel={channel}
+                  index={currentIndex}
+                  isFavorite={true}
+                  onToggleFavorite={onToggleFavorite}
+                  onSelect={onSelectChannel}
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {sortedGroupNames.map((groupName) => {
         const channels = groupedChannels[groupName];
         if (!channels || channels.length === 0) return null;
@@ -97,6 +136,8 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
                     key={`${channel.name}-${channel.url}`}
                     channel={channel}
                     index={currentIndex}
+                    isFavorite={favorites.includes(channel.name)}
+                    onToggleFavorite={onToggleFavorite}
                     onSelect={onSelectChannel}
                   />
                 );
