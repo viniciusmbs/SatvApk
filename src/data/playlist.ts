@@ -4,7 +4,7 @@ export const m3uPlaylist = `#EXTM3U
 http://tjtor8411.com:80/Osiel123/Felicidade321/71766.ts
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Animal Planet
-https://rdcanais.net/animalplanet
+https://alerquina54105.embedtv.lat/animalplanet
 
 #EXTINF:-1 group-title="DOCUMENTÁRIOS",Arte 1
 https://rdcanais.net/arte1
