@@ -16,7 +16,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
 
     const handleTvKeyDown = (e: KeyboardEvent) => {
       const key = e.key;
-      const code = e.keyCode || e.which;
+      const code = e.keyCode;
 
       const isUp = key === 'ArrowUp' || code === 38 || code === 19;
       const isDown = key === 'ArrowDown' || code === 40 || code === 20;
@@ -39,7 +39,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
       // Collect all visible TV navigable elements in strict sequential order
       const navElements = Array.from(
         document.querySelectorAll<HTMLElement>(
-          '#channel-search-input, [data-tv-nav="category"], [data-tv-card="true"]'
+          '[data-tv-nav="tab"], #channel-search-input, [data-tv-nav="category"], [data-tv-card="true"]'
         )
       ).filter((el) => {
         return el.offsetParent !== null && !el.hasAttribute('disabled');
@@ -50,7 +50,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
       // Handle TAB key explicitly for Android TV remote tab sequence
       if (isTab) {
         e.preventDefault();
-        const currIdx = activeEl ? navElements.indexOf(activeEl) : -1;
+        let currIdx = activeEl ? navElements.indexOf(activeEl) : -1;
         let nextIdx = 0;
 
         if (e.shiftKey) {
@@ -72,6 +72,22 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
         return;
       }
 
+      // If user is focused on Header tabs, ArrowDown jumps into the search bar or first category
+      if (activeEl?.getAttribute('data-tv-nav') === 'tab') {
+        if (isDown) {
+          e.preventDefault();
+          const searchInput = document.getElementById('channel-search-input');
+          const firstCategory = document.querySelector<HTMLElement>('[data-tv-nav="category"]');
+          const firstCard = document.querySelector<HTMLElement>('[data-tv-card="true"]');
+          const target = searchInput || firstCategory || firstCard;
+          if (target) {
+            target.focus();
+            target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+          }
+          return;
+        }
+      }
+
       // If user is typing in the search bar, ArrowDown jumps into the categories or first card
       if (activeEl?.id === 'channel-search-input') {
         if (isDown) {
@@ -86,8 +102,16 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
               lastFocusedCardRef.current = target;
             }
           }
+          return;
+        } else if (isUp) {
+          e.preventDefault();
+          const currentTab = document.querySelector<HTMLElement>('[data-tv-nav="tab"]');
+          if (currentTab) {
+            currentTab.focus();
+            currentTab.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+          }
+          return;
         }
-        return;
       }
 
       // If nothing is focused yet, activate the first target
@@ -105,17 +129,18 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
         return;
       }
 
-      // Enter / OK action on focused element
+      // Enter action on focused element
       if (isEnter) {
-        if (activeEl.getAttribute('data-tv-card') === 'true') {
+        if (
+          activeEl.getAttribute('data-tv-card') === 'true' ||
+          activeEl.getAttribute('data-tv-nav') === 'category' ||
+          activeEl.getAttribute('data-tv-nav') === 'tab'
+        ) {
           e.preventDefault();
           activeEl.click();
-          lastFocusedCardRef.current = activeEl;
-          return;
-        }
-        if (activeEl.getAttribute('data-tv-nav') === 'category') {
-          e.preventDefault();
-          activeEl.click();
+          if (activeEl.getAttribute('data-tv-card') === 'true') {
+            lastFocusedCardRef.current = activeEl;
+          }
           return;
         }
       }
@@ -193,40 +218,8 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
       }
     };
 
-    // On initial load or return from back navigation (pageshow / webView.goBack), restore last focused card
-    const restoreLastFocus = () => {
-      let target: HTMLElement | null = null;
-      try {
-        const lastChannel = sessionStorage.getItem('satv_last_channel');
-        if (lastChannel) {
-          target = document.querySelector<HTMLElement>(`[data-channel-name="${lastChannel}"]`);
-        }
-      } catch {}
-
-      if (!target && lastFocusedCardRef.current && document.contains(lastFocusedCardRef.current)) {
-        target = lastFocusedCardRef.current;
-      }
-
-      if (!target) {
-        target = document.querySelector<HTMLElement>('[data-tv-card="true"]');
-      }
-
-      if (target) {
-        target.focus();
-        target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-        lastFocusedCardRef.current = target;
-      }
-    };
-
-    const timer = setTimeout(restoreLastFocus, 150);
-    window.addEventListener('pageshow', restoreLastFocus);
     window.addEventListener('keydown', handleTvKeyDown);
-
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('pageshow', restoreLastFocus);
-      window.removeEventListener('keydown', handleTvKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleTvKeyDown);
   }, [enabled]);
 
   return { lastFocusedCardRef };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tv, Info, LayoutGrid, Calendar } from 'lucide-react';
+import { ExternalLink, LayoutGrid, CalendarDays } from 'lucide-react';
 import { ViewMode } from '../types';
 
 interface HeaderProps {
@@ -10,70 +10,86 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ totalChannels, viewMode, setViewMode }) => {
   return (
-    <header className="bg-gradient-to-r from-[#7f1d1d] via-[#991b1b] to-[#7f1d1d] text-white shadow-md sticky top-0 z-40 border-b border-red-900/60">
-      <div className="w-full max-w-[1920px] mx-auto px-2.5 sm:px-4 lg:px-6">
-        <div className="flex items-center justify-between h-11 sm:h-12">
+    <header className="bg-gradient-to-r from-[#7f1d1d] via-[#991b1b] to-[#7f1d1d] text-white shadow-xl sticky top-0 z-40 border-b border-red-900/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo & Brand */}
-          <div className="flex items-center space-x-2.5">
+          <div className="flex items-center space-x-3">
             <div className="relative flex items-center justify-center">
               <img
                 src="https://i.imgur.com/VWtF2t5.jpeg"
                 alt="SATV Logo"
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/80 shadow-sm object-cover bg-black"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-white/80 shadow-md object-cover bg-black"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
                 }}
               />
+              <span className="sr-only">SATV</span>
             </div>
             <div>
-              <div className="flex items-center space-x-1.5">
-                <span className="bg-white text-[#991b1b] text-[10px] font-black px-1.5 py-0.2 rounded shadow-sm tracking-wider">
+              <div className="flex items-center gap-2">
+                <span className="bg-white text-[#991b1b] text-xs font-black px-1.5 py-0.5 rounded shadow-sm tracking-wider">
                   SATV
                 </span>
-                <h1 className="text-xs sm:text-sm font-bold tracking-wide text-white truncate">
+                <h1 className="text-sm sm:text-base font-bold tracking-wide text-white drop-shadow-sm truncate">
                   SATV - Vinicius Mendes ®
                 </h1>
               </div>
+              <p className="text-[11px] text-red-200/90 hidden sm:block">
+                Web IPTV &bull; {totalChannels} Canais Disponíveis
+              </p>
             </div>
           </div>
 
-          {/* Seletor de Modo: Grade de Canais vs Guia EPG */}
-          <div className="flex items-center bg-black/40 border border-white/15 rounded-lg p-0.5">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md text-xs font-bold transition-all ${
-                viewMode === 'grid'
-                  ? 'bg-red-600 text-white shadow'
-                  : 'text-slate-300 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Canais</span>
-            </button>
-            <button
-              onClick={() => setViewMode('epg')}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-md text-xs font-bold transition-all ${
-                viewMode === 'epg'
-                  ? 'bg-red-600 text-white shadow'
-                  : 'text-slate-300 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Guia (EPG)</span>
-            </button>
-          </div>
+          {/* Navigation Tabs: Canais vs Guia de Programação (EPG) */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* View Mode Switcher */}
+            <div className="flex items-center p-1 bg-black/40 rounded-xl border border-white/15 shadow-inner">
+              <button
+                id="tab-btn-canais"
+                type="button"
+                data-tv-nav="tab"
+                tabIndex={0}
+                onClick={() => setViewMode('grid')}
+                className={`tv-nav-focus flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer outline-none ${
+                  viewMode === 'grid'
+                    ? 'bg-white text-[#991b1b] shadow-md ring-2 ring-white/70'
+                    : 'text-red-100 hover:text-white hover:bg-white/10'
+                }`}
+                title="Visualizar grade de canais"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Canais</span>
+              </button>
 
-          {/* Quick TV Tip Indicator & Contador */}
-          <div className="flex items-center space-x-2">
-            <div className="hidden lg:flex items-center gap-1.5 bg-black/40 border border-white/10 px-2.5 py-0.5 rounded-full text-[11px] text-red-100">
-              <Tv className="w-3 h-3 text-red-300" />
-              <span>D-Pad: Navegar &bull; OK: Assistir</span>
+              <button
+                id="tab-btn-guia-epg"
+                type="button"
+                data-tv-nav="tab"
+                tabIndex={0}
+                onClick={() => setViewMode('epg')}
+                className={`tv-nav-focus flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer outline-none ${
+                  viewMode === 'epg'
+                    ? 'bg-white text-[#991b1b] shadow-md ring-2 ring-white/70'
+                    : 'text-red-100 hover:text-white hover:bg-white/10'
+                }`}
+                title="Visualizar guia de programação e o que está passando agora"
+              >
+                <CalendarDays className="w-3.5 h-3.5" />
+                <span>Guia (EPG)</span>
+                <span className="ml-0.5 px-1 py-0.2 text-[9px] bg-red-600 text-white rounded font-black tracking-tighter">
+                  NOVO
+                </span>
+              </button>
             </div>
 
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-black/50 text-white border border-white/20">
-              <Info className="w-3 h-3 text-amber-300" />
-              <span>{totalChannels} Canais</span>
-            </span>
+            {/* Clean Indicator for Direct Tab Opening */}
+            <div className="hidden md:flex items-center space-x-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-black/30 text-red-100 border border-white/10 shadow-sm">
+                <ExternalLink className="w-3 h-3 text-red-300" />
+                <span>Abertura Direta</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
