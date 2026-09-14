@@ -215,39 +215,14 @@ export const toHttpsIfPossible = (u?: string): string => {
 };
 
 /**
- * Normaliza URLs de transmissão e embeds web para o formato compatível com autoplay no Smart TV / Mi TV.
- * Converte provedores como rdse (v1.rdse.rest, rdse.buzz) e rdcanais diretamente para o endpoint do embedtv.lat
- * mantendo compatibilidade total e autoplay sem precisar de mouse ou toque.
+ * Normaliza URLs de canais e embeds sem reescrever ou travar em domínios específicos.
+ * Preserva o link exato definido pelo usuário (seja rdcanais.net, embedtv.lat, rdse ou outro),
+ * apenas garantindo o protocolo https para URLs relativas.
  */
 export const normalizeEmbedUrl = (rawUrl?: string): string => {
   if (!rawUrl) return '';
   const url = rawUrl.trim();
   if (!url) return '';
-
-  // Se já for embedtv.lat (ex: alerquina, w7, etc.), apenas garante https
-  if (url.includes('embedtv.lat')) {
-    if (url.startsWith('//')) return 'https:' + url;
-    return url;
-  }
-
-  // Se for stream direto (.m3u8, .ts, etc.), não mexe
-  if (isDirectMediaStream(url)) {
-    return url;
-  }
-
-  // Extrai o slug de canais do rdse (ex: https://v1.rdse.rest/discoveryturbo ou v1.rdse.buzz/bandsp)
-  const rdseMatch = url.match(/(?:https?:\/\/)?(?:[a-z0-9]+\.)?rdse\.[a-z.]+(?:\/canal|\/assistir|\/tv)?\/([a-zA-Z0-9_-]+)/i);
-  if (rdseMatch && rdseMatch[1]) {
-    const slug = rdseMatch[1];
-    return `https://alerquina54105.embedtv.lat/${slug}`;
-  }
-
-  // Extrai o slug de canais do rdcanais (ex: https://rdcanais.net/bandsp, rdcanais.net/canal/bandsp)
-  const rdcanaisMatch = url.match(/rdcanais\.[a-z.]+(?:\/canal|\/assistir|\/tv)?\/([a-zA-Z0-9_-]+)/i);
-  if (rdcanaisMatch && rdcanaisMatch[1]) {
-    const slug = rdcanaisMatch[1];
-    return `https://alerquina54105.embedtv.lat/${slug}`;
-  }
 
   // Garante protocolo https para links que começam com //
   if (url.startsWith('//')) {

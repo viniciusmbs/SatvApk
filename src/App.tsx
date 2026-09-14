@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { Channel, GroupedChannels } from './types';
 import { DEFAULT_PLAYLIST } from './data/playlist';
-import { parseM3U, normalizeEmbedUrl } from './services/m3uParser';
+import { parseM3U, normalizeEmbedUrl, isDirectMediaStream } from './services/m3uParser';
 import { useTvNavigation } from './services/useTvNavigation';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
@@ -58,13 +58,19 @@ export function App() {
     enabled: true,
   });
 
-  // Direct channel navigation for Mi TV Android WebView
+  // Direct channel navigation: direct media streams (.m3u8, .ts) open natively,
+  // while web/embed channels (rdcanais.net, embedtv.lat, rdse, etc.) open in /api/embed-frame
+  // which injects the automatic play script, eliminates ads, and supports TV remote controls.
   const handleSelectChannel = useCallback((channel: Channel) => {
     try {
       sessionStorage.setItem('satv_last_channel', channel.name);
     } catch {}
-    const destinationUrl = normalizeEmbedUrl(channel.url);
-    window.location.href = destinationUrl;
+    const rawUrl = normalizeEmbedUrl(channel.url);
+    if (isDirectMediaStream(rawUrl)) {
+      window.location.href = rawUrl;
+    } else {
+      window.location.href = `/api/embed-frame?url=${encodeURIComponent(rawUrl)}`;
+    }
   }, []);
 
   const handleClearFilters = useCallback(() => {
