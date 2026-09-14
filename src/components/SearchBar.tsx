@@ -6,31 +6,25 @@ interface SearchBarProps {
   setSearchQuery: (query: string) => void;
   categories: string[];
   selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
+  setSelectedCategory: (cat: string) => void;
   filteredCount: number;
 }
 
 const CATEGORY_PRIORITY: Record<string, number> = {
-  'TV ABERTA & REGIONAIS': 1,
-  'TV ABERTA': 1,
-  'CANAL': 2,
-  'DOCUMENTÁRIOS': 3,
-  'DOCUMENTARIOS': 3,
-  'FILMES & SÉRIES': 4,
-  'FILMES E SÉRIES': 4,
-  'ESPORTES & PPV': 5,
+  'CANAL': 1,
+  'DOCUMENTÁRIOS': 2,
+  'FILMES & SÉRIES': 3,
+  'FILMES E SÉRIES': 3,
+  'VARIEDADES': 4,
   'ESPORTES': 5,
   'ESPN': 6,
   'PREMIERE': 7,
   'ESPORTES PPV': 8,
   'HBO': 9,
-  'VARIEDADES': 10,
+  'NOTÍCIAS': 10,
   'INFANTIS': 11,
-  'NOTÍCIAS': 12,
-  'NOTICIAS': 12,
-  'MÚSICA': 13,
-  'MUSICA': 13,
-  'RELIGIOSOS': 14,
+  'MÚSICA': 12,
+  'RELIGIOSOS': 13,
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -50,13 +44,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
   });
 
   return (
-    <div className="bg-[#111726] border-b border-slate-800/80 py-2 shadow-inner">
-      <div className="w-full max-w-[1920px] mx-auto px-2.5 sm:px-4 lg:px-6 space-y-2">
+    <div className="bg-[#10121a] border-b border-white/5 py-3 shadow-inner">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2.5">
         {/* Search input bar */}
-        <div className="flex flex-col sm:flex-row gap-2 items-center justify-between">
-          <div className="relative w-full max-w-lg">
-            <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
-              <Search className="h-3.5 w-3.5" />
+        <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div className="relative w-full max-w-xl">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <Search className="h-4 w-4" />
             </div>
             <input
               id="channel-search-input"
@@ -64,44 +58,45 @@ const SearchBar: React.FC<SearchBarProps> = ({
               tabIndex={1}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar canal ou categoria (ex: ESPN, Globo, Telecine)..."
-              className="w-full bg-[#1b2333] text-gray-100 placeholder-slate-400 text-xs sm:text-sm rounded-lg pl-8 pr-8 py-1.5 border border-slate-700/70 focus:outline-none focus:ring-2 focus:ring-red-500/80 focus:border-red-500 transition shadow-sm"
+              placeholder="Buscar canal por nome ou categoria (ex: ESPN, Globo, Telecine)..."
+              className="w-full bg-[#171a23] text-gray-100 placeholder-slate-400 text-sm rounded-xl pl-10 pr-10 py-2 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500/80 focus:border-red-500 transition shadow-sm"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
                 tabIndex={-1}
-                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-white cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white cursor-pointer"
                 title="Limpar busca"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             )}
           </div>
 
-          <div className="text-[11px] text-slate-400 font-medium">
-            Exibindo <span className="text-red-400 font-bold">{filteredCount}</span> canais
+          {/* Results Badge */}
+          <div className="text-xs text-slate-400 font-medium whitespace-nowrap self-end sm:self-center">
+            Mostrando <span className="text-red-400 font-semibold">{filteredCount}</span> canais
           </div>
         </div>
 
-        {/* Tabulated Category Pills - Compact & Fast Scroll */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 no-scrollbar">
+        {/* Tabulated Category Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
           {/* Category: Todos */}
           <button
             data-tv-nav="category"
             data-category-index={0}
             tabIndex={0}
             onClick={() => setSelectedCategory('TODOS')}
-            className={`tv-nav-focus px-2.5 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
+            className={`tv-nav-focus px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
               selectedCategory === 'TODOS'
-                ? 'bg-red-600 text-white shadow-sm ring-1 ring-red-400'
-                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/60'
+                ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
+                : 'bg-[#171a23] hover:bg-[#202533] text-slate-300 hover:text-white border border-white/10'
             }`}
           >
             Todos
           </button>
 
-          {/* Categories starting with CANAL, DOCUMENTÁRIOS, etc. */}
+          {/* Categories starting with DOCUMENTÁRIOS, ESPORTES, etc. */}
           {sortedCategories.map((category, idx) => {
             const catIndex = idx + 1;
             const isSelected = selectedCategory === category;
@@ -112,10 +107,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 data-category-index={catIndex}
                 tabIndex={0}
                 onClick={() => setSelectedCategory(category)}
-                className={`tv-nav-focus px-2.5 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
+                className={`tv-nav-focus px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
                   isSelected
-                    ? 'bg-red-600 text-white shadow-sm ring-1 ring-red-400'
-                    : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/60'
+                    ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
+                    : 'bg-[#171a23] hover:bg-[#202533] text-slate-300 hover:text-white border border-white/10'
                 }`}
               >
                 {category}

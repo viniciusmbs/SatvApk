@@ -96,7 +96,7 @@ const EpgGrid: React.FC<EpgGridProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
       {/* Guia status header banner */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-[#131b2e] border border-slate-700/60 rounded-xl px-4 py-3 text-xs text-slate-300">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-[#131620] border border-white/10 rounded-xl px-4 py-3 text-xs text-slate-300 shadow-md">
         <div className="flex items-center gap-2">
           <span className="flex h-2.5 w-2.5 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
@@ -184,15 +184,15 @@ const EpgGrid: React.FC<EpgGridProps> = ({
                     data-channel-index={currentIndex}
                     onClick={handleRowClick}
                     onKeyDown={handleKeyDown}
-                    className="group tv-card-focus relative bg-[#151c2c] hover:bg-[#1e2738] focus:bg-[#1e2738] border border-slate-700/60 hover:border-red-500 focus:border-red-500 rounded-xl p-3 sm:p-3.5 flex flex-col md:flex-row items-stretch md:items-center gap-3.5 transition-all duration-150 cursor-pointer outline-none select-none shadow-md"
+                    className="group tv-card-focus relative bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1b1f2c] border border-white/10 hover:border-red-500 focus:border-red-500 rounded-xl p-3 sm:p-3.5 flex flex-col md:flex-row items-stretch md:items-center gap-3.5 transition-all duration-150 cursor-pointer outline-none select-none shadow-md"
                   >
                     {/* Channel Column (Logo & Name) */}
                     <div className="flex items-center gap-3 w-full md:w-56 shrink-0">
-                      <div className="w-14 h-12 sm:w-16 sm:h-14 bg-slate-900/90 rounded-lg p-1.5 border border-slate-800 group-hover:border-slate-700 flex items-center justify-center shrink-0">
+                      <div className="w-14 h-12 sm:w-16 sm:h-14 channel-logo-cradle rounded-xl p-1.5 flex items-center justify-center shrink-0">
                         <img
                           src={logoSrc}
                           alt={`${channel.name} logo`}
-                          className="max-w-full max-h-full object-contain"
+                          className="max-w-full max-h-full object-contain channel-logo-img"
                           loading="lazy"
                           referrerPolicy="no-referrer"
                           onError={(e) => {

@@ -118,23 +118,23 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-gray-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
-      {/* Clean Minimal App Header with Canais / Guia EPG Tabs */}
-      <Header
-        totalChannels={channels.length}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-      />
-
-      {/* Tabulated Search & Category Filter Bar */}
-      <SearchBar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        categories={categories}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        filteredCount={filteredChannels.length}
-      />
+    <div className="min-h-screen bg-[#0c0e14] text-gray-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
+      {/* Sticky Top Navigation & Filter Bar */}
+      <div className="sticky top-0 z-40 shadow-xl">
+        <Header
+          totalChannels={channels.length}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+        />
+        <SearchBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          categories={categories}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          filteredCount={filteredChannels.length}
+        />
+      </div>
 
       {/* Main View: Canais (Grid padrão) ou Guia (EPG com programação ao vivo) */}
       <main className="flex-1">
@@ -154,7 +154,7 @@ export default function App() {
       </main>
 
       {/* Clean TV Footer */}
-      <footer className="bg-[#090d16] border-t border-slate-900 py-5 text-center text-xs text-slate-500 space-y-1">
+      <footer className="bg-[#08090d] border-t border-white/5 py-5 text-center text-xs text-slate-500 space-y-1">
         <p className="font-semibold text-slate-400">
           SATV &bull; Vinicius Mendes ® &copy; {new Date().getFullYear()}
         </p>

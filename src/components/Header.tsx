@@ -10,16 +10,16 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ totalChannels, viewMode, setViewMode }) => {
   return (
-    <header className="bg-gradient-to-r from-[#7f1d1d] via-[#991b1b] to-[#7f1d1d] text-white shadow-xl sticky top-0 z-40 border-b border-red-900/50">
+    <header className="bg-gradient-to-r from-[#7f1d1d] via-[#991b1b] to-[#7f1d1d] text-white shadow-md border-b border-red-900/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="flex items-center justify-between h-12 sm:h-13">
           {/* Logo & Brand */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2.5">
             <div className="relative flex items-center justify-center">
               <img
                 src="https://i.imgur.com/VWtF2t5.jpeg"
                 alt="SATV Logo"
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-white/80 shadow-md object-cover bg-black"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white/80 shadow-md object-cover bg-black"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
                 }}
@@ -27,15 +27,15 @@ const Header: React.FC<HeaderProps> = ({ totalChannels, viewMode, setViewMode })
               <span className="sr-only">SATV</span>
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="bg-white text-[#991b1b] text-xs font-black px-1.5 py-0.5 rounded shadow-sm tracking-wider">
+              <div className="flex items-center gap-1.5">
+                <span className="bg-white text-[#991b1b] text-[10px] font-black px-1.5 py-0.2 rounded shadow-sm tracking-wider">
                   SATV
                 </span>
-                <h1 className="text-sm sm:text-base font-bold tracking-wide text-white drop-shadow-sm truncate">
+                <h1 className="text-xs sm:text-sm font-bold tracking-wide text-white drop-shadow-sm truncate">
                   SATV - Vinicius Mendes ®
                 </h1>
               </div>
-              <p className="text-[11px] text-red-200/90 hidden sm:block">
+              <p className="text-[10px] text-red-200/90 hidden sm:block">
                 Web IPTV &bull; {totalChannels} Canais Disponíveis
               </p>
             </div>
@@ -73,12 +73,13 @@ const Header: React.FC<HeaderProps> = ({ totalChannels, viewMode, setViewMode })
                     ? 'bg-white text-[#991b1b] shadow-md ring-2 ring-white/70'
                     : 'text-red-100 hover:text-white hover:bg-white/10'
                 }`}
-                title="Visualizar guia de programação e o que está passando agora"
+                title="Visualizar guia de programação (ou aperte o botão Menu / ☰ no controle)"
               >
                 <CalendarDays className="w-3.5 h-3.5" />
                 <span>Guia (EPG)</span>
-                <span className="ml-0.5 px-1 py-0.2 text-[9px] bg-red-600 text-white rounded font-black tracking-tighter">
-                  NOVO
+                <span className="ml-1 px-1.5 py-0.5 text-[9px] bg-red-600/90 text-white rounded font-bold tracking-tight inline-flex items-center gap-1 shadow-sm">
+                  <span>☰</span>
+                  <span className="hidden sm:inline">Menu</span>
                 </span>
               </button>
             </div>

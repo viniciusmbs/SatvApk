@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Play, Tv } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { Channel } from '../types';
-import { normalizeEmbedUrl } from '../services/m3uParser';
+import { getChannelLogo } from '../data/channelLogos';
 
 interface ChannelCardProps {
   channel: Channel;
   index: number;
-  onSelect: (channel: Channel) => void;
+  onSelect?: (channel: Channel) => void;
 }
 
 const ChannelCard: React.FC<ChannelCardProps> = ({
@@ -16,77 +16,70 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
 }) => {
   const [imgError, setImgError] = useState(false);
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    try {
-      sessionStorage.setItem('satv_last_channel', channel.name);
-    } catch {}
-    onSelect(channel);
-  };
+  // Fallback to official high-quality logo mapping
+  const fallbackLogo = getChannelLogo(channel.name);
+  const logoSrc = imgError || !channel.logo ? fallbackLogo : channel.logo;
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      try {
-        sessionStorage.setItem('satv_last_channel', channel.name);
-      } catch {}
+  const handleOpenChannel = () => {
+    window.open(channel.url, '_blank', 'noopener,noreferrer');
+    if (onSelect) {
       onSelect(channel);
     }
   };
 
-  const destinationHref = normalizeEmbedUrl(channel.url);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Standard Enter (13), Space (32), Android DPAD_CENTER (23), and Android KEYCODE_ENTER (66)
+    const isActivationKey =
+      e.key === 'Enter' ||
+      e.key === ' ' ||
+      e.keyCode === 13 ||
+      e.keyCode === 23 ||
+      e.keyCode === 66;
+
+    if (isActivationKey) {
+      e.preventDefault();
+      handleOpenChannel();
+    }
+  };
 
   return (
     <a
-      href={destinationHref}
+      id={`channel-card-${channel.id || encodeURIComponent(channel.name)}`}
+      href={channel.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      tabIndex={0}
+      role="button"
+      aria-label={`Canal ${channel.name} - Abrir em nova aba`}
       data-tv-card="true"
       data-channel-name={channel.name}
-      data-channel-index={index + 1}
-      tabIndex={0}
-      onClick={handleClick}
+      data-channel-index={index}
+      onClick={(e) => {
+        e.preventDefault();
+        handleOpenChannel();
+      }}
       onKeyDown={handleKeyDown}
-      className="tv-card-focus group relative flex flex-col items-center justify-between p-1.5 sm:p-2 rounded-xl bg-[#141a29] hover:bg-[#1b2438] border border-slate-800 hover:border-red-500/80 transition-all duration-150 cursor-pointer shadow-md hover:shadow-red-950/20 select-none outline-none focus:outline-none no-underline text-inherit"
-      title={`Assistir ${channel.name} (${channel.group})`}
+      className="group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1b1f2c] border border-white/10 hover:border-red-500 focus:border-red-500 rounded-xl p-2 flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-md"
     >
-      {/* Logo Container - Compact & Lightweight for TV Decoders */}
-      <div className="w-full aspect-[16/10] rounded-lg bg-black/60 border border-slate-800/70 flex items-center justify-center p-1 my-1 overflow-hidden relative group-hover:border-slate-600 transition-colors">
-        {!imgError && channel.logo ? (
-          <img
-            src={channel.logo}
-            alt={channel.name}
-            className="max-h-full max-w-full object-contain filter drop-shadow-sm group-hover:scale-105 group-focus:scale-105 transition-transform duration-150"
-            onError={() => setImgError(true)}
-            loading="lazy"
-            decoding="async"
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-slate-500 px-1">
-            <Tv className="w-5 h-5 mb-0.5 text-slate-500 group-hover:text-red-400 transition-colors" />
-            <span className="text-[8.5px] font-bold tracking-tight uppercase text-slate-400 max-w-[95%] truncate text-center">
-              {channel.name}
-            </span>
-          </div>
-        )}
-
-        {/* Play Overlay on Hover / Focus */}
-        <div className="absolute inset-0 bg-red-600/25 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-          <div className="w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center shadow-md transform scale-90 group-hover:scale-100 group-focus:scale-105 transition-transform">
-            <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-          </div>
-        </div>
+      {/* Square-proportioned Channel Logo Box with contrasting cradle */}
+      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center p-2 channel-logo-cradle rounded-lg overflow-hidden transition">
+        <img
+          src={logoSrc}
+          alt={`${channel.name} logo`}
+          className="max-w-full max-h-full object-contain channel-logo-img"
+          onError={() => setImgError(true)}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+        />
       </div>
 
-      {/* Channel Information - Compact Typography */}
-      <div className="w-full text-center space-y-0.5">
-        <h4 className="text-[10.5px] sm:text-[11.5px] font-bold text-gray-200 group-hover:text-white group-focus:text-white truncate px-0.5 leading-tight">
-          {channel.name}
-        </h4>
-        <div className="flex items-center justify-center">
-          <span className="text-[8px] sm:text-[8.5px] font-semibold text-slate-400 group-hover:text-slate-300 group-focus:text-red-200 truncate uppercase tracking-wider">
-            {channel.group}
-          </span>
-        </div>
-      </div>
+      {/* Channel Name */}
+      <p
+        className="text-gray-100 text-[10px] sm:text-[11px] font-bold truncate w-full leading-tight group-hover:text-red-400 group-focus:text-red-400 transition-colors pt-1 px-0.5"
+        title={channel.name}
+      >
+        {channel.name}
+      </p>
     </a>
   );
 };

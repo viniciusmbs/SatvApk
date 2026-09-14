@@ -10,26 +10,20 @@ interface ChannelGridProps {
 }
 
 const CATEGORY_ORDER: Record<string, number> = {
-  'TV ABERTA & REGIONAIS': 1,
-  'TV ABERTA': 1,
-  'CANAL': 2,
-  'DOCUMENTÁRIOS': 3,
-  'DOCUMENTARIOS': 3,
-  'FILMES & SÉRIES': 4,
-  'FILMES E SÉRIES': 4,
-  'ESPORTES & PPV': 5,
+  'CANAL': 1,
+  'DOCUMENTÁRIOS': 2,
+  'FILMES & SÉRIES': 3,
+  'FILMES E SÉRIES': 3,
+  'VARIEDADES': 4,
   'ESPORTES': 5,
   'ESPN': 6,
   'PREMIERE': 7,
   'ESPORTES PPV': 8,
   'HBO': 9,
-  'VARIEDADES': 10,
+  'NOTÍCIAS': 10,
   'INFANTIS': 11,
-  'NOTÍCIAS': 12,
-  'NOTICIAS': 12,
-  'MÚSICA': 13,
-  'MUSICA': 13,
-  'RELIGIOSOS': 14,
+  'MÚSICA': 12,
+  'RELIGIOSOS': 13,
 };
 
 const ChannelGrid: React.FC<ChannelGridProps> = ({
@@ -48,15 +42,10 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
     return a.localeCompare(b, 'pt-BR');
   });
 
-  const totalVisible = Object.values(groupedChannels).reduce(
-    (acc: number, list: Channel[]) => acc + (list ? list.length : 0),
-    0
-  );
-
-  if (totalVisible === 0) {
+  if (sortedGroupNames.length === 0) {
     return (
-      <div className="text-center py-20 px-4">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-center">
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
+        <div className="w-16 h-16 bg-slate-800/80 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-500 border border-slate-700/60">
           <Tv className="w-8 h-8 text-red-400" />
         </div>
         <h3 className="text-lg font-semibold text-gray-200 mb-1">
@@ -67,39 +56,40 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
         </p>
         <button
           onClick={onClearFilters}
-          className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-700 text-white transition shadow-md cursor-pointer focus:ring-2 focus:ring-red-400 outline-none"
+          className="px-4 py-2 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-700 text-white transition shadow-md cursor-pointer"
         >
-          Limpar Filtros e Ver Todos os Canais
+          Limpar Filtros e Ver Todos
         </button>
       </div>
     );
   }
 
+  // Calculate continuous sequential index across all visible channels
   let globalIndex = 0;
 
   return (
-    <div className="w-full max-w-[1920px] mx-auto px-2.5 sm:px-4 lg:px-6 py-4 space-y-6 sm:space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 py-4 space-y-6">
       {sortedGroupNames.map((groupName) => {
         const channels = groupedChannels[groupName];
         if (!channels || channels.length === 0) return null;
 
         return (
-          <section key={groupName} className="space-y-2 sm:space-y-2.5">
-            {/* Category Header - Sleek & Compact */}
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5">
+          <section key={groupName} className="space-y-2.5">
+            {/* Category Header */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
               <div className="flex items-center space-x-2">
-                <span className="w-1.5 h-3.5 bg-red-600 rounded-full" />
+                <span className="w-2 h-2 rounded-full bg-red-500 inline-block shadow-sm shadow-red-500/50" />
                 <h2 className="text-xs sm:text-sm font-bold text-gray-100 tracking-wide uppercase">
                   {groupName}
                 </h2>
-                <span className="text-[10px] text-slate-400 font-medium px-2 py-0.2 rounded-full bg-slate-800/80 border border-slate-700/50">
+                <span className="text-[11px] text-slate-400 font-medium px-2 py-0.5 rounded-full bg-[#171a23] border border-white/5">
                   {channels.length} canais
                 </span>
               </div>
             </div>
 
-            {/* Channels Grid - Exatamente 8 colunas no Fire TV e telas widescreen */}
-            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-8 xl:grid-cols-8 gap-2">
+            {/* Channels Grid (Square Tiles) */}
+            <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-2 sm:gap-2.5">
               {channels.map((channel) => {
                 const currentIndex = globalIndex++;
                 return (
