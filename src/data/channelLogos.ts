@@ -233,7 +233,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'HISTORY 2': `${TV_LOGO_US}history-channel-us.png`,
   'NATIONAL GEOGRAPHIC': `${TV_LOGO_US}national-geographic-us.png`,
   'NATGEO WILD': `https://i.imgur.com/esyuVVc.png`,
-  'Red Bull TV': `blob:https://imgur.com/4309cc28-da2f-4337-a523-ce613a333259`,  
+  'Red Bull TV': `blob:https://imgur.com/4309cc28-da2f-4337-a523-ce613a333259`,
   'Fish TV': `https://i.imgur.com/bbwaRva.png`,
   'Dog TV': `https://dr56wvhu2c8zo.cloudfront.net/dogtv6/assets/b8817023-ccd9-4ca5-b06d-26e554915561.png`,
   'TLC': `${TV_LOGO_US}tlc-us.png`,
