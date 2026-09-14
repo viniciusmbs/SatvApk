@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Play, Tv } from 'lucide-react';
 import { Channel } from '../types';
-import { isDirectMediaStream, normalizeEmbedUrl } from '../services/m3uParser';
+import { normalizeEmbedUrl } from '../services/m3uParser';
 
 interface ChannelCardProps {
   channel: Channel;
@@ -34,10 +34,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
     }
   };
 
-  const normalized = normalizeEmbedUrl(channel.url);
-  const destinationHref = isDirectMediaStream(normalized)
-    ? normalized
-    : `/api/embed-frame?url=${encodeURIComponent(normalized)}`;
+  const destinationHref = normalizeEmbedUrl(channel.url);
 
   return (
     <a
