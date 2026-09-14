@@ -215,34 +215,12 @@ export const toHttpsIfPossible = (u?: string): string => {
 };
 
 /**
- * Converts third-party web embeds (such as v1.rdse.buzz, w1.rdse.buzz, rdcanais)
- * into direct embedtv.lat autoplay links so that Smart TVs start playing immediately
- * without requiring mouse clicks or user interaction.
+ * Retorna a URL limpa diretamente como cadastrada na playlist,
+ * sem forçar redirecionamento para o domínio antigo da Alerquina.
  */
 export const normalizeEmbedUrl = (rawUrl?: string): string => {
   if (!rawUrl) return '';
-  const url = rawUrl.trim();
-
-  // If already embedtv.lat, return as is
-  if (url.includes('embedtv.lat')) {
-    return url;
-  }
-
-  // Handle rdse.buzz (e.g., https://v1.rdse.buzz/bandsp -> https://alerquina54105.embedtv.lat/bandsp)
-  const rdseMatch = url.match(/(?:https?:\/\/)?(?:[a-z0-9]+\.)?rdse\.buzz\/([a-zA-Z0-9_-]+)/i);
-  if (rdseMatch && rdseMatch[1]) {
-    const slug = rdseMatch[1];
-    return `https://alerquina54105.embedtv.lat/${slug}`;
-  }
-
-  // Handle rdcanais (e.g., rdcanais.net/canal/bandsp or rdcanais.link/slug)
-  const rdcanaisMatch = url.match(/rdcanais\.[a-z.]+(?:\/canal|\/assistir|\/tv)?\/([a-zA-Z0-9_-]+)/i);
-  if (rdcanaisMatch && rdcanaisMatch[1]) {
-    const slug = rdcanaisMatch[1];
-    return `https://alerquina54105.embedtv.lat/${slug}`;
-  }
-
-  return url;
+  return rawUrl.trim();
 };
 
 /**
@@ -306,11 +284,6 @@ export const getAutoplayUrl = (rawUrl?: string): string => {
 
 /**
  * Returns the optimized player URL for the internal FullscreenViewer iframe.
- * Uses /api/embed-frame proxy so that:
- * 1. Anti-sandbox scripts in embed providers are stripped/neutralized.
- * 2. Ad overlays, popunders (aclib, runPop) that cause white screens are stripped.
- * 3. Pure black background and hardware acceleration styles are enforced.
- * 4. Autoplay triggers and center play buttons are automatically pressed.
  */
 export const getViewerEmbedUrl = (rawUrl?: string, mode: 'server' | 'direct' = 'server'): string => {
   if (!rawUrl) return '';
