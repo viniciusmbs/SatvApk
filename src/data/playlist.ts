@@ -326,7 +326,7 @@ https://rdcanais.net/bandsp
 https://rdcanais.net/bandsp
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",INTEGRAÇÃO JUIZ DE FORA 
-http://up.kiwi/351921603109/34939156/296738
+http://tjtor8411.com:80/Osiel123/Felicidade321/72068.ts
 
 #EXTINF:-1 group-title="TV ABERTA & REGIONAIS",Globo Minas
 https://rdcanais.net/globomg
