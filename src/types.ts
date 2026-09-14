@@ -5,7 +5,6 @@ export interface Channel {
   group: string;
   url: string;
   originalUrl?: string;
-  mirrors?: string[];
 }
 
 export interface GroupedChannels {

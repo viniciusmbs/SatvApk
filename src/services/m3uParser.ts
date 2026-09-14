@@ -215,127 +215,6 @@ export const toHttpsIfPossible = (u?: string): string => {
 };
 
 /**
- * Extrai o identificador/slug do canal para links web (Rede Canais, Alecrim/EmbedTV, RDSE).
- */
-export const extractChannelSlug = (rawUrl?: string): string | null => {
-  if (!rawUrl) return null;
-  const url = rawUrl.trim();
-  if (!url || isDirectMediaStream(url)) return null;
-
-  try {
-    const clean = url.split('?')[0].replace(/\/+$/, '');
-
-    // Procura por padrões conhecidos: /animalplanet, /canal/animalplanet, etc.
-    const match = clean.match(
-      /(?:embedtv\.lat|rdcanais\.[a-z.]+|rdse\.[a-z.]+)(?:\/canal|\/assistir|\/tv)?\/([a-zA-Z0-9_-]+)/i
-    );
-    if (match && match[1]) {
-      return match[1].toLowerCase();
-    }
-
-    // Se for URL válida terminando com slug simples
-    if (clean.includes('://')) {
-      const parts = new URL(clean).pathname.split('/').filter(Boolean);
-      if (parts.length > 0) {
-        const last = parts[parts.length - 1];
-        if (last && !last.includes('.')) {
-          return last.toLowerCase();
-        }
-      }
-    }
-  } catch {
-    // fallback
-  }
-
-  return null;
-};
-
-/**
- * Retorna os 3 links candidatos ordenados por prioridade e capacidade de autoplay:
- * 1. Alecrim (alerquina54105.embedtv.lat) - autoplay prioritário
- * 2. EmbedTV W7 (w7.embedtv.lat) - espelho reserva com autoplay
- * 3. Rede Canais (rdcanais.net) - terceiro espelho reserva
- */
-export const getChannelMirrors = (rawUrl?: string): string[] => {
-  if (!rawUrl) return [];
-  const url = rawUrl.trim();
-  if (!url) return [];
-
-  // Se for stream direto (.ts, .m3u8), só existe ele mesmo
-  if (isDirectMediaStream(url)) {
-    return [url];
-  }
-
-  // Se o usuário colocou múltiplos links separados por '|'
-  if (url.includes('|')) {
-    return url
-      .split('|')
-      .map((u) => normalizeEmbedUrl(u))
-      .filter(Boolean);
-  }
-
-  const slug = extractChannelSlug(url);
-  if (!slug) {
-    return [normalizeEmbedUrl(url)];
-  }
-
-  const mirrors: string[] = [
-    `https://alerquina54105.embedtv.lat/${slug}`,
-    `https://w7.embedtv.lat/${slug}`,
-    url.includes('rdcanais') ? normalizeEmbedUrl(url) : `https://rdcanais.net/${slug}`,
-  ];
-
-  // Garante que a URL original do usuário esteja na lista
-  const normalizedOriginal = normalizeEmbedUrl(url);
-  if (!mirrors.includes(normalizedOriginal)) {
-    mirrors.push(normalizedOriginal);
-  }
-
-  return Array.from(new Set(mirrors));
-};
-
-/**
- * Testa se um servidor/espelho está online com timeout curto.
- * Usa fetch em modo no-cors. Se o domínio estiver offline, sem DNS ou fora do ar,
- * a Promise falha rapidamente (< 200ms) ou aborta no timeout.
- */
-export const isServerOnline = async (url: string, timeoutMs = 1200): Promise<boolean> => {
-  if (!url) return false;
-  if (typeof window === 'undefined') return true;
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    await fetch(url, {
-      method: 'HEAD',
-      mode: 'no-cors',
-      cache: 'no-store',
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
-    return true;
-  } catch {
-    clearTimeout(timer);
-    // Se HEAD for recusado pelo servidor de borda, tenta GET rápido
-    try {
-      const getCtrl = new AbortController();
-      const getTimer = setTimeout(() => getCtrl.abort(), 800);
-      await fetch(url, {
-        method: 'GET',
-        mode: 'no-cors',
-        cache: 'no-store',
-        signal: getCtrl.signal,
-      });
-      clearTimeout(getTimer);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-};
-
-/**
  * Normaliza URLs de canais e embeds sem reescrever ou travar em domínios específicos.
  * Preserva o link exato definido pelo usuário (seja rdcanais.net, embedtv.lat, rdse ou outro),
  * apenas garantindo o protocolo https para URLs relativas.
@@ -485,7 +364,6 @@ export const parseM3U = (m3uContent: string, customLogos?: CustomLogosMap): Chan
           || getChannelLogo(name, customLogos);
 
         const effectiveUrl = normalizeEmbedUrl(urlLine);
-        const mirrors = getChannelMirrors(urlLine);
 
         const channel: Channel = {
           id: (idMatch && idMatch[1]) ? idMatch[1] : `ch-${channels.length + 1}`,
@@ -494,7 +372,6 @@ export const parseM3U = (m3uContent: string, customLogos?: CustomLogosMap): Chan
           group: finalGroup,
           url: effectiveUrl,
           originalUrl: urlLine,
-          mirrors: mirrors,
         };
 
         channels.push(channel);
