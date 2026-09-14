@@ -87,7 +87,7 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'TV DIARIO': TV_DIARIO_SVG,
   'TV JUSTIÇA': TV_JUSTICA_SVG,
   'TV JUSTICA': TV_JUSTICA_SVG,
-
+  'SBT MG ALTEROSA': `${TV_LOGO_BR}sbt-br.png`,
   // ESPORTES & PPV
   'SPORTV': `${TV_LOGO_BR}sportv-br.png`,
   'SPORTTV': `${TV_LOGO_BR}sportv-br.png`,
