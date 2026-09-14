@@ -20,9 +20,8 @@ async function startServer() {
     }
 
     try {
-      // 1. Fetch initial upstream page with 10s timeout
+      // 1. Fetch initial upstream page
       const upstream = await fetch(targetUrl, {
-        signal: AbortSignal.timeout(10000),
         headers: {
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
@@ -48,7 +47,6 @@ async function startServer() {
         try {
           const innerUrl = new URL(rawInner, targetUrl).toString();
           const innerUpstream = await fetch(innerUrl, {
-            signal: AbortSignal.timeout(8000),
             headers: {
               'User-Agent':
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
@@ -57,12 +55,7 @@ async function startServer() {
           });
           if (innerUpstream.ok) {
             const innerHtml = await innerUpstream.text();
-            if (
-              innerHtml.includes('<video') ||
-              innerHtml.includes('Clappr') ||
-              innerHtml.includes('player') ||
-              innerHtml.includes('jwplayer')
-            ) {
+            if (innerHtml.includes('<video') || innerHtml.includes('Clappr') || innerHtml.includes('player')) {
               html = innerHtml;
               currentOrigin = new URL(innerUrl).origin;
             }
@@ -72,55 +65,20 @@ async function startServer() {
         }
       }
 
-      // 3. Strip ad popups, popunders (aclib, runPop) that cause white screens
-      html = html.replace(/<script[^>]*src="[^"]*acscdn\.com[^"]*"[^>]*><\/script>/gi, '');
-      html = html.replace(/<script[^>]*src="[^"]*adcash[^"]*"[^>]*><\/script>/gi, '');
-      html = html.replace(/<script[^>]*src="[^"]*popads[^"]*"[^>]*><\/script>/gi, '');
-      html = html.replace(/aclib\s*\.\s*runPop\s*\([^)]*\);?/gi, '');
-
-      // 4. Neutralize all sandbox checking routines in upstream scripts
+      // 3. Neutralize all sandbox checking routines in upstream scripts
       html = html.replace(
-        /function\s+detectSandbox\s*\([^)]*\{[\s\S]*?\}/gi,
+        /function\s+detectSandbox\s*\([^)]*\)\s*\{[\s\S]*?return\s+false;\s*\}/gi,
         'function detectSandbox() { return false; }'
       );
       html = html.replace(/if\s*\(\s*detectSandbox\s*\(\s*\)\s*\)/gi, 'if (false)');
-      html = html.replace(
-        /function\s+sbChecker\s*\([^)]*\{[\s\S]*?\}/gi,
-        'function sbChecker() { return false; }'
-      );
+      html = html.replace(/function\s+sbChecker\s*\([^)]*\)\s*\{[\s\S]*?return\s+false;\s*\}/gi, 'function sbChecker() { return false; }');
       html = html.replace(/if\s*\(\s*sbChecker\s*\(\s*\)\s*\)/gi, 'if (false)');
 
-      // 5. Inject auto-play enforcer, black background, remote controls & hardware acceleration
+      // 4. Inject auto-play enforcer & sandbox neutralizer script
       const injectedTags = `
         <base href="${currentOrigin}/">
         <style>
-          html, body {
-            background-color: #000000 !important;
-            color: #ffffff !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            overflow: hidden !important;
-          }
-          video, .player_screen, #video, .player, [class*="player"] {
-            background-color: #000000 !important;
-            transform: translateZ(0) !important;
-            -webkit-transform: translateZ(0) !important;
-            -webkit-backface-visibility: hidden !important;
-            backface-visibility: hidden !important;
-          }
-          iframe {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            border: none !important;
-            z-index: 10 !important;
-            background: #000000 !important;
-          }
-          #sandbox_detect, .sandbox-banner, [id*="sandbox"], #sb-message, div[class*="popup"], div[id*="popup"] {
+          #sandbox_detect, .sandbox-banner, [id*="sandbox"], #sb-message {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
@@ -128,103 +86,20 @@ async function startServer() {
             width: 0 !important;
             height: 0 !important;
           }
-          #satv-back-btn {
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            z-index: 2147483647;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(15, 23, 42, 0.88);
-            color: #ffffff;
-            border: 1.5px solid rgba(239, 68, 68, 0.8);
-            border-radius: 12px;
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            backdrop-filter: blur(8px);
-            transition: opacity 0.4s ease, transform 0.15s ease;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
-            user-select: none;
-            outline: none;
-          }
-          #satv-back-btn:hover, #satv-back-btn:focus {
-            background: #ef4444;
-            transform: scale(1.05);
-            border-color: #ffffff;
-          }
         </style>
-
-        <div id="satv-back-btn" tabindex="0" role="button" aria-label="Voltar para a lista de canais">
-          <span style="color:#ef4444;font-size:16px;font-weight:bold;line-height:1;">&#8592;</span>
-          <span>Voltar aos Canais</span>
-        </div>
-
         <script>
           // Neutralize sandbox check globals
           window.detectSandbox = function() { return false; };
           window.sbChecker = function() { return false; };
-          window.open = function() { return null; }; // block ad popunders
           try {
             Object.defineProperty(window, 'detectSandbox', { value: function() { return false; }, writable: false });
             Object.defineProperty(window, 'sbChecker', { value: function() { return false; }, writable: false });
           } catch (e) {}
 
-          // Back button logic with idle auto-hide and Remote Control Back button support
-          (function() {
-            var backBtn = document.getElementById('satv-back-btn');
-            function goBack() {
-              if (window.history.length > 1) {
-                window.history.back();
-              } else {
-                window.location.href = '/';
-              }
-            }
-
-            if (backBtn) {
-              backBtn.addEventListener('click', goBack);
-              backBtn.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  goBack();
-                }
-              });
-            }
-
-            var hideTimer = null;
-            function showBackButton() {
-              if (!backBtn) return;
-              backBtn.style.opacity = '1';
-              backBtn.style.pointerEvents = 'auto';
-              clearTimeout(hideTimer);
-              hideTimer = setTimeout(function() {
-                backBtn.style.opacity = '0';
-                backBtn.style.pointerEvents = 'none';
-              }, 4500);
-            }
-
-            showBackButton();
-            ['mousemove', 'keydown', 'touchstart'].forEach(function(evt) {
-              window.addEventListener(evt, showBackButton, { passive: true });
-            });
-
-            // Remote control back keys (Escape, Backspace, Android Back 4, Tizen 10009)
-            window.addEventListener('keydown', function(e) {
-              var code = e.keyCode || e.which;
-              if (code === 27 || code === 8 || code === 4 || code === 10009 || e.key === 'Escape' || e.key === 'Backspace') {
-                e.preventDefault();
-                goBack();
-              }
-            });
-          })();
-
-          // Auto-play trigger: continuously monitor and start video playback on Rede Canais, EmbedTV, and all sources
+          // Auto-play trigger: continuously monitor and start video playback
           (function() {
             var attemptCount = 0;
-            var maxAttempts = 80; // Try for up to 40 seconds
+            var maxAttempts = 60; // Try for up to 30 seconds
             var playInterval = setInterval(function() {
               attemptCount++;
               if (attemptCount > maxAttempts) {
@@ -233,40 +108,20 @@ async function startServer() {
               }
 
               // 1. Click center play button or play-pause button if present
-              var playButtons = [
-                '.player-poster',
-                '[data-poster]',
-                'button[data-playpause]',
-                '[data-player]',
-                '.media-control-button',
-                '#center-play-btn',
-                '.center-play-btn',
-                '.vjs-big-play-button',
-                '.jw-display-icon-container',
-                '.jw-icon-playback',
-                '[aria-label="Play"]',
-                '[aria-label="Reproduzir"]',
-                '.play-btn',
-                '#play-button',
-                '.play-button',
-                'div[style*="z-index: 2147483647"]',
-                'div[style*="z-index:2147483647"]'
-              ];
-
-              for (var b = 0; b < playButtons.length; b++) {
-                var btn = document.querySelector(playButtons[b]);
-                if (btn && btn.offsetParent !== null) {
-                  try { btn.click(); } catch(e) {}
-                }
+              var centerBtn = document.getElementById('center-play-btn') || 
+                              document.querySelector('.center-play-btn') ||
+                              document.querySelector('[aria-label="Play"]') ||
+                              document.querySelector('.play-btn') ||
+                              document.querySelector('.vjs-big-play-button');
+              if (centerBtn && centerBtn.offsetParent !== null) {
+                try { centerBtn.click(); } catch(e) {}
               }
 
-              // 2. Play all video elements directly with hardware acceleration
+              // 2. Play all video elements directly
               var videos = document.querySelectorAll('video');
               var anyPlaying = false;
               for (var i = 0; i < videos.length; i++) {
                 var v = videos[i];
-                v.style.backgroundColor = '#000000';
-                v.style.transform = 'translateZ(0)';
                 if (!v.paused && v.currentTime > 0) {
                   anyPlaying = true;
                   continue;
@@ -276,41 +131,26 @@ async function startServer() {
                   var p = v.play();
                   if (p && typeof p.catch === 'function') {
                     p.catch(function() {
-                      // If browser blocks unmuted autoplay, play muted first then unmute immediately
+                      // If browser requires user interaction for unmuted autoplay, play muted first then unmute
                       v.muted = true;
-                      v.play().then(function() {
-                        setTimeout(function() { v.muted = false; }, 300);
-                      }).catch(function(){});
+                      v.play().catch(function(){});
                     });
                   }
                 } catch(e) {}
               }
 
-              // 3. Trigger Clappr / JWPlayer if available
+              // 3. Trigger Clappr player if available
               if (window.player && typeof window.player.play === 'function') {
                 try { window.player.play(); } catch(e) {}
               }
-              if (window.jwplayer) {
-                try {
-                  var jw = window.jwplayer();
-                  if (jw && typeof jw.play === 'function') jw.play();
-                } catch(e) {}
-              }
 
-              // 4. Dispatch synthetic center click every 2 seconds if still not playing
-              if (!anyPlaying && attemptCount % 4 === 0) {
-                try {
-                  var cx = window.innerWidth / 2;
-                  var cy = window.innerHeight / 2;
-                  var targetEl = document.elementFromPoint(cx, cy);
-                  if (targetEl && targetEl !== document.body && targetEl !== document.documentElement && targetEl.id !== 'satv-back-btn') {
-                    targetEl.click();
-                  }
-                } catch(e) {}
+              if (anyPlaying) {
+                // If already playing smoothly, stop polling early
+                clearInterval(playInterval);
               }
             }, 500);
 
-            // Also trigger play on any user remote control interaction anywhere in the window
+            // Also trigger play on the very first user interaction anywhere in the window
             ['click', 'keydown', 'touchstart'].forEach(function(evt) {
               window.addEventListener(evt, function() {
                 var videos = document.querySelectorAll('video');
@@ -318,10 +158,7 @@ async function startServer() {
                   videos[i].muted = false;
                   videos[i].play().catch(function(){});
                 }
-                if (window.player && typeof window.player.play === 'function') {
-                  try { window.player.play(); } catch(e) {}
-                }
-              }, { passive: true });
+              }, { once: true });
             });
           })();
         </script>
@@ -334,7 +171,6 @@ async function startServer() {
       }
 
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.setHeader('Access-Control-Allow-Origin', '*');
       res.removeHeader('X-Frame-Options');
       res.removeHeader('Content-Security-Policy');
       res.send(html);
@@ -354,8 +190,7 @@ async function startServer() {
     try {
       const response = await fetch(streamUrl, {
         headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           'Accept': '*/*',
         },
       });
@@ -409,32 +244,30 @@ async function startServer() {
     }
 
     try {
-      const response = await fetch(playlistUrl, {
+      const upstream = await fetch(playlistUrl, {
         headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept': '*/*',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         },
       });
 
-      if (!response.ok) {
-        res.status(response.status).json({ error: `Upstream error: ${response.statusText}` });
+      if (!upstream.ok) {
+        res.status(upstream.status).json({ error: `Failed to fetch playlist: ${upstream.statusText}` });
         return;
       }
 
-      const content = await response.text();
+      const text = await upstream.text();
       res.setHeader('Content-Type', 'text/plain; charset=utf-8');
       res.setHeader('Access-Control-Allow-Origin', '*');
-      res.send(content);
+      res.send(text);
     } catch (err: any) {
-      res.status(502).json({ error: err.message || 'Error fetching playlist' });
+      res.status(502).json({ error: err.message });
     }
   });
 
   // Cached in-memory Brazil EPG data
   let cachedEpgData: any = null;
   let lastEpgFetch = 0;
-  const EPG_CACHE_TTL = 30 * 60 * 1000; // 30 minutos
+  const EPG_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 
   app.get('/api/epg', async (req, res) => {
     const now = Date.now();
@@ -445,16 +278,28 @@ async function startServer() {
     }
 
     try {
-      const epgUrl = 'https://raw.githubusercontent.com/limaalef/BrazilTVEPG/main/claro.xml';
-      const upstream = await fetch(epgUrl, {
-        signal: AbortSignal.timeout(15000),
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Accept': 'text/xml, application/xml, */*',
-        },
-      });
+      // Fetch both claro.xml and epg.xml from BrazilTVEPG to maximize channels and synopses
+      const urls = [
+        'https://raw.githubusercontent.com/limaalef/BrazilTVEPG/main/claro.xml',
+        'https://raw.githubusercontent.com/limaalef/BrazilTVEPG/main/epg.xml',
+      ];
 
-      if (!upstream.ok) {
+      const responses = await Promise.allSettled(
+        urls.map((u) =>
+          fetch(u, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+              Accept: 'text/xml, application/xml, */*',
+            },
+          }).then((r) => (r.ok ? r.text() : ''))
+        )
+      );
+
+      const xmlTexts = responses
+        .map((r) => (r.status === 'fulfilled' ? r.value : ''))
+        .filter(Boolean);
+
+      if (xmlTexts.length === 0) {
         if (cachedEpgData) {
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.json(cachedEpgData);
@@ -464,7 +309,7 @@ async function startServer() {
         return;
       }
 
-      const xmlText = await upstream.text();
+      // Lightweight regex parser for XMLTV programmes
       const programmes: Record<string, any[]> = {};
       const progRegex = /<programme\s+start="([^"]+)"\s+stop="([^"]+)"\s+channel="([^"]+)">([\s\S]*?)<\/programme>/g;
 
@@ -489,32 +334,59 @@ async function startServer() {
         }
       };
 
+      // Relevant time window: 6 hours ago to 24 hours ahead
       const minRelevantTime = now - 6 * 60 * 60 * 1000;
       const maxRelevantTime = now + 24 * 60 * 60 * 1000;
 
-      let match;
-      while ((match = progRegex.exec(xmlText)) !== null) {
-        const startMs = parseTime(match[1]);
-        const stopMs = parseTime(match[2]);
-        const rawChannel = match[3];
-        const inner = match[4];
+      for (const xmlText of xmlTexts) {
+        let match;
+        progRegex.lastIndex = 0;
+        while ((match = progRegex.exec(xmlText)) !== null) {
+          const startStr = match[1];
+          const stopStr = match[2];
+          const rawChannel = match[3];
+          const inner = match[4];
 
-        if (stopMs < minRelevantTime || startMs > maxRelevantTime) continue;
+          const startMs = parseTime(startStr);
+          const stopMs = parseTime(stopStr);
 
-        const titleMatch = inner.match(/<title[^>]*>([\s\S]*?)<\/title>/);
-        const descMatch = inner.match(/<desc[^>]*>([\s\S]*?)<\/desc>/);
-        const catMatch = inner.match(/<category[^>]*>([\s\S]*?)<\/category>/);
+          if (stopMs < minRelevantTime || startMs > maxRelevantTime) {
+            continue;
+          }
 
-        const title = titleMatch ? titleMatch[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
-        const desc = descMatch ? descMatch[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
-        const category = catMatch ? catMatch[1].trim() : '';
-        const chKey = rawChannel.replace(/&amp;/g, '&').trim();
+          const titleMatch = inner.match(/<title[^>]*>([\s\S]*?)<\/title>/);
+          const descMatch = inner.match(/<desc[^>]*>([\s\S]*?)<\/desc>/);
+          const catMatch = inner.match(/<category[^>]*>([\s\S]*?)<\/category>/);
 
-        if (!programmes[chKey]) programmes[chKey] = [];
-        programmes[chKey].push({ start: startMs, stop: stopMs, title, desc, category });
+          const title = titleMatch ? titleMatch[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
+          const desc = descMatch ? descMatch[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
+          const category = catMatch ? catMatch[1].trim() : '';
+
+          const chKey = rawChannel.replace(/&amp;/g, '&').trim();
+          if (!programmes[chKey]) {
+            programmes[chKey] = [];
+          }
+
+          programmes[chKey].push({
+            start: startMs,
+            stop: stopMs,
+            title,
+            desc,
+            category,
+          });
+        }
       }
 
-      cachedEpgData = { updatedAt: now, channelCount: Object.keys(programmes).length, programmes };
+      // Sort programmes for each channel
+      for (const chKey of Object.keys(programmes)) {
+        programmes[chKey].sort((a, b) => a.start - b.start);
+      }
+
+      cachedEpgData = {
+        updatedAt: now,
+        channelCount: Object.keys(programmes).length,
+        programmes,
+      };
       lastEpgFetch = now;
 
       res.setHeader('Access-Control-Allow-Origin', '*');
@@ -526,11 +398,12 @@ async function startServer() {
         res.json(cachedEpgData);
         return;
       }
-      res.status(500).json({ error: err.message || 'Error processing EPG' });
+      res.status(500).json({ error: err.message || 'Error processing EPG XML' });
     }
   });
 
-  // Vite middleware for development vs static for production
+
+  // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -546,7 +419,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
+    console.log(`SATV Server running on http://0.0.0.0:${PORT}`);
   });
 }
 
