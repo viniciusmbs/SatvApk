@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex items-baseline gap-2 min-w-0">
               <h1
                 style={{ fontFamily: "'Alex Brush', 'Great Vibes', cursive" }}
-                className="text-2xl sm:text-3xl text-white font-normal tracking-wide drop-shadow-md truncate py-0.5"
+                className="text-xl sm:text-2xl text-white font-normal tracking-wide drop-shadow-md truncate py-0.5"
               >
                 Aqui você é a nossa atração
               </h1>
