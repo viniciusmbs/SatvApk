@@ -143,9 +143,7 @@ export default function App() {
     }
   };
 
-  // Global D-Pad / remote shortcut:
-  // - Menu button (3 pontinhos no Fire TV = KeyCode 82 / ContextMenu): Abre o Menu Principal
-  // - Botão Voltar (Escape / Backspace): Intercepta fechamento acidental e exibe confirmação
+  // Global D-Pad / remote shortcut com fase de captura (true) para interceptar o botão voltar da TV
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       const isMenuKey =
@@ -159,24 +157,31 @@ export default function App() {
 
       if (isMenuKey) {
         e.preventDefault();
+        e.stopPropagation();
         setIsMenuOpen((prev) => !prev);
         return;
       }
 
-      // Interceptação do botão Voltar do controle remoto da TV
+      // Interceptação rigorosa do botão Voltar (Escape / Backspace)
       if (e.key === 'Escape' || e.key === 'Backspace' || e.keyCode === 27 || e.keyCode === 8) {
-        // Se houver algum modal aberto (Menu Principal ou outro), deixa o modal fechar primeiro
-        const isAnyModalOpen = document.querySelector('[role="dialog"]') !== null || isMenuOpen || showExitConfirm;
-        if (isAnyModalOpen) {
-          if (showExitConfirm) {
-            setShowExitConfirm(false);
-            e.preventDefault();
-          }
+        if (isMenuOpen) {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsMenuOpen(false);
+          return;
+        }
+
+        if (showExitConfirm) {
+          e.preventDefault();
+          e.stopPropagation();
+          setShowExitConfirm(false);
           return;
         }
 
         e.preventDefault();
+        e.stopPropagation();
         setShowExitConfirm(true);
+        return;
       }
 
       if ((e.key === '/' || e.key === 's') && document.activeElement?.tagName !== 'INPUT') {
@@ -187,8 +192,10 @@ export default function App() {
         }
       }
     };
-    window.addEventListener('keydown', handleGlobalKey);
-    return () => window.removeEventListener('keydown', handleGlobalKey);
+
+    // O 'true' garante que a TV intercepta o clique do controle antes de fechar o app
+    window.addEventListener('keydown', handleGlobalKey, true);
+    return () => window.removeEventListener('keydown', handleGlobalKey, true);
   }, [isMenuOpen, showExitConfirm]);
 
   return (
@@ -205,6 +212,7 @@ export default function App() {
             if (viewMode === 'epg') setViewMode('rows');
           }}
           onOpenMenu={() => setIsMenuOpen(true)}
+          onOpenExit={() => setShowExitConfirm(true)}
         />
         <SearchBar
           searchQuery={searchQuery}
