@@ -37,9 +37,6 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
   onClearFilters,
   density = 'compact',
 }) => {
-  const allChannels: Channel[] = (Object.values(groupedChannels) as Channel[][]).flat();
-  const favoriteChannels = allChannels.filter((c) => favorites.includes(c.name));
-
   const sortedGroupNames = Object.keys(groupedChannels).sort((a, b) => {
     const upperA = a.toUpperCase();
     const upperB = b.toUpperCase();
@@ -54,22 +51,22 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
   // Responsive grid classes based on density
   const gridClasses =
     density === 'compact'
-      ? 'grid grid-cols-4 min-[420px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-9 xl:grid-cols-11 2xl:grid-cols-12 gap-1.5 sm:gap-2'
+      ? 'grid grid-cols-4 min-[360px]:grid-cols-5 min-[440px]:grid-cols-6 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-1 sm:gap-2'
       : density === 'large'
       ? 'grid grid-cols-2 min-[420px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9 gap-2.5 sm:gap-3'
       : 'grid grid-cols-3 min-[420px]:grid-cols-4 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-11 gap-2 sm:gap-2.5';
 
-  if (sortedGroupNames.length === 0 && favoriteChannels.length === 0) {
+  if (sortedGroupNames.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <div className="w-16 h-16 bg-slate-800/80 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-500 border border-slate-700/60">
-          <Tv className="w-8 h-8 text-red-400" />
+          <Star className="w-8 h-8 text-amber-400" />
         </div>
         <h3 className="text-lg font-semibold text-gray-200 mb-1">
           Nenhum canal encontrado
         </h3>
         <p className="text-sm text-slate-400 max-w-md mx-auto mb-5">
-          Tente buscar com outro nome de canal ou limpe os filtros de categoria.
+          Se estiver na aba Favoritos, segure o botão OK no controle ou clique na estrelinha de qualquer canal para favoritá-lo.
         </p>
         <button
           onClick={onClearFilters}
@@ -86,39 +83,6 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
 
   return (
     <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-5 sm:space-y-6">
-      {/* Top Favorite Row if any exist */}
-      {favoriteChannels.length > 0 && (
-        <section className="space-y-2">
-          <div className="flex items-center justify-between border-b border-amber-500/20 pb-1.5">
-            <div className="flex items-center space-x-2">
-              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-              <h2 className="text-xs sm:text-sm font-bold text-amber-300 tracking-wide uppercase">
-                Meus Favoritos
-              </h2>
-              <span className="text-[10px] sm:text-[11px] text-amber-300/90 font-medium px-2 py-0.2 rounded-full bg-amber-500/10 border border-amber-500/20">
-                {favoriteChannels.length} {favoriteChannels.length === 1 ? 'canal' : 'canais'}
-              </span>
-            </div>
-          </div>
-          <div className={gridClasses}>
-            {favoriteChannels.map((channel) => {
-              const currentIndex = globalIndex++;
-              return (
-                <ChannelCard
-                  key={`fav-${channel.name}-${channel.url}`}
-                  channel={channel}
-                  index={currentIndex}
-                  isFavorite={true}
-                  onToggleFavorite={onToggleFavorite}
-                  onSelect={onSelectChannel}
-                  density={density}
-                />
-              );
-            })}
-          </div>
-        </section>
-      )}
-
       {sortedGroupNames.map((groupName) => {
         const channels = groupedChannels[groupName];
         if (!channels || channels.length === 0) return null;

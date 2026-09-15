@@ -89,7 +89,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             data-category-index={0}
             tabIndex={0}
             onClick={() => setSelectedCategory('TODOS')}
-            className={`tv-nav-focus px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
+            className={`tv-nav-focus px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
               selectedCategory === 'TODOS'
                 ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
                 : 'bg-[#171a23] hover:bg-[#202533] text-slate-300 hover:text-white border border-white/10'
@@ -98,35 +98,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
             Todos
           </button>
 
-          {/* Category: ⭐ Favoritos (sempre visível em destaque) */}
-          <button
-            data-tv-nav="category"
-            data-category-index={1}
-            tabIndex={0}
-            onClick={() => setSelectedCategory('FAVORITOS')}
-            className={`tv-nav-focus flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all outline-none cursor-pointer border ${
-              selectedCategory === 'FAVORITOS'
-                ? 'bg-amber-500 text-black border-amber-300 shadow-md ring-1 ring-amber-300'
-                : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
-            }`}
-            title="Ver somente os canais favoritos"
-          >
-            <Star className={`w-3.5 h-3.5 ${selectedCategory === 'FAVORITOS' ? 'fill-black' : 'fill-amber-400'}`} />
-            <span>Favoritos</span>
-            {favoritesCount > 0 && (
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                selectedCategory === 'FAVORITOS'
-                  ? 'bg-black text-amber-300'
-                  : 'bg-amber-400 text-black'
-              }`}>
-                {favoritesCount}
-              </span>
-            )}
-          </button>
-
           {/* Categories starting with CANAL, DOCUMENTÁRIOS, ESPORTES, etc. */}
           {sortedCategories.map((category, idx) => {
-            const catIndex = idx + 2;
+            const catIndex = idx + 1;
             const isSelected = selectedCategory === category;
             return (
               <button
@@ -135,7 +109,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 data-category-index={catIndex}
                 tabIndex={0}
                 onClick={() => setSelectedCategory(category)}
-                className={`tv-nav-focus px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
+                className={`tv-nav-focus px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
                   isSelected
                     ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
                     : 'bg-[#171a23] hover:bg-[#202533] text-slate-300 hover:text-white border border-white/10'

@@ -7,6 +7,7 @@ interface HeaderProps {
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
   favoritesCount?: number;
+  isFavoritesActive?: boolean;
   onOpenFavorites?: () => void;
   onOpenMenu?: () => void;
   density?: UiDensity;
@@ -18,6 +19,7 @@ const Header: React.FC<HeaderProps> = ({
   viewMode,
   setViewMode,
   favoritesCount = 0,
+  isFavoritesActive = false,
   onOpenFavorites,
   onOpenMenu,
   density = 'compact',
@@ -52,15 +54,15 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="bg-gradient-to-r from-[#7f1d1d] via-[#991b1b] to-[#7f1d1d] text-white shadow-md border-b border-red-900/40 select-none">
-      <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6">
-        <div className="flex items-center justify-between h-11 sm:h-12">
+      <div className="max-w-[1920px] mx-auto px-1.5 sm:px-4 lg:px-6">
+        <div className="flex items-center justify-between h-10 sm:h-12">
           {/* Logo & Brand */}
-          <div className="flex items-center space-x-1.5 sm:space-x-2.5">
+          <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
             <div className="relative flex items-center justify-center shrink-0">
               <img
                 src="https://i.imgur.com/VWtF2t5.jpeg"
                 alt="SATV Logo"
-                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-white/80 shadow-md object-cover bg-black"
+                className="w-5 h-5 sm:w-7 sm:h-7 rounded-full border border-white/80 shadow-md object-cover bg-black"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
                 }}
@@ -69,10 +71,10 @@ const Header: React.FC<HeaderProps> = ({
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1 sm:gap-1.5">
-                <span className="bg-white text-[#991b1b] text-[9px] sm:text-[10px] font-black px-1 sm:px-1.5 py-0.2 rounded shadow-sm tracking-wider">
+                <span className="bg-white text-[#991b1b] text-[8.5px] sm:text-[10px] font-black px-1 sm:px-1.5 py-0.2 rounded shadow-sm tracking-wider">
                   SATV
                 </span>
-                <h1 className="text-xs sm:text-sm font-bold tracking-wide text-white drop-shadow-sm truncate">
+                <h1 className="text-xs sm:text-sm font-bold tracking-wide text-white drop-shadow-sm truncate max-w-[85px] min-[380px]:max-w-[130px] sm:max-w-[220px] md:max-w-none">
                   SATV - Vinicius Mendes ®
                 </h1>
               </div>
@@ -83,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Navigation Tabs & Controls */}
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-2">
             {/* View Mode Switcher (Fileiras / Mosaico / Guia EPG) + Favoritos */}
             <div className="flex items-center p-0.5 bg-black/40 rounded-lg sm:rounded-xl border border-white/15 shadow-inner">
               {onOpenFavorites && (
@@ -93,13 +95,19 @@ const Header: React.FC<HeaderProps> = ({
                   data-tv-nav="tab"
                   tabIndex={0}
                   onClick={onOpenFavorites}
-                  className="tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none text-amber-300 hover:text-amber-200 hover:bg-amber-500/20 mr-0.5"
-                  title="Acessar canais favoritos"
+                  className={`tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none mr-0.5 ${
+                    isFavoritesActive
+                      ? 'bg-amber-400 text-black shadow-md ring-2 ring-amber-300 font-black'
+                      : 'text-amber-300 hover:text-amber-200 hover:bg-amber-500/20'
+                  }`}
+                  title={isFavoritesActive ? 'Exibindo Favoritos. Clique para ver Todos' : 'Ver canais favoritos'}
                 >
-                  <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-amber-400 text-amber-400" />
-                  <span className="hidden min-[520px]:inline">Favoritos</span>
+                  <Star className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isFavoritesActive ? 'fill-black text-black' : 'fill-amber-400 text-amber-400'}`} />
+                  <span className="hidden min-[480px]:inline">Favoritos</span>
                   {favoritesCount > 0 && (
-                    <span className="px-1 sm:px-1.5 py-0.2 text-[8.5px] sm:text-[9px] bg-amber-400 text-black rounded-full font-extrabold ml-0.5">
+                    <span className={`px-1 sm:px-1.5 py-0.2 text-[8px] sm:text-[9px] rounded-full font-extrabold ml-0.5 ${
+                      isFavoritesActive ? 'bg-black text-amber-300' : 'bg-amber-400 text-black'
+                    }`}>
                       {favoritesCount}
                     </span>
                   )}
@@ -113,14 +121,14 @@ const Header: React.FC<HeaderProps> = ({
                 tabIndex={0}
                 onClick={() => setViewMode('rows')}
                 className={`tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none ${
-                  viewMode === 'rows'
+                  viewMode === 'rows' && !isFavoritesActive
                     ? 'bg-white text-[#991b1b] shadow-md ring-2 ring-white/70'
                     : 'text-red-100 hover:text-white hover:bg-white/10'
                 }`}
                 title="Modo TV: fileiras horizontais de canais"
               >
                 <Rows3 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                <span className="hidden min-[520px]:inline">Fileiras</span>
+                <span className="hidden min-[480px]:inline">Fileiras</span>
               </button>
 
               <button
@@ -130,14 +138,14 @@ const Header: React.FC<HeaderProps> = ({
                 tabIndex={0}
                 onClick={() => setViewMode('grid')}
                 className={`tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none ${
-                  viewMode === 'grid'
+                  viewMode === 'grid' && !isFavoritesActive
                     ? 'bg-white text-[#991b1b] shadow-md ring-2 ring-white/70'
                     : 'text-red-100 hover:text-white hover:bg-white/10'
                 }`}
                 title="Modo Mosaico: grade compacta de quadradinhos"
               >
                 <LayoutGrid className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                <span className="hidden min-[520px]:inline">Mosaico</span>
+                <span className="hidden min-[480px]:inline">Mosaico</span>
               </button>
 
               <button
@@ -154,7 +162,8 @@ const Header: React.FC<HeaderProps> = ({
                 title="Guia EPG com programação ao vivo (ou pressione Menu no controle)"
               >
                 <CalendarDays className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                <span>Guia</span>
+                <span className="hidden min-[480px]:inline">Guia</span>
+                <span className="inline-flex sm:hidden">Guia</span>
                 <span className="hidden sm:inline-flex items-center px-1 py-0.2 text-[8.5px] bg-red-600/90 text-white rounded font-bold">
                   ☰
                 </span>
@@ -169,7 +178,7 @@ const Header: React.FC<HeaderProps> = ({
                 data-tv-nav="tab"
                 tabIndex={0}
                 onClick={cycleDensity}
-                className="tv-nav-focus hidden min-[460px]:flex items-center gap-1 px-2 py-1 rounded-lg sm:rounded-xl bg-black/40 hover:bg-black/60 text-white/90 hover:text-white border border-white/15 text-[10.5px] sm:text-xs font-semibold shadow-inner transition cursor-pointer outline-none"
+                className="tv-nav-focus hidden min-[620px]:flex items-center gap-1 px-2 py-1 rounded-lg sm:rounded-xl bg-black/40 hover:bg-black/60 text-white/90 hover:text-white border border-white/15 text-[10.5px] sm:text-xs font-semibold shadow-inner transition cursor-pointer outline-none"
                 title={`Alternar tamanho dos ícones (Atual: ${densityLabel}). Clique para mudar!`}
               >
                 <SlidersHorizontal className="w-3 h-3 text-red-300" />

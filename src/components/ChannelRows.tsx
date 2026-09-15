@@ -60,10 +60,10 @@ const RowSection: React.FC<{
 
   const cardWidthClass =
     density === 'compact'
-      ? 'w-[74px] sm:w-[82px] md:w-[88px] lg:w-[94px] shrink-0'
+      ? 'w-[52px] min-[360px]:w-[58px] min-[420px]:w-[64px] sm:w-[72px] md:w-[78px] lg:w-[84px] shrink-0'
       : density === 'large'
-      ? 'w-24 sm:w-28 md:w-32 shrink-0'
-      : 'w-20 sm:w-22 md:w-24 lg:w-26 shrink-0';
+      ? 'w-20 min-[360px]:w-24 sm:w-28 md:w-32 shrink-0'
+      : 'w-[60px] min-[360px]:w-[66px] min-[420px]:w-[72px] sm:w-[78px] md:w-[84px] lg:w-[90px] shrink-0';
 
   return (
     <section className="space-y-2">
@@ -143,10 +143,6 @@ const ChannelRows: React.FC<ChannelRowsProps> = ({
   onClearFilters,
   density = 'compact',
 }) => {
-  // Extract all channels for favorite lookup
-  const allChannels: Channel[] = (Object.values(groupedChannels) as Channel[][]).flat();
-  const favoriteChannels = allChannels.filter((c) => favorites.includes(c.name));
-
   const sortedGroupNames = Object.keys(groupedChannels).sort((a, b) => {
     const upperA = a.toUpperCase();
     const upperB = b.toUpperCase();
@@ -158,17 +154,17 @@ const ChannelRows: React.FC<ChannelRowsProps> = ({
     return a.localeCompare(b, 'pt-BR');
   });
 
-  if (sortedGroupNames.length === 0 && favoriteChannels.length === 0) {
+  if (sortedGroupNames.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <div className="w-16 h-16 bg-slate-800/80 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-500 border border-slate-700/60">
-          <Tv className="w-8 h-8 text-red-400" />
+          <Star className="w-8 h-8 text-amber-400" />
         </div>
         <h3 className="text-lg font-semibold text-gray-200 mb-1">
           Nenhum canal encontrado
         </h3>
         <p className="text-sm text-slate-400 max-w-md mx-auto mb-5">
-          Tente buscar com outro nome de canal ou limpe os filtros de categoria.
+          Se estiver na aba Favoritos, segure o botão OK no controle ou clique na estrelinha de qualquer canal para favoritá-lo.
         </p>
         <button
           onClick={onClearFilters}
@@ -184,20 +180,6 @@ const ChannelRows: React.FC<ChannelRowsProps> = ({
 
   return (
     <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-5 sm:space-y-6">
-      {/* Top Favorite Row if any exist */}
-      {favoriteChannels.length > 0 && (
-        <RowSection
-          title="Meus Favoritos"
-          isFavRow
-          channels={favoriteChannels}
-          favorites={favorites}
-          startIndex={globalIndex}
-          onToggleFavorite={onToggleFavorite}
-          onSelectChannel={onSelectChannel}
-          density={density}
-        />
-      )}
-
       {/* Category Rows */}
       {sortedGroupNames.map((groupName) => {
         const channels = groupedChannels[groupName];

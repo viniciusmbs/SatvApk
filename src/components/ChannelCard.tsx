@@ -140,24 +140,24 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
 
   const cardPadding =
     density === 'compact'
-      ? 'p-1 sm:p-1.5'
+      ? 'p-0.5 min-[360px]:p-1 sm:p-1.5'
       : density === 'large'
       ? 'p-2 sm:p-2.5'
-      : 'p-1.5 sm:p-2';
+      : 'p-1 sm:p-2';
 
   const logoMaxHeight =
     density === 'compact'
-      ? 'max-h-8 sm:max-h-9 md:max-h-10'
+      ? 'max-h-5 min-[360px]:max-h-6 min-[420px]:max-h-7 sm:max-h-8 md:max-h-9'
       : density === 'large'
       ? 'max-h-11 sm:max-h-13 md:max-h-14'
-      : 'max-h-9 sm:max-h-10 md:max-h-12';
+      : 'max-h-7 min-[360px]:max-h-8 sm:max-h-9 md:max-h-10';
 
   const titleFontSize =
     density === 'compact'
-      ? 'text-[8.5px] sm:text-[9.5px] md:text-[10.5px]'
+      ? 'text-[6.5px] min-[360px]:text-[7.5px] min-[420px]:text-[8px] sm:text-[9px] md:text-[9.5px]'
       : density === 'large'
       ? 'text-[10px] sm:text-[11px] md:text-[12px]'
-      : 'text-[9.5px] sm:text-[10px] md:text-[11px]';
+      : 'text-[7.5px] min-[360px]:text-[8.5px] sm:text-[9.5px] md:text-[10.5px]';
 
   return (
     <a

@@ -201,9 +201,14 @@ export default function App() {
           viewMode={viewMode}
           setViewMode={setViewMode}
           favoritesCount={favorites.length}
+          isFavoritesActive={selectedCategory === 'FAVORITOS'}
           onOpenFavorites={() => {
-            setSelectedCategory('FAVORITOS');
-            if (viewMode === 'epg') setViewMode('rows');
+            if (selectedCategory === 'FAVORITOS') {
+              setSelectedCategory('TODOS');
+            } else {
+              setSelectedCategory('FAVORITOS');
+              if (viewMode === 'epg') setViewMode('rows');
+            }
           }}
           onOpenMenu={() => setIsMenuOpen(true)}
           density={uiDensity}
