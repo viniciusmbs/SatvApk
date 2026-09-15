@@ -8,6 +8,7 @@ import {
   Download,
   ExternalLink,
   Check,
+  LogOut,
 } from 'lucide-react';
 import { ViewMode } from '../types';
 import { soundService } from '../services/soundService';
@@ -20,6 +21,7 @@ interface MenuModalProps {
   onOpenFavorites: () => void;
   favoritesCount: number;
   totalChannels: number;
+  onOpenExit?: () => void;
 }
 
 export const MenuModal: React.FC<MenuModalProps> = ({
@@ -30,6 +32,7 @@ export const MenuModal: React.FC<MenuModalProps> = ({
   onOpenFavorites,
   favoritesCount,
   totalChannels,
+  onOpenExit,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -344,6 +347,35 @@ export const MenuModal: React.FC<MenuModalProps> = ({
               <ExternalLink className="w-3.5 h-3.5 text-blue-200" />
             </a>
           </div>
+
+          {/* 4. Sair do SATV com Trava de Segurança */}
+          {onOpenExit && (
+            <div className="pt-1">
+              <button
+                id="menu-opt-exit"
+                data-menu-item="true"
+                type="button"
+                tabIndex={0}
+                onClick={() => {
+                  onClose();
+                  setTimeout(() => {
+                    onOpenExit();
+                  }, 50);
+                }}
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-red-950/30 hover:bg-red-900/50 border border-red-500/30 transition-all text-left cursor-pointer outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 focus:bg-red-900/70"
+              >
+                <div className="flex items-center gap-3">
+                  <LogOut className="w-4 h-4 text-red-400 shrink-0" />
+                  <div>
+                    <div className="text-xs font-bold text-red-300">Sair do SATV</div>
+                    <div className="text-[11px] text-slate-400">
+                      Trava de segurança contra saída acidental
+                    </div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Rodapé com Fechar */}

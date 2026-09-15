@@ -9,6 +9,8 @@ import ChannelGrid from './components/ChannelGrid';
 import EpgGrid from './components/EpgGrid';
 import Footer from './components/Footer';
 import { MenuModal } from './components/MenuModal';
+import { ExitConfirmModal } from './components/ExitConfirmModal';
+import { soundService } from './services/soundService';
 import { useTvNavigation } from './services/useTvNavigation';
 
 export default function App() {
@@ -25,8 +27,9 @@ export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // Estado para controlar a caixa de diálogo de confirmação de saída
+  // Estado para controlar a trava de segurança de saída
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [hasExited, setHasExited] = useState(false);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
@@ -143,7 +146,44 @@ export default function App() {
     }
   };
 
-  // Global D-Pad / remote shortcut com fase de captura (true) para interceptar o botão voltar da TV
+  // Trava de segurança no histórico do navegador: intercepta a tecla Voltar física do Fire TV Stick
+  useEffect(() => {
+    try {
+      window.history.pushState({ satvState: 'main' }, '');
+    } catch {
+      // ignore
+    }
+
+    const handlePopState = () => {
+      // Re-injeta estado imediatamente para manter a trava de segurança ativa
+      try {
+        window.history.pushState({ satvState: 'main' }, '');
+      } catch {
+        // ignore
+      }
+
+      if (isMenuOpen) {
+        setIsMenuOpen(false);
+        return;
+      }
+
+      if (showExitConfirm) {
+        // Se a trava de segurança já está aberta e o usuário apertou Voltar no Fire TV, cancela a saída
+        soundService.playSelect();
+        setShowExitConfirm(false);
+        return;
+      }
+
+      // Abre a trava de segurança de saída
+      soundService.playNav();
+      setShowExitConfirm(true);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isMenuOpen, showExitConfirm]);
+
+  // Global D-Pad / remote shortcut com fase de captura (true) para interceptar o botão voltar do Fire TV
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       const isMenuKey =
@@ -153,7 +193,8 @@ export default function App() {
         e.code === 'ContextMenu' ||
         e.key === 'Menu' ||
         ((e.key === 'm' || e.key === 'M') &&
-          document.activeElement?.tagName !== 'INPUT');
+          document.activeElement?.tagName !== 'INPUT' &&
+          document.activeElement?.tagName !== 'TEXTAREA');
 
       if (isMenuKey) {
         e.preventDefault();
@@ -162,8 +203,22 @@ export default function App() {
         return;
       }
 
-      // Interceptação rigorosa do botão Voltar (Escape / Backspace)
-      if (e.key === 'Escape' || e.key === 'Backspace' || e.keyCode === 27 || e.keyCode === 8) {
+      const isBackKey =
+        e.keyCode === 4 || // KEYCODE_BACK (Fire TV / Android)
+        e.key === 'GoBack' ||
+        e.key === 'BrowserBack' ||
+        e.key === 'Back' ||
+        e.code === 'BrowserBack' ||
+        e.key === 'Escape' ||
+        e.keyCode === 27 ||
+        e.keyCode === 10009 || // Samsung Tizen
+        e.keyCode === 461 || // LG webOS
+        ((e.key === 'Backspace' || e.keyCode === 8) &&
+          document.activeElement?.tagName !== 'INPUT' &&
+          document.activeElement?.tagName !== 'TEXTAREA');
+
+      // Interceptação rigorosa do botão Voltar do Fire TV e TV Box
+      if (isBackKey) {
         if (isMenuOpen) {
           e.preventDefault();
           e.stopPropagation();
@@ -174,12 +229,14 @@ export default function App() {
         if (showExitConfirm) {
           e.preventDefault();
           e.stopPropagation();
+          soundService.playSelect();
           setShowExitConfirm(false);
           return;
         }
 
         e.preventDefault();
         e.stopPropagation();
+        soundService.playNav();
         setShowExitConfirm(true);
         return;
       }
@@ -197,6 +254,48 @@ export default function App() {
     window.addEventListener('keydown', handleGlobalKey, true);
     return () => window.removeEventListener('keydown', handleGlobalKey, true);
   }, [isMenuOpen, showExitConfirm]);
+
+  const handleConfirmExit = () => {
+    soundService.playSelect();
+    setShowExitConfirm(false);
+    try {
+      window.close();
+    } catch {
+      // ignore
+    }
+    setHasExited(true);
+  };
+
+  if (hasExited) {
+    return (
+      <div className="min-h-screen bg-[#0c0e14] text-white flex flex-col items-center justify-center p-6 select-none text-center animate-in fade-in duration-300">
+        <div className="max-w-md w-full bg-[#151923] border border-white/15 rounded-2xl p-8 shadow-2xl space-y-6">
+          <img
+            src="https://i.imgur.com/VWtF2t5.jpeg"
+            alt="SATV Logo"
+            className="w-16 h-16 mx-auto rounded-full border-2 border-white/80 shadow-lg object-cover bg-black"
+          />
+          <div className="space-y-2">
+            <h1 className="text-2xl font-black text-white">Aplicativo Encerrado</h1>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Você saiu do SATV com segurança. Pode desligar a TV ou apertar a tecla <strong>Início (Home)</strong> no controle remoto do Fire TV.
+            </p>
+          </div>
+          <button
+            autoFocus
+            type="button"
+            onClick={() => {
+              soundService.playSelect();
+              setHasExited(false);
+            }}
+            className="w-full py-3 px-5 rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold text-sm transition cursor-pointer outline-none shadow-xl focus:ring-4 focus:ring-white"
+          >
+            Reabrir SATV
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0c0e14] text-gray-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
@@ -264,45 +363,12 @@ export default function App() {
         </div>
       )}
 
-      {/* Modal de Confirmação de Saída */}
-      {showExitConfirm && (
-        <div role="dialog" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-[#171a23] border border-white/15 rounded-xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4 animate-in fade-in zoom-in duration-200">
-            <div className="space-y-1">
-              <h3 className="text-lg font-bold text-white">Deseja mesmo sair?</h3>
-              <p className="text-xs text-slate-400">
-                Você deseja fechar ou sair do aplicativo SATV?
-              </p>
-            </div>
-
-            <div className="flex gap-3 pt-2">
-              <button
-                autoFocus
-                type="button"
-                onClick={() => setShowExitConfirm(false)}
-                className="flex-1 py-2 px-4 rounded-lg bg-[#262b38] hover:bg-[#323846] text-white text-xs font-bold transition border border-white/10 cursor-pointer outline-none focus:ring-2 focus:ring-white"
-              >
-                Não
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  try {
-                    window.close();
-                  } catch {
-                    // fallback
-                  }
-                  window.location.href = 'about:blank';
-                }}
-                className="flex-1 py-2 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition cursor-pointer outline-none focus:ring-2 focus:ring-red-400"
-              >
-                Sim, Sair
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Trava de Segurança: Modal de Confirmação de Saída */}
+      <ExitConfirmModal
+        isOpen={showExitConfirm}
+        onCancel={() => setShowExitConfirm(false)}
+        onConfirmExit={handleConfirmExit}
+      />
 
       {/* Clean TV Footer */}
       <Footer totalChannels={channels.length} favoritesCount={favorites.length} />
@@ -319,6 +385,7 @@ export default function App() {
         }}
         favoritesCount={favorites.length}
         totalChannels={channels.length}
+        onOpenExit={() => setShowExitConfirm(true)}
       />
     </div>
   );
