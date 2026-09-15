@@ -348,7 +348,7 @@ export const MenuModal: React.FC<MenuModalProps> = ({
             </a>
           </div>
 
-          {/* 4. Sair do SATV com Trava de Segurança */}
+          {/* 4. Sair do aplicativo */}
           {onOpenExit && (
             <div className="pt-1">
               <button
@@ -362,16 +362,11 @@ export const MenuModal: React.FC<MenuModalProps> = ({
                     onOpenExit();
                   }, 50);
                 }}
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-red-950/30 hover:bg-red-900/50 border border-red-500/30 transition-all text-left cursor-pointer outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 focus:bg-red-900/70"
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-red-950/20 hover:bg-red-900/40 border border-red-500/20 transition-all text-left cursor-pointer outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 focus:bg-red-900/60"
               >
                 <div className="flex items-center gap-3">
                   <LogOut className="w-4 h-4 text-red-400 shrink-0" />
-                  <div>
-                    <div className="text-xs font-bold text-red-300">Sair do SATV</div>
-                    <div className="text-[11px] text-slate-400">
-                      Trava de segurança contra saída acidental
-                    </div>
-                  </div>
+                  <span className="text-xs font-bold text-red-300">Sair do Aplicativo</span>
                 </div>
               </button>
             </div>

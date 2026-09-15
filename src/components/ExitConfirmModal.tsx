@@ -16,7 +16,7 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
   const cancelBtnRef = useRef<HTMLButtonElement>(null);
   const exitBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Focus inicial no botão 'Não' (segurança por padrão para evitar clique acidental duplo)
+  // Focus inicial no botão 'Não' para segurança contra clique acidental
   useEffect(() => {
     if (!isOpen) return;
 
@@ -49,11 +49,11 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
         key === 'Back' ||
         code === 27 ||
         code === 8 ||
-        code === 4 || // KEYCODE_BACK Fire TV / Android
+        code === 4 || // KEYCODE_BACK Fire TV
         code === 10009 || // Samsung Tizen
         code === 461; // LG webOS
 
-      // Pressionar Voltar enquanto a trava de segurança está na tela equivale a 'Não' (Cancela a saída)
+      // Pressionar Voltar enquanto a trava está na tela cancela e continua no app
       if (isBack) {
         e.preventDefault();
         e.stopPropagation();
@@ -62,7 +62,7 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
         return;
       }
 
-      // Alternância horizontal no D-Pad entre 'Não' e 'Sim, Sair'
+      // Alternância horizontal no D-Pad entre 'Não' e 'Sim'
       if (isLeft || isUp) {
         e.preventDefault();
         e.stopPropagation();
@@ -112,9 +112,9 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
           </p>
         </div>
 
-        {/* Botões de Ação com Foco TV D-Pad */}
+        {/* Botões de Ação */}
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
-          {/* Botão NÃO (Foco inicial padrão para segurança total) */}
+          {/* Botão NÃO (Foco inicial padrão) */}
           <button
             ref={cancelBtnRef}
             id="exit-btn-cancel"
@@ -147,7 +147,7 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
           </button>
         </div>
 
-        {/* Dica para o Usuário do Controle Remoto do Fire TV */}
+        {/* Dica para o Usuário do Fire TV */}
         <div className="pt-2 border-t border-white/10 flex items-center justify-center gap-2 text-[11px] text-slate-400">
           <ArrowLeft className="w-3.5 h-3.5 text-slate-300" />
           <span>Dica Fire TV: Aperte <strong>Voltar</strong> no controle para cancelar</span>

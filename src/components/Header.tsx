@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutGrid, Menu, Rows3, Clock, MoreVertical, Volume2, VolumeX, LogOut } from 'lucide-react';
+import { LayoutGrid, Menu, Rows3, Clock, MoreVertical, Volume2, VolumeX } from 'lucide-react';
 import { ViewMode } from '../types';
 
 interface HeaderProps {
@@ -9,7 +9,6 @@ interface HeaderProps {
   favoritesCount?: number;
   onOpenFavorites?: () => void;
   onOpenMenu?: () => void;
-  onOpenExit?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -19,7 +18,6 @@ const Header: React.FC<HeaderProps> = ({
   favoritesCount = 0,
   onOpenFavorites,
   onOpenMenu,
-  onOpenExit,
 }) => {
   const [timeStr, setTimeStr] = useState('');
   const [isMuted, setIsMuted] = useState(false);
@@ -187,22 +185,6 @@ const Header: React.FC<HeaderProps> = ({
                 aria-label="Menu Principal"
               >
                 <MoreVertical className="w-5 h-5 text-white stroke-[2.5]" />
-              </button>
-            )}
-
-            {/* Botão Sair com Trava de Segurança */}
-            {onOpenExit && (
-              <button
-                id="btn-header-exit"
-                type="button"
-                data-tv-nav="tab"
-                tabIndex={0}
-                onClick={onOpenExit}
-                className="tv-nav-focus flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-red-900/80 text-red-300 hover:text-white border border-red-500/30 shadow-inner transition cursor-pointer outline-none"
-                title="Sair do SATV (Trava de Segurança)"
-                aria-label="Sair do SATV"
-              >
-                <LogOut className="w-4 h-4 text-red-300" />
               </button>
             )}
           </div>

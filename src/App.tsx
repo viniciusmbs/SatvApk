@@ -168,20 +168,34 @@ export default function App() {
       }
 
       if (showExitConfirm) {
-        // Se a trava de segurança já está aberta e o usuário apertou Voltar no Fire TV, cancela a saída
+        // Se a confirmação de saída já está aberta e apertar Voltar no Fire TV, cancela e fecha
         soundService.playSelect();
         setShowExitConfirm(false);
         return;
       }
 
-      // Abre a trava de segurança de saída
+      // Se estiver com busca ativa, o primeiro voltar fecha a busca
+      if (searchQuery) {
+        soundService.playNav();
+        setSearchQuery('');
+        return;
+      }
+
+      // Se estiver em uma categoria específica, o voltar volta para 'TODOS'
+      if (selectedCategory !== 'TODOS') {
+        soundService.playNav();
+        setSelectedCategory('TODOS');
+        return;
+      }
+
+      // Não tem mais tela para voltar e iria sair do aplicativo: abre 'Deseja sair?'
       soundService.playNav();
       setShowExitConfirm(true);
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [isMenuOpen, showExitConfirm]);
+  }, [isMenuOpen, showExitConfirm, searchQuery, selectedCategory]);
 
   // Global D-Pad / remote shortcut com fase de captura (true) para interceptar o botão voltar do Fire TV
   useEffect(() => {
@@ -217,7 +231,7 @@ export default function App() {
           document.activeElement?.tagName !== 'INPUT' &&
           document.activeElement?.tagName !== 'TEXTAREA');
 
-      // Interceptação rigorosa do botão Voltar do Fire TV e TV Box
+      // Interceptação do botão Voltar do Fire TV quando não há mais telas
       if (isBackKey) {
         if (isMenuOpen) {
           e.preventDefault();
@@ -234,6 +248,25 @@ export default function App() {
           return;
         }
 
+        // Se tem texto digitado na busca ou campo focado, limpa e foca nos canais
+        if (searchQuery) {
+          e.preventDefault();
+          e.stopPropagation();
+          soundService.playNav();
+          setSearchQuery('');
+          return;
+        }
+
+        // Se está filtrado por categoria, volta para TODOS
+        if (selectedCategory !== 'TODOS') {
+          e.preventDefault();
+          e.stopPropagation();
+          soundService.playNav();
+          setSelectedCategory('TODOS');
+          return;
+        }
+
+        // Não tem mais tela anterior e ele fosse sair: pergunta se deseja sair
         e.preventDefault();
         e.stopPropagation();
         soundService.playNav();
@@ -253,7 +286,7 @@ export default function App() {
     // O 'true' garante que a TV intercepta o clique do controle antes de fechar o app
     window.addEventListener('keydown', handleGlobalKey, true);
     return () => window.removeEventListener('keydown', handleGlobalKey, true);
-  }, [isMenuOpen, showExitConfirm]);
+  }, [isMenuOpen, showExitConfirm, searchQuery, selectedCategory]);
 
   const handleConfirmExit = () => {
     soundService.playSelect();
@@ -311,7 +344,6 @@ export default function App() {
             if (viewMode === 'epg') setViewMode('rows');
           }}
           onOpenMenu={() => setIsMenuOpen(true)}
-          onOpenExit={() => setShowExitConfirm(true)}
         />
         <SearchBar
           searchQuery={searchQuery}
