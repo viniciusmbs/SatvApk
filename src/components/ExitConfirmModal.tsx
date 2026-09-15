@@ -16,7 +16,6 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
   const cancelBtnRef = useRef<HTMLButtonElement>(null);
   const exitBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Focus inicial no botão 'Não' para segurança contra clique acidental
   useEffect(() => {
     if (!isOpen) return;
 
@@ -28,7 +27,6 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
     return () => clearTimeout(timer);
   }, [isOpen]);
 
-  // Controle de navegação D-Pad exclusivo do controle remoto e Fire TV
   useEffect(() => {
     if (!isOpen) return;
 
@@ -49,11 +47,10 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
         key === 'Back' ||
         code === 27 ||
         code === 8 ||
-        code === 4 || // KEYCODE_BACK Fire TV
-        code === 10009 || // Samsung Tizen
-        code === 461; // LG webOS
+        code === 4 ||
+        code === 10009 ||
+        code === 461;
 
-      // Pressionar Voltar enquanto a trava está na tela cancela e continua no app
       if (isBack) {
         e.preventDefault();
         e.stopPropagation();
@@ -62,7 +59,6 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
         return;
       }
 
-      // Alternância horizontal no D-Pad entre 'Não' e 'Sim'
       if (isLeft || isUp) {
         e.preventDefault();
         e.stopPropagation();
@@ -94,12 +90,10 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
         onClick={(e) => e.stopPropagation()}
         className="bg-[#151923] border-2 border-red-500/40 rounded-2xl p-6 sm:p-7 max-w-md w-full shadow-2xl text-center space-y-5 transform animate-in zoom-in-95 duration-200"
       >
-        {/* Ícone de Trava de Segurança */}
         <div className="mx-auto flex items-center justify-center w-14 h-14 rounded-full bg-red-950/60 border border-red-500/40 text-red-400 shadow-inner">
           <ShieldAlert className="w-8 h-8 animate-pulse text-red-400" />
         </div>
 
-        {/* Textos de Advertência */}
         <div className="space-y-2">
           <div className="inline-block px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-extrabold uppercase tracking-wider">
             Trava de Segurança Ativa
@@ -112,9 +106,7 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
           </p>
         </div>
 
-        {/* Botões de Ação */}
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
-          {/* Botão NÃO (Foco inicial padrão) */}
           <button
             ref={cancelBtnRef}
             id="exit-btn-cancel"
@@ -130,7 +122,6 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
             <span>Não, Continuar</span>
           </button>
 
-          {/* Botão SIM, SAIR */}
           <button
             ref={exitBtnRef}
             id="exit-btn-confirm"
@@ -147,7 +138,6 @@ export const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({
           </button>
         </div>
 
-        {/* Dica para o Usuário do Fire TV */}
         <div className="pt-2 border-t border-white/10 flex items-center justify-center gap-2 text-[11px] text-slate-400">
           <ArrowLeft className="w-3.5 h-3.5 text-slate-300" />
           <span>Dica Fire TV: Aperte <strong>Voltar</strong> no controle para cancelar</span>

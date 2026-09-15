@@ -27,7 +27,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // Estado para controlar a trava de segurança de saída
+  // Estado para controlar a confirmação de saída
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [hasExited, setHasExited] = useState(false);
 
@@ -98,7 +98,6 @@ export default function App() {
     const q = searchQuery.trim().toLowerCase();
 
     return channels.filter((channel) => {
-      // Category filter (handles FAVORITOS filter explicitly)
       if (selectedCategory === 'FAVORITOS') {
         if (!favorites.includes(channel.name)) {
           return false;
@@ -107,7 +106,6 @@ export default function App() {
         return false;
       }
 
-      // Search query filter (matches channel name or group)
       if (q) {
         const nameMatch = channel.name.toLowerCase().includes(q);
         const groupMatch = channel.group.toLowerCase().includes(q);
@@ -134,7 +132,6 @@ export default function App() {
     setSelectedCategory('TODOS');
   };
 
-  // Active TV tabulation navigation hook (disabled while menu modal or exit modal is open)
   const { lastFocusedCardRef } = useTvNavigation({ enabled: !isMenuOpen && !showExitConfirm });
 
   const handleSelectChannel = (ch: Channel) => {
@@ -146,7 +143,7 @@ export default function App() {
     }
   };
 
-  // Trava de segurança no histórico do navegador: intercepta a tecla Voltar física do Fire TV Stick
+  // Trava de segurança no histórico do navegador (botão voltar físico)
   useEffect(() => {
     try {
       window.history.pushState({ satvState: 'main' }, '');
@@ -155,7 +152,6 @@ export default function App() {
     }
 
     const handlePopState = () => {
-      // Re-injeta estado imediatamente para manter a trava de segurança ativa
       try {
         window.history.pushState({ satvState: 'main' }, '');
       } catch {
@@ -168,27 +164,24 @@ export default function App() {
       }
 
       if (showExitConfirm) {
-        // Se a confirmação de saída já está aberta e apertar Voltar no Fire TV, cancela e fecha
         soundService.playSelect();
         setShowExitConfirm(false);
         return;
       }
 
-      // Se estiver com busca ativa, o primeiro voltar fecha a busca
       if (searchQuery) {
         soundService.playNav();
         setSearchQuery('');
         return;
       }
 
-      // Se estiver em uma categoria específica, o voltar volta para 'TODOS'
       if (selectedCategory !== 'TODOS') {
         soundService.playNav();
         setSelectedCategory('TODOS');
         return;
       }
 
-      // Não tem mais tela para voltar e iria sair do aplicativo: abre 'Deseja sair?'
+      // Última tela: pergunta se quer sair
       soundService.playNav();
       setShowExitConfirm(true);
     };
@@ -197,7 +190,7 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [isMenuOpen, showExitConfirm, searchQuery, selectedCategory]);
 
-  // Global D-Pad / remote shortcut com fase de captura (true) para interceptar o botão voltar do Fire TV
+  // Interceptação pelo controle remoto do Fire TV Stick
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       const isMenuKey =
@@ -218,21 +211,21 @@ export default function App() {
       }
 
       const isBackKey =
-        e.keyCode === 4 || // KEYCODE_BACK (Fire TV / Android)
+        e.keyCode === 4 ||
         e.key === 'GoBack' ||
         e.key === 'BrowserBack' ||
         e.key === 'Back' ||
         e.code === 'BrowserBack' ||
         e.key === 'Escape' ||
         e.keyCode === 27 ||
-        e.keyCode === 10009 || // Samsung Tizen
-        e.keyCode === 461 || // LG webOS
+        e.keyCode === 10009 ||
+        e.keyCode === 461 ||
         ((e.key === 'Backspace' || e.keyCode === 8) &&
           document.activeElement?.tagName !== 'INPUT' &&
           document.activeElement?.tagName !== 'TEXTAREA');
 
-      // Interceptação do botão Voltar do Fire TV quando não há mais telas
       if (isBackKey) {
+        // 1. Se o menu estiver aberto, fecha o menu
         if (isMenuOpen) {
           e.preventDefault();
           e.stopPropagation();
@@ -240,6 +233,7 @@ export default function App() {
           return;
         }
 
+        // 2. Se a confirmação já estiver aberta, fecha ela e cancela
         if (showExitConfirm) {
           e.preventDefault();
           e.stopPropagation();
@@ -248,16 +242,18 @@ export default function App() {
           return;
         }
 
-        // Se tem texto digitado na busca ou campo focado, limpa e foca nos canais
+        // 3. Se estiver pesquisando, limpa a pesquisa
         if (searchQuery) {
           e.preventDefault();
           e.stopPropagation();
           soundService.playNav();
           setSearchQuery('');
+          const firstCard = document.querySelector<HTMLElement>('[data-channel-name]');
+          firstCard?.focus();
           return;
         }
 
-        // Se está filtrado por categoria, volta para TODOS
+        // 4. Se estiver em uma categoria, volta para TODOS
         if (selectedCategory !== 'TODOS') {
           e.preventDefault();
           e.stopPropagation();
@@ -266,7 +262,7 @@ export default function App() {
           return;
         }
 
-        // Não tem mais tela anterior e ele fosse sair: pergunta se deseja sair
+        // 5. CHEGOU NA ÚLTIMA TELA: Pergunta se deseja sair
         e.preventDefault();
         e.stopPropagation();
         soundService.playNav();
@@ -283,7 +279,6 @@ export default function App() {
       }
     };
 
-    // O 'true' garante que a TV intercepta o clique do controle antes de fechar o app
     window.addEventListener('keydown', handleGlobalKey, true);
     return () => window.removeEventListener('keydown', handleGlobalKey, true);
   }, [isMenuOpen, showExitConfirm, searchQuery, selectedCategory]);
@@ -356,7 +351,7 @@ export default function App() {
         />
       </div>
 
-      {/* Main View: Fileiras (Carrossel TV), Mosaico (Grid) ou Guia (EPG) */}
+      {/* Main View: Fileiras, Mosaico ou Guia EPG */}
       <main className="flex-1">
         {viewMode === 'rows' && (
           <ChannelRows
@@ -387,7 +382,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Floating Smart TV Toast Notification */}
+      {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 bg-[#171a23]/95 border border-amber-400/60 rounded-xl shadow-2xl text-amber-300 text-xs sm:text-sm font-bold flex items-center gap-2 backdrop-blur-md transition-all">
           <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping" />
@@ -395,17 +390,17 @@ export default function App() {
         </div>
       )}
 
-      {/* Trava de Segurança: Modal de Confirmação de Saída */}
+      {/* Modal de Confirmação de Saída */}
       <ExitConfirmModal
         isOpen={showExitConfirm}
         onCancel={() => setShowExitConfirm(false)}
         onConfirmExit={handleConfirmExit}
       />
 
-      {/* Clean TV Footer */}
+      {/* Rodapé */}
       <Footer totalChannels={channels.length} favoritesCount={favorites.length} />
 
-      {/* Three Dots / Menu List Modal */}
+      {/* Menu Modal (três pontinhos) */}
       <MenuModal
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
@@ -417,7 +412,6 @@ export default function App() {
         }}
         favoritesCount={favorites.length}
         totalChannels={channels.length}
-        onOpenExit={() => setShowExitConfirm(true)}
       />
     </div>
   );
