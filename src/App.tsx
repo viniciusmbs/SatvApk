@@ -24,6 +24,10 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('TODOS');
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Estado para controlar a caixa de diálogo de confirmação de saída
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -127,8 +131,8 @@ export default function App() {
     setSelectedCategory('TODOS');
   };
 
-  // Active TV tabulation navigation hook (disabled while menu modal is open)
-  const { lastFocusedCardRef } = useTvNavigation({ enabled: !isMenuOpen });
+  // Active TV tabulation navigation hook (disabled while menu modal or exit modal is open)
+  const { lastFocusedCardRef } = useTvNavigation({ enabled: !isMenuOpen && !showExitConfirm });
 
   const handleSelectChannel = (ch: Channel) => {
     const cardEl =
@@ -140,11 +144,8 @@ export default function App() {
   };
 
   // Global D-Pad / remote shortcut:
-  // - Menu button (3 tracinhos / 3 pontinhos no Fire TV = KeyCode 82 / ContextMenu):
-  //    * Abre o Menu Principal com a lista de opções e modos de exibição
-  // - Favoritar no controle:
-  //    * Basta SEGURAR o botão central (OK) por 1 segundo no canal, ou apertar Play/Pause!
-  // - Tecla '/' ou 's' para ir direto na busca
+  // - Menu button (3 pontinhos no Fire TV = KeyCode 82 / ContextMenu): Abre o Menu Principal
+  // - Botão Voltar (Escape / Backspace): Intercepta fechamento acidental e exibe confirmação
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       const isMenuKey =
@@ -162,6 +163,22 @@ export default function App() {
         return;
       }
 
+      // Interceptação do botão Voltar do controle remoto da TV
+      if (e.key === 'Escape' || e.key === 'Backspace' || e.keyCode === 27 || e.keyCode === 8) {
+        // Se houver algum modal aberto (Menu Principal ou outro), deixa o modal fechar primeiro
+        const isAnyModalOpen = document.querySelector('[role="dialog"]') !== null || isMenuOpen || showExitConfirm;
+        if (isAnyModalOpen) {
+          if (showExitConfirm) {
+            setShowExitConfirm(false);
+            e.preventDefault();
+          }
+          return;
+        }
+
+        e.preventDefault();
+        setShowExitConfirm(true);
+      }
+
       if ((e.key === '/' || e.key === 's') && document.activeElement?.tagName !== 'INPUT') {
         const searchInput = document.getElementById('channel-search-input');
         if (searchInput) {
@@ -172,7 +189,7 @@ export default function App() {
     };
     window.addEventListener('keydown', handleGlobalKey);
     return () => window.removeEventListener('keydown', handleGlobalKey);
-  }, []);
+  }, [isMenuOpen, showExitConfirm]);
 
   return (
     <div className="min-h-screen bg-[#0c0e14] text-gray-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
@@ -236,6 +253,46 @@ export default function App() {
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 bg-[#171a23]/95 border border-amber-400/60 rounded-xl shadow-2xl text-amber-300 text-xs sm:text-sm font-bold flex items-center gap-2 backdrop-blur-md transition-all">
           <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping" />
           <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Modal de Confirmação de Saída */}
+      {showExitConfirm && (
+        <div role="dialog" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-[#171a23] border border-white/15 rounded-xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4 animate-in fade-in zoom-in duration-200">
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-white">Deseja mesmo sair?</h3>
+              <p className="text-xs text-slate-400">
+                Você deseja fechar ou sair do aplicativo SATV?
+              </p>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                autoFocus
+                type="button"
+                onClick={() => setShowExitConfirm(false)}
+                className="flex-1 py-2 px-4 rounded-lg bg-[#262b38] hover:bg-[#323846] text-white text-xs font-bold transition border border-white/10 cursor-pointer outline-none focus:ring-2 focus:ring-white"
+              >
+                Não
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    window.close();
+                  } catch {
+                    // fallback
+                  }
+                  window.location.href = 'about:blank';
+                }}
+                className="flex-1 py-2 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition cursor-pointer outline-none focus:ring-2 focus:ring-red-400"
+              >
+                Sim, Sair
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
