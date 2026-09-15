@@ -1,29 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-  LayoutGrid,
-  CalendarDays,
-  Rows3,
-  Clock,
-  Star,
-  Menu as MenuIcon,
-  Volume2,
-  VolumeX,
-  SlidersHorizontal,
-  MoreVertical,
-} from 'lucide-react';
-import { ViewMode, UiDensity } from '../types';
-import { soundService } from '../services/soundService';
+import { LayoutGrid, Menu, Rows3, Clock, Star, MoreVertical, Volume2, VolumeX } from 'lucide-react';
+import { ViewMode } from '../types';
 
 interface HeaderProps {
   totalChannels: number;
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
   favoritesCount?: number;
-  isFavoritesActive?: boolean;
   onOpenFavorites?: () => void;
-  onToggleChannelGuide?: () => void;
-  density?: UiDensity;
-  setDensity?: (density: UiDensity) => void;
+  onOpenMenu?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -31,14 +16,11 @@ const Header: React.FC<HeaderProps> = ({
   viewMode,
   setViewMode,
   favoritesCount = 0,
-  isFavoritesActive = false,
   onOpenFavorites,
-  onToggleChannelGuide,
-  density = 'compact',
-  setDensity,
+  onOpenMenu,
 }) => {
   const [timeStr, setTimeStr] = useState('');
-  const [isMuted, setIsMuted] = useState(() => soundService.getIsMuted());
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     const updateTime = () => {
@@ -55,52 +37,48 @@ const Header: React.FC<HeaderProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  const handleToggleMute = () => {
-    const muted = soundService.toggleMute();
-    setIsMuted(muted);
-    if (!muted) {
-      soundService.playClick();
-    }
+  const toggleSound = () => {
+    setIsMuted((prev) => !prev);
+    // Mute or unmute any media elements on page if present
+    document.querySelectorAll('video, audio').forEach((el) => {
+      (el as HTMLMediaElement).muted = !isMuted;
+    });
   };
-
-  const cycleDensity = () => {
-    if (!setDensity) return;
-    if (density === 'compact') setDensity('normal');
-    else if (density === 'normal') setDensity('large');
-    else setDensity('compact');
-  };
-
-  const densityLabel =
-    density === 'compact' ? 'Pequeno' : density === 'large' ? 'Grande' : 'Médio';
 
   return (
-    <header 
-      style={{ backgroundColor: '#330303' }}
-      className="bg-[#450101] bg-satv-maroon text-white shadow-md border-b border-[#2d0000] select-none py-1 sm:py-1.5"
-    >
-      <div className="tv-safe-container">
-        <div className="flex items-center justify-between h-11 sm:h-14 relative">
-          {/* Logo & Signature Slogan (Left aligned) */}
-          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
-            <img
-              src="https://i.imgur.com/VWtF2t5.jpeg"
-              alt="SATV Logo"
-              className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full border border-white/80 shadow-md object-cover bg-black"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = 'none';
-              }}
-            />
-            <span
-              className="font-slogan-cursive text-white text-[15px] min-[400px]:text-xl sm:text-2xl md:text-3xl font-normal tracking-wide drop-shadow-md select-none whitespace-nowrap"
-            >
-              Aqui você é a nossa atração
-            </span>
+    <header className="bg-gradient-to-r from-[#5f0d0d] via-[#851616] to-[#4e0909] text-white shadow-lg border-b border-black/30 select-none">
+      <div className="w-full px-3 sm:px-5 lg:px-6">
+        <div className="flex items-center justify-between h-13 sm:h-14">
+          {/* Logo & Calligraphic Slogan ("Aqui você é a nossa atração") */}
+          <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
+            <div className="relative flex items-center justify-center shrink-0">
+              <img
+                src="https://i.imgur.com/VWtF2t5.jpeg"
+                alt="SATV Logo"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-white/90 shadow-md object-cover bg-black"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
+              <span className="sr-only">SATV</span>
+            </div>
+
+            {/* Slogan cursivo clássico e refinado */}
+            <div className="flex items-baseline gap-2 min-w-0">
+              <h1
+                style={{ fontFamily: "'Alex Brush', 'Great Vibes', cursive" }}
+                className="text-2xl sm:text-3xl text-white font-normal tracking-wide drop-shadow-md truncate py-0.5"
+              >
+                Aqui você é a nossa atração
+              </h1>
+            </div>
           </div>
 
-          {/* Navigation Tabs & Controls (Right) */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            {/* View Mode Switcher (Fileiras / Mosaico / Guia EPG) + Favoritos */}
-            <div className="flex items-center p-0.5 bg-black/40 rounded-lg sm:rounded-xl border border-white/15 shadow-inner">
+          {/* Navigation Tabs, Audio, Clock & Guia Button */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {/* View Mode Switcher (Favoritos, Fileiras, Mosaico, Guia) */}
+            <div className="flex items-center p-0.5 sm:p-1 bg-black/50 rounded-full border border-white/15 shadow-inner">
+              {/* Favoritos */}
               {onOpenFavorites && (
                 <button
                   id="tab-btn-favoritos"
@@ -108,133 +86,116 @@ const Header: React.FC<HeaderProps> = ({
                   data-tv-nav="tab"
                   tabIndex={0}
                   onClick={onOpenFavorites}
-                  className={`tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none mr-0.5 ${
-                    isFavoritesActive
-                      ? 'bg-amber-400 text-black shadow-md ring-2 ring-amber-300 font-black'
-                      : 'text-amber-300 hover:text-amber-200 hover:bg-amber-500/20'
-                  }`}
-                  title={isFavoritesActive ? 'Exibindo Favoritos. Clique para ver Todos' : 'Ver canais favoritos'}
+                  className="tv-nav-focus flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.2 rounded-full text-xs font-bold transition-all cursor-pointer outline-none text-amber-400 hover:text-amber-300 hover:bg-amber-500/20"
+                  title="Acessar canais favoritos (tecla 0 no controle)"
                 >
-                  <Star className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isFavoritesActive ? 'fill-black text-black' : 'fill-amber-400 text-amber-400'}`} />
-                  <span className="hidden min-[520px]:inline">Favoritos</span>
+                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  <span className="hidden xs:inline font-bold">Favoritos</span>
                   {favoritesCount > 0 && (
-                    <span className={`px-1 sm:px-1.5 py-0.2 text-[8px] sm:text-[9px] rounded-full font-extrabold ml-0.5 ${
-                      isFavoritesActive ? 'bg-black text-amber-300' : 'bg-amber-400 text-black'
-                    }`}>
+                    <span className="px-1.5 py-0.2 text-[9px] bg-amber-400 text-black rounded-full font-black ml-0.5">
                       {favoritesCount}
                     </span>
                   )}
                 </button>
               )}
 
+              {/* Fileiras */}
               <button
                 id="tab-btn-fileiras"
                 type="button"
                 data-tv-nav="tab"
                 tabIndex={0}
                 onClick={() => setViewMode('rows')}
-                className={`tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none ${
-                  viewMode === 'rows' && !isFavoritesActive
-                    ? 'bg-white text-[#450101] shadow-md ring-2 ring-white/70'
-                    : 'text-red-100 hover:text-white hover:bg-white/10'
+                className={`tv-nav-focus flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.2 rounded-full text-xs font-bold transition-all cursor-pointer outline-none ${
+                  viewMode === 'rows'
+                    ? 'bg-white text-[#851616] shadow-md'
+                    : 'text-gray-200 hover:text-white hover:bg-white/10'
                 }`}
-                title="Modo TV: fileiras horizontais de canais"
+                title="Modo TV: fileiras horizontais por categoria"
               >
-                <Rows3 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                <span className="hidden min-[520px]:inline">Fileiras</span>
+                <Rows3 className="w-3.5 h-3.5" />
+                <span className="hidden xs:inline">Fileiras</span>
               </button>
 
+              {/* Mosaico */}
               <button
                 id="tab-btn-canais"
                 type="button"
                 data-tv-nav="tab"
                 tabIndex={0}
                 onClick={() => setViewMode('grid')}
-                className={`tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none ${
-                  viewMode === 'grid' && !isFavoritesActive
-                    ? 'bg-white text-[#450101] shadow-md ring-2 ring-white/70'
-                    : 'text-red-100 hover:text-white hover:bg-white/10'
+                className={`tv-nav-focus flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.2 rounded-full text-xs font-bold transition-all cursor-pointer outline-none ${
+                  viewMode === 'grid'
+                    ? 'bg-white text-[#851616] shadow-md'
+                    : 'text-gray-200 hover:text-white hover:bg-white/10'
                 }`}
-                title="Modo Mosaico: grade compacta de quadradinhos"
+                title="Modo Mosaico: grade vertical de canais"
               >
-                <LayoutGrid className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                <span className="hidden min-[520px]:inline">Mosaico</span>
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span className="hidden xs:inline">Mosaico</span>
               </button>
 
-              {/* Botão Guia de Canais (Três Tracinhos / Menu) */}
+              {/* Guia EPG (Tab) */}
               <button
                 id="tab-btn-guia-epg"
                 type="button"
                 data-tv-nav="tab"
                 tabIndex={0}
-                onClick={() => {
-                  if (onToggleChannelGuide) {
-                    onToggleChannelGuide();
-                  } else {
-                    setViewMode(viewMode === 'epg' ? 'rows' : 'epg');
-                  }
-                }}
-                className={`tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none ${
+                onClick={() => setViewMode('epg')}
+                className={`tv-nav-focus flex items-center gap-1 px-2.5 sm:px-3.5 py-1 sm:py-1.2 rounded-full text-xs font-bold transition-all cursor-pointer outline-none ${
                   viewMode === 'epg'
-                    ? 'bg-white text-[#450101] shadow-md ring-2 ring-white/70'
-                    : 'text-red-100 hover:text-white hover:bg-white/10'
+                    ? 'bg-white text-[#851616] shadow-md font-extrabold'
+                    : 'text-gray-200 hover:text-white hover:bg-white/10'
                 }`}
-                title="Guia de Canais (EPG) • Atalho no controle: botão com três tracinhos (Menu)"
+                title="Guia EPG de canais e programação ao vivo"
               >
-                <MenuIcon className="w-3.5 h-3.5 text-amber-300" />
+                <Menu className={`w-3.5 h-3.5 ${viewMode === 'epg' ? 'text-amber-500' : 'text-gray-200'}`} />
                 <span>Guia</span>
               </button>
             </div>
 
-            {/* Audio Feedback Toggle Button (Som de Clique) */}
+            {/* Volume / Áudio Button */}
             <button
-              id="btn-toggle-sound"
+              id="btn-header-volume"
               type="button"
               data-tv-nav="tab"
               tabIndex={0}
-              onClick={handleToggleMute}
-              className={`tv-nav-focus flex items-center justify-center p-1 sm:p-1.5 rounded-lg sm:rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/15 shadow-inner transition cursor-pointer outline-none ${
-                isMuted ? 'text-white/40' : 'text-amber-300'
-              }`}
-              title={isMuted ? 'Som de clique desativado (Clique para ativar som)' : 'Som de clique ativado (clicksan.mp3)'}
-              aria-label="Som de clique de navegação"
+              onClick={toggleSound}
+              className="tv-nav-focus flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-black/60 active:bg-black/80 text-gray-200 hover:text-white border border-white/15 shadow-inner transition cursor-pointer outline-none"
+              title={isMuted ? 'Ativar Som' : 'Desativar Som (Mudo)'}
+              aria-label="Controle de Áudio"
             >
-              {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+              {isMuted ? (
+                <VolumeX className="w-4 h-4 text-red-400" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-gray-200" />
+              )}
             </button>
 
             {/* Smart TV Real-Time Clock */}
             {timeStr && (
-              <div className="hidden lg:flex items-center gap-1 px-2 py-1 rounded-lg bg-black/30 border border-white/10 text-xs font-mono font-bold text-white shadow-sm">
-                <Clock className="w-3 h-3 text-red-300" />
+              <div className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full bg-black/40 border border-white/15 text-xs font-mono font-bold text-white shadow-inner">
+                <Clock className="w-3.5 h-3.5 text-gray-300" />
                 <span>{timeStr}</span>
               </div>
             )}
 
-            {/* Botão de Três Pontinhos (Abre / Alterna Guia de Canais EPG) */}
-            <button
-              id="btn-three-dots-menu"
-              type="button"
-              data-tv-nav="tab"
-              tabIndex={0}
-              onClick={() => {
-                soundService.playSelect();
-                if (onToggleChannelGuide) {
-                  onToggleChannelGuide();
-                } else {
-                  setViewMode(viewMode === 'epg' ? 'rows' : 'epg');
-                }
-              }}
-              className={`tv-nav-focus flex items-center justify-center gap-1 px-2 py-1 rounded-lg sm:rounded-xl border border-white/20 shadow-inner transition cursor-pointer outline-none ${
-                viewMode === 'epg'
-                  ? 'bg-amber-400 text-black font-black shadow-md ring-2 ring-amber-300'
-                  : 'bg-black/40 hover:bg-black/60 active:bg-black/80 text-white'
-              }`}
-              title="Guia de Canais (EPG) • Botão de três pontinhos ou menu do controle"
-              aria-label="Abrir Guia de Canais EPG"
-            >
-              <MoreVertical className="w-4 h-4" />
-              <span className="text-[10px] sm:text-xs font-bold hidden sm:inline">Guia</span>
-            </button>
+            {/* Botão Guia / Menu Amarelo Destacado com Três Pontinhos (⋮ Guia) */}
+            {onOpenMenu && (
+              <button
+                id="btn-three-dots-menu"
+                type="button"
+                data-tv-nav="tab"
+                tabIndex={0}
+                onClick={onOpenMenu}
+                className="tv-nav-focus flex items-center gap-1 px-3 sm:px-4 py-1.5 rounded-full bg-[#eab308] hover:bg-[#facc15] active:bg-[#ca8a04] text-black font-extrabold text-xs shadow-md shadow-amber-950/40 transition cursor-pointer outline-none border border-amber-300/60"
+                title="Abrir Menu Principal e Modos de Exibição (ou aperte Menu no controle)"
+                aria-label="Menu e Guia de Opções"
+              >
+                <MoreVertical className="w-4 h-4 text-black stroke-[2.5]" />
+                <span>Guia</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

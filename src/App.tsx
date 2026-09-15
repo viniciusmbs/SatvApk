@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import type { Channel, GroupedChannels, ViewMode, UiDensity } from './types';
+import type { Channel, GroupedChannels, ViewMode } from './types';
 import { parseM3U } from './services/m3uParser';
 import { m3uPlaylist } from './data/playlist';
 import Header from './components/Header';
@@ -8,21 +8,15 @@ import ChannelRows from './components/ChannelRows';
 import ChannelGrid from './components/ChannelGrid';
 import EpgGrid from './components/EpgGrid';
 import Footer from './components/Footer';
+import { MenuModal } from './components/MenuModal';
 import { useTvNavigation } from './services/useTvNavigation';
-import { soundService } from './services/soundService';
 
 export default function App() {
-  const [channels, setChannels] = useState<Channel[]>(() => {
-    try {
-      return parseM3U(m3uPlaylist);
-    } catch (err) {
-      console.error('Erro ao processar canais:', err);
-      return [];
-    }
-  });
+  const [channels, setChannels] = useState<Channel[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('TODOS');
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -33,32 +27,6 @@ export default function App() {
       return [];
     }
   });
-
-  // UI Density state (compact by default for optimal Fire TV Stick & Mobile rendering)
-  const [uiDensity, setUiDensity] = useState<UiDensity>(() => {
-    try {
-      const saved = localStorage.getItem('satv_ui_density');
-      if (saved === 'compact' || saved === 'normal' || saved === 'large') {
-        return saved;
-      }
-      return 'compact';
-    } catch {
-      return 'compact';
-    }
-  });
-
-  const handleSetUiDensity = (newDensity: UiDensity) => {
-    setUiDensity(newDensity);
-    soundService.playClick();
-    try {
-      localStorage.setItem('satv_ui_density', newDensity);
-    } catch {
-      // ignore
-    }
-    const label =
-      newDensity === 'compact' ? 'Pequeno (Compacto)' : newDensity === 'large' ? 'Grande' : 'Médio';
-    showToast(`📐 Tamanho dos Ícones: ${label}`);
-  };
 
   const showToast = (msg: string) => {
     if (toastTimeoutRef.current) {
@@ -71,9 +39,8 @@ export default function App() {
     }, 2800);
   };
 
-  // Toggle favorite channel explicitly
+  // Toggle favorite channel
   const handleToggleFavorite = (channelName: string) => {
-    soundService.playSelect();
     setFavorites((prev) => {
       const isAlready = prev.includes(channelName);
       const next = isAlready
@@ -87,7 +54,7 @@ export default function App() {
       showToast(
         isAlready
           ? `Removido dos Favoritos: ${channelName}`
-          : `⭐ ${channelName} adicionado aos Favoritos!`
+          : `⭐ ${channelName} adicionado aos Meus Favoritos!`
       );
       return next;
     });
@@ -149,7 +116,6 @@ export default function App() {
   }, [filteredChannels]);
 
   const handleClearFilters = () => {
-    soundService.playClick();
     setSearchQuery('');
     setSelectedCategory('TODOS');
   };
@@ -158,82 +124,34 @@ export default function App() {
   const { lastFocusedCardRef } = useTvNavigation({ enabled: true });
 
   const handleSelectChannel = (ch: Channel) => {
-    try {
-      const channelId = ch.id || encodeURIComponent(ch.name);
-      localStorage.setItem('satv_last_focused_channel_name', ch.name);
-      localStorage.setItem('satv_last_focused_channel_id', channelId);
-      localStorage.setItem('satv_last_scroll_y', String(window.scrollY));
-      localStorage.setItem('satv_should_restore_channel', 'true');
-      sessionStorage.setItem('satv_last_focused_channel_name', ch.name);
-      sessionStorage.setItem('satv_last_focused_channel_id', channelId);
-      sessionStorage.setItem('satv_last_scroll_y', String(window.scrollY));
-      sessionStorage.setItem('satv_should_restore_channel', 'true');
-    } catch {
-      // ignore
-    }
-
     const cardEl =
       document.getElementById(`channel-card-${ch.id || encodeURIComponent(ch.name)}`) ||
-      document.getElementById(`epg-card-${ch.id || encodeURIComponent(ch.name)}`) ||
-      document.querySelector<HTMLElement>(`[data-channel-name="${ch.name}"]`);
-
+      document.getElementById(`epg-card-${ch.id || encodeURIComponent(ch.name)}`);
     if (cardEl) {
       lastFocusedCardRef.current = cardEl;
     }
   };
 
-  // Sound feedback on window scroll (when scrolling down/up on mobile or TV)
-  useEffect(() => {
-    const handleScroll = () => {
-      soundService.playScroll();
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   // Global D-Pad / remote shortcut:
-  // - Menu button (3 tracinhos / 3 pontinhos no controle remoto do IPTV / Fire TV = KeyCode 82 / ContextMenu / Guide / EPG / KeyCode 172):
-  //    * Abre / Alterna diretamente a GUIA DE CANAIS (EPG)!
-  // - Tecla 'g' ou 'm': abre a Guia de Canais
+  // - Menu button (3 tracinhos / 3 pontinhos no Fire TV = KeyCode 82 / ContextMenu):
+  //    * Abre o Menu Principal com a lista de opções e modos de exibição
+  // - Favoritar no controle:
+  //    * Basta SEGURAR o botão central (OK) por 1 segundo no canal, ou apertar Play/Pause!
   // - Tecla '/' ou 's' para ir direto na busca
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
-      const isGuideOrMenuKey =
-        e.keyCode === 82 || // Android KEYCODE_MENU (Fire TV 3 Tracinhos)
+      const isMenuKey =
+        e.keyCode === 82 ||
         e.which === 82 ||
-        e.keyCode === 172 || // Android KEYCODE_GUIDE
-        e.which === 172 ||
-        e.keyCode === 165 || // Android KEYCODE_INFO
-        e.which === 165 ||
-        e.keyCode === 458 || // Smart TV EPG Key
-        e.keyCode === 93 || // ContextMenu
-        e.which === 93 ||
-        e.keyCode === 115 || // F4 (Mapped on some TV webviews)
-        e.keyCode === 209 || // KEYCODE_PROG_RED / KEYCODE_TV
-        e.keyCode === 170 || // KEYCODE_TV
         e.key === 'ContextMenu' ||
         e.code === 'ContextMenu' ||
         e.key === 'Menu' ||
-        e.code === 'Menu' ||
-        e.key === 'Guide' ||
-        e.code === 'Guide' ||
-        e.key === 'EPG' ||
-        ((e.key === 'm' || e.key === 'M' || e.key === 'g' || e.key === 'G') &&
+        ((e.key === 'm' || e.key === 'M') &&
           document.activeElement?.tagName !== 'INPUT');
 
-      if (isGuideOrMenuKey) {
+      if (isMenuKey) {
         e.preventDefault();
-        soundService.playClick();
-        setViewMode((prev) => {
-          const nextMode: ViewMode = prev === 'epg' ? 'rows' : 'epg';
-          showToast(
-            nextMode === 'epg'
-              ? '📺 Guia de Canais (EPG) Aberta!'
-              : '📺 Modo Fileiras Aberto!'
-          );
-          return nextMode;
-        });
+        setIsMenuOpen((prev) => !prev);
         return;
       }
 
@@ -241,7 +159,6 @@ export default function App() {
         const searchInput = document.getElementById('channel-search-input');
         if (searchInput) {
           e.preventDefault();
-          soundService.playClick();
           searchInput.focus();
         }
       }
@@ -257,37 +174,20 @@ export default function App() {
         <Header
           totalChannels={channels.length}
           viewMode={viewMode}
-          setViewMode={(mode) => {
-            soundService.playClick();
-            setViewMode(mode);
-          }}
+          setViewMode={setViewMode}
           favoritesCount={favorites.length}
-          isFavoritesActive={selectedCategory === 'FAVORITOS'}
           onOpenFavorites={() => {
-            soundService.playClick();
-            if (selectedCategory === 'FAVORITOS') {
-              setSelectedCategory('TODOS');
-            } else {
-              setSelectedCategory('FAVORITOS');
-              if (viewMode === 'epg') setViewMode('rows');
-            }
+            setSelectedCategory('FAVORITOS');
+            if (viewMode === 'epg') setViewMode('rows');
           }}
-          onToggleChannelGuide={() => {
-            soundService.playClick();
-            setViewMode((prev) => (prev === 'epg' ? 'rows' : 'epg'));
-          }}
-          density={uiDensity}
-          setDensity={handleSetUiDensity}
+          onOpenMenu={() => setIsMenuOpen(true)}
         />
         <SearchBar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           categories={categories}
           selectedCategory={selectedCategory}
-          setSelectedCategory={(cat) => {
-            soundService.playClick();
-            setSelectedCategory(cat);
-          }}
+          setSelectedCategory={setSelectedCategory}
           filteredCount={filteredChannels.length}
           favoritesCount={favorites.length}
         />
@@ -302,7 +202,6 @@ export default function App() {
             onToggleFavorite={handleToggleFavorite}
             onSelectChannel={handleSelectChannel}
             onClearFilters={handleClearFilters}
-            density={uiDensity}
           />
         )}
         {viewMode === 'grid' && (
@@ -312,12 +211,13 @@ export default function App() {
             onToggleFavorite={handleToggleFavorite}
             onSelectChannel={handleSelectChannel}
             onClearFilters={handleClearFilters}
-            density={uiDensity}
           />
         )}
         {viewMode === 'epg' && (
           <EpgGrid
             groupedChannels={groupedChannels}
+            favorites={favorites}
+            onToggleFavorite={handleToggleFavorite}
             onSelectChannel={handleSelectChannel}
             onClearFilters={handleClearFilters}
           />
@@ -326,7 +226,7 @@ export default function App() {
 
       {/* Floating Smart TV Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 bg-[#171a23]/95 border border-amber-400/60 rounded-xl shadow-2xl text-amber-300 text-xs sm:text-sm font-bold flex items-center gap-2 backdrop-blur-md transition-all animate-fadeIn">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 bg-[#171a23]/95 border border-amber-400/60 rounded-xl shadow-2xl text-amber-300 text-xs sm:text-sm font-bold flex items-center gap-2 backdrop-blur-md transition-all">
           <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping" />
           <span>{toastMessage}</span>
         </div>
@@ -334,6 +234,20 @@ export default function App() {
 
       {/* Clean TV Footer */}
       <Footer totalChannels={channels.length} favoritesCount={favorites.length} />
+
+      {/* Three Dots / Menu List Modal */}
+      <MenuModal
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        onOpenFavorites={() => {
+          setSelectedCategory('FAVORITOS');
+          if (viewMode === 'epg') setViewMode('rows');
+        }}
+        favoritesCount={favorites.length}
+        totalChannels={channels.length}
+      />
     </div>
   );
 }
