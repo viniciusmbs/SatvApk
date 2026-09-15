@@ -60,13 +60,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const isFavoritesSelected = selectedCategory === 'FAVORITOS';
 
   return (
-    <div className="w-full bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-1.5 sm:py-2 shadow-md overflow-hidden">
-      <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 space-y-1.5 min-w-0">
-        {/* Search input bar & Counter - Reduzido o tamanho da barra em 1/4 (de max-w-xl para max-w-md) */}
-        <div className="flex flex-col sm:flex-row gap-2 items-center justify-between min-w-0">
-          <div className="relative w-full max-w-md min-w-0">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-              <Search className="h-3.5 w-3.5" />
+    <div className="w-full bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-1 sm:py-1.5 shadow-md overflow-hidden">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 space-y-1 min-w-0">
+        
+        {/* Linha superior: Input de busca compacto + Contador de canais */}
+        <div className="flex items-center justify-between gap-3 min-w-0">
+          {/* Barra de busca redimensionada para ficar menor (max-w-xs / ~1/4 menor) */}
+          <div className="relative w-full max-w-xs sm:max-w-sm min-w-0">
+            <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400">
+              <Search className="h-3 w-3" />
             </div>
             <input
               id="channel-search-input"
@@ -74,30 +76,32 @@ const SearchBar: React.FC<SearchBarProps> = ({
               tabIndex={1}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar canal por nome ou categoria..."
-              className="w-full bg-[#171a23] text-gray-100 placeholder-slate-400 text-xs rounded-lg pl-9 pr-9 py-1.5 border border-white/15 focus:outline-none focus:ring-1 focus:ring-[#6b0707] focus:border-[#6b0707] transition shadow-sm"
+              placeholder="Buscar canal..."
+              className="w-full bg-[#171a23] text-gray-100 placeholder-slate-400 text-xs rounded-md pl-8 pr-8 py-1 border border-white/15 focus:outline-none focus:ring-1 focus:ring-[#6b0707] focus:border-[#6b0707] transition shadow-sm"
             />
             {searchQuery && (
               <button
                 onClick={handleClearSearch}
                 tabIndex={-1}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white cursor-pointer"
+                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-white cursor-pointer"
                 title="Limpar busca"
               >
-                <X className="h-4 w-4" />
+                <X className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
 
-          <div className="text-xs text-slate-400 font-medium whitespace-nowrap hidden sm:block shrink-0">
+          {/* Contador de canais alinhado na mesma linha */}
+          <div className="text-[11px] sm:text-xs text-slate-400 font-medium whitespace-nowrap shrink-0">
             Mostrando <span className="text-red-400 font-semibold">{filteredCount}</span> canais
           </div>
         </div>
 
-        {/* Tabulated Category Pills & Favorites integrated */}
+        {/* Linha inferior: Pílulas de Categorias e Favoritos */}
         <div className="w-full min-w-0">
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar w-full min-w-0">
-            {/* Botão Favoritos incorporado nas pílulas */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 no-scrollbar w-full min-w-0">
+            
+            {/* Botão Favoritos */}
             {onOpenFavorites && (
               <button
                 id="tab-btn-favoritos"
@@ -106,17 +110,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 tabIndex={0}
                 onClick={onOpenFavorites}
                 style={{ outline: 'none', boxShadow: 'none' }}
-                className={`flex items-center gap-1 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                className={`flex items-center gap-1 px-2.5 py-1 sm:px-3 sm:py-1 rounded-md text-[11px] font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
                   isFavoritesSelected
                     ? 'bg-amber-500 text-black border border-amber-300 font-bold'
                     : 'bg-[#171a23] hover:bg-[#3b0404] text-amber-400 border border-white/15 hover:border-[#6b0707]'
                 }`}
                 title="Acessar canais favoritos"
               >
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                 <span>Favoritos</span>
                 {favoritesCount > 0 && (
-                  <span className="px-1.5 py-0.2 text-[9px] bg-amber-400 text-black rounded-full font-black ml-0.5">
+                  <span className="px-1 py-0.2 text-[9px] bg-amber-400 text-black rounded-full font-black ml-0.5">
                     {favoritesCount}
                   </span>
                 )}
@@ -130,7 +134,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               tabIndex={0}
               onClick={() => handleSelectCategory('TODOS')}
               style={{ outline: 'none', boxShadow: 'none' }}
-              className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+              className={`px-2.5 py-1 sm:px-3 sm:py-1 rounded-md text-[11px] font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
                 selectedCategory === 'TODOS'
                   ? 'bg-[#3b0404] text-white border border-[#6b0707]'
                   : 'bg-[#171a23] hover:bg-[#3b0404] text-slate-300 hover:text-white border border-white/15 hover:border-[#6b0707]'
@@ -151,7 +155,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                   tabIndex={0}
                   onClick={() => handleSelectCategory(category)}
                   style={{ outline: 'none', boxShadow: 'none' }}
-                  className={`px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                  className={`px-2.5 py-1 sm:px-3 sm:py-1 rounded-md text-[11px] font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
                     isSelected
                       ? 'bg-[#3b0404] text-white border border-[#6b0707]'
                       : 'bg-[#171a23] hover:bg-[#3b0404] text-slate-300 hover:text-white border border-white/15 hover:border-[#6b0707]'
@@ -163,6 +167,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             })}
           </div>
         </div>
+
       </div>
     </div>
   );

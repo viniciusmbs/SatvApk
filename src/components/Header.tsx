@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutGrid, Menu, Rows3, Clock, MoreVertical, Volume2, VolumeX } from 'lucide-react'; // Removi o 'Star' daqui pois não será mais usado no header
+import { LayoutGrid, Menu, Rows3, Clock, MoreVertical, Volume2, VolumeX } from 'lucide-react';
 import { ViewMode } from '../types';
 
 interface HeaderProps {
@@ -7,7 +7,7 @@ interface HeaderProps {
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
   favoritesCount?: number;
-  onOpenFavorites?: () => void; // Você pode manter ou remover das props se não for mais usar aqui
+  onOpenFavorites?: () => void;
   onOpenMenu?: () => void;
 }
 
@@ -36,6 +36,31 @@ const Header: React.FC<HeaderProps> = ({
     const interval = setInterval(updateTime, 15000);
     return () => clearInterval(interval);
   }, []);
+
+  // Listener global para capturar o botão de menu (três traços ≡) do Fire Stick / Controle Remoto
+  useEffect(() => {
+    const handleRemoteMenuKey = (e: KeyboardEvent) => {
+      // Identifica o botão de menu do controle remoto (três traços / ContextMenu / F10 / Menu / keyCode 93 ou 18)
+      const isMenuKey =
+        e.key === 'ContextMenu' ||
+        e.key === 'Menu' ||
+        e.key === 'F10' ||
+        e.keyCode === 93 ||
+        e.keyCode === 18;
+
+      if (isMenuKey) {
+        e.preventDefault(); // Evita o comportamento padrão do navegador
+        if (onOpenMenu) {
+          onOpenMenu(); // Abre instantaneamente a guia/menu de qualquer lugar da página!
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleRemoteMenuKey);
+    return () => {
+      window.removeEventListener('keydown', handleRemoteMenuKey);
+    };
+  }, [onOpenMenu]);
 
   const toggleSound = () => {
     setIsMuted((prev) => !prev);
@@ -74,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Navigation Tabs, Audio, Clock & Guia Button */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            {/* View Mode Switcher (Fileiras, Mosaico, Guia) - O Favoritos foi removido DAQUI */}
+            {/* View Mode Switcher */}
             <div className="flex items-center p-0.5 sm:p-1 bg-black/50 rounded-full border border-white/15 shadow-inner">
               {/* Fileiras */}
               <button
