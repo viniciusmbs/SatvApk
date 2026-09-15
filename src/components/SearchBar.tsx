@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
-import { Search, X, Star, Tv, ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
+import { Search, X, Star } from 'lucide-react';
+import { soundService } from '../services/soundService';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -9,6 +10,7 @@ interface SearchBarProps {
   setSelectedCategory: (cat: string) => void;
   filteredCount: number;
   favoritesCount?: number;
+  onOpenFavorites?: () => void;
 }
 
 const CATEGORY_PRIORITY: Record<string, number> = {
@@ -36,10 +38,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   setSelectedCategory,
   filteredCount,
   favoritesCount = 0,
+  onOpenFavorites,
 }) => {
-  const categoryScrollRef = useRef<HTMLDivElement>(null);
-
-  // Sort categories strictly: CANAL, DOCUMENTÁRIOS, etc.
   const sortedCategories = [...categories].sort((a, b) => {
     const pA = CATEGORY_PRIORITY[a.toUpperCase()] ?? 50;
     const pB = CATEGORY_PRIORITY[b.toUpperCase()] ?? 50;
@@ -47,21 +47,26 @@ const SearchBar: React.FC<SearchBarProps> = ({
     return a.localeCompare(b, 'pt-BR');
   });
 
-  const handleScroll = (direction: 'left' | 'right') => {
-    if (categoryScrollRef.current) {
-      const scrollAmount = direction === 'left' ? -260 : 260;
-      categoryScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
+  const handleSelectCategory = (cat: string) => {
+    soundService.playSelect();
+    setSelectedCategory(cat);
   };
 
+  const handleClearSearch = () => {
+    soundService.playSelect();
+    setSearchQuery('');
+  };
+
+  const isFavoritesSelected = selectedCategory === 'FAVORITOS';
+
   return (
-    <div className="w-full bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-2.5 sm:py-3 shadow-md select-none">
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 space-y-2.5">
-        {/* Linha superior: Campo de Busca e Contador de Canais alinhados */}
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center justify-between">
-          <div className="relative flex-1 max-w-2xl">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-              <Search className="h-4 w-4" />
+    <div className="bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-1.5 sm:py-2 shadow-md">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 space-y-1.5">
+        {/* Search input bar & Counter */}
+        <div className="flex flex-col sm:flex-row gap-2 items-center justify-between">
+          <div className="relative w-full max-w-xl">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <Search className="h-3.5 w-3.5" />
             </div>
             <input
               id="channel-search-input"
@@ -69,13 +74,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
               tabIndex={1}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar canal por nome ou categoria (ex: ESPN, Globo, Telecine)..."
-              className="w-full bg-[#161924] hover:bg-[#1d2130] focus:bg-[#1d2130] text-gray-100 placeholder-slate-400 text-xs sm:text-sm rounded-xl pl-10 pr-10 py-2 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500/80 focus:border-red-500 transition shadow-inner"
+              placeholder="Buscar canal por nome ou categoria..."
+              className="w-full bg-[#171a23] text-gray-100 placeholder-slate-400 text-xs rounded-lg pl-9 pr-9 py-1.5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-red-500/80 focus:border-red-500 transition shadow-sm"
             />
             {searchQuery && (
               <button
-                type="button"
-                onClick={() => setSearchQuery('')}
+                onClick={handleClearSearch}
                 tabIndex={-1}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white cursor-pointer"
                 title="Limpar busca"
@@ -85,111 +89,74 @@ const SearchBar: React.FC<SearchBarProps> = ({
             )}
           </div>
 
-          {/* Badge Contador de Canais elegante e alinhado */}
-          <div className="flex items-center justify-between sm:justify-end gap-2 text-xs text-slate-300 font-medium shrink-0">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#161924] border border-white/10 shadow-sm">
-              <Tv className="w-3.5 h-3.5 text-red-400 shrink-0" />
-              <span>
-                Mostrando <strong className="text-white font-bold">{filteredCount}</strong> {filteredCount === 1 ? 'canal' : 'canais'}
-              </span>
-            </div>
+          <div className="text-xs text-slate-400 font-medium whitespace-nowrap hidden sm:block">
+            Mostrando <span className="text-red-400 font-semibold">{filteredCount}</span> canais
           </div>
         </div>
 
-        {/* Linha de Categorias com navegação e scroll suave */}
-        <div className="relative flex items-center">
-          {/* Botão rolar esquerda (desktop / TV) */}
-          <button
-            type="button"
-            tabIndex={-1}
-            onClick={() => handleScroll('left')}
-            className="hidden sm:flex shrink-0 items-center justify-center w-7 h-7 mr-1 rounded-lg bg-[#161924] hover:bg-[#202535] text-slate-400 hover:text-white border border-white/10 transition cursor-pointer"
-            title="Rolar categorias para a esquerda"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          {/* Carrossel de Categorias */}
-          <div
-            ref={categoryScrollRef}
-            className="flex-1 flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar scroll-smooth"
-          >
-            {/* Categoria: Todos */}
+        {/* Tabulated Category Pills & Favorites integrated */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          {/* Botão Favoritos incorporado nas pílulas */}
+          {onOpenFavorites && (
             <button
+              id="tab-btn-favoritos"
+              type="button"
               data-tv-nav="category"
-              data-category-index={0}
               tabIndex={0}
-              onClick={() => setSelectedCategory('TODOS')}
-              className={`tv-nav-focus shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer border ${
-                selectedCategory === 'TODOS'
-                  ? 'bg-red-600 text-white border-red-500 shadow-md ring-1 ring-red-400 font-bold'
-                  : 'bg-[#161924] hover:bg-[#202533] text-slate-300 hover:text-white border-white/10'
+              onClick={onOpenFavorites}
+              className={`tv-nav-focus flex items-center gap-1 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer shrink-0 ${
+                isFavoritesSelected
+                  ? 'bg-amber-500 text-black shadow-md ring-1 ring-amber-300 font-bold'
+                  : 'bg-[#171a23] hover:bg-[#4f0303] text-amber-400 border border-amber-500/30'
               }`}
+              title="Acessar canais favoritos"
             >
-              Todos
-            </button>
-
-            {/* Categoria: ⭐ Favoritos */}
-            <button
-              data-tv-nav="category"
-              data-category-index={1}
-              tabIndex={0}
-              onClick={() => setSelectedCategory('FAVORITOS')}
-              className={`tv-nav-focus shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all outline-none cursor-pointer border ${
-                selectedCategory === 'FAVORITOS'
-                  ? 'bg-amber-500 text-black border-amber-300 shadow-md ring-1 ring-amber-300'
-                  : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
-              }`}
-              title="Ver somente os canais favoritos"
-            >
-              <Star className={`w-3.5 h-3.5 ${selectedCategory === 'FAVORITOS' ? 'fill-black' : 'fill-amber-400'}`} />
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
               <span>Favoritos</span>
               {favoritesCount > 0 && (
-                <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                    selectedCategory === 'FAVORITOS'
-                      ? 'bg-black text-amber-300'
-                      : 'bg-amber-400 text-black'
-                  }`}
-                >
+                <span className="px-1.5 py-0.2 text-[9px] bg-amber-400 text-black rounded-full font-black ml-0.5">
                   {favoritesCount}
                 </span>
               )}
             </button>
+          )}
 
-            {/* Categorias ordenadas */}
-            {sortedCategories.map((category, idx) => {
-              const catIndex = idx + 2;
-              const isSelected = selectedCategory === category;
-              return (
-                <button
-                  key={category}
-                  data-tv-nav="category"
-                  data-category-index={catIndex}
-                  tabIndex={0}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`tv-nav-focus shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer border ${
-                    isSelected
-                      ? 'bg-red-600 text-white border-red-500 shadow-md ring-1 ring-red-400 font-bold'
-                      : 'bg-[#161924] hover:bg-[#202533] text-slate-300 hover:text-white border-white/10'
-                  }`}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Botão rolar direita (desktop / TV) */}
+          {/* Categoria: Todos */}
           <button
-            type="button"
-            tabIndex={-1}
-            onClick={() => handleScroll('right')}
-            className="hidden sm:flex shrink-0 items-center justify-center w-7 h-7 ml-1 rounded-lg bg-[#161924] hover:bg-[#202535] text-slate-400 hover:text-white border border-white/10 transition cursor-pointer"
-            title="Rolar categorias para a direita"
+            data-tv-nav="category"
+            data-category-index={0}
+            tabIndex={0}
+            onClick={() => handleSelectCategory('TODOS')}
+            className={`tv-nav-focus px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer shrink-0 ${
+              selectedCategory === 'TODOS'
+                ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
+                : 'bg-[#171a23] hover:bg-[#202533] text-slate-300 hover:text-white border border-white/10'
+            }`}
           >
-            <ChevronRight className="w-4 h-4" />
+            Todos
           </button>
+
+          {/* Demais Categorias */}
+          {sortedCategories.map((category, idx) => {
+            const catIndex = idx + 1;
+            const isSelected = selectedCategory === category;
+            return (
+              <button
+                key={category}
+                data-tv-nav="category"
+                data-category-index={catIndex}
+                tabIndex={0}
+                onClick={() => handleSelectCategory(category)}
+                className={`tv-nav-focus px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer shrink-0 ${
+                  isSelected
+                    ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
+                    : 'bg-[#171a23] hover:bg-[#202533] text-slate-300 hover:text-white border border-white/10'
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
