@@ -62,9 +62,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className="w-full bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-1.5 sm:py-2 shadow-md overflow-hidden">
       <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 space-y-1.5 min-w-0">
-        {/* Search input bar & Counter */}
+        {/* Search input bar & Counter - Reduzido o tamanho da barra em 1/4 (de max-w-xl para max-w-md) */}
         <div className="flex flex-col sm:flex-row gap-2 items-center justify-between min-w-0">
-          <div className="relative w-full max-w-xl min-w-0">
+          <div className="relative w-full max-w-md min-w-0">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
               <Search className="h-3.5 w-3.5" />
             </div>
