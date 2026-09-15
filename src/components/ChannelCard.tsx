@@ -1,212 +1,194 @@
-import React, { useRef } from 'react';
-import { ChevronLeft, ChevronRight, Star, Tv } from 'lucide-react';
-import { Channel, GroupedChannels } from '../types';
-import ChannelCard from './ChannelCard';
+import React, { useState } from 'react';
+import { Star } from 'lucide-react';
+import { Channel, UiDensity } from '../types';
+import { getChannelLogo } from '../data/channelLogos';
+import { soundService } from '../services/soundService';
 
-interface ChannelRowsProps {
-  groupedChannels: GroupedChannels;
-  favorites: string[];
-  onToggleFavorite: (channelName: string) => void;
-  onSelectChannel: (channel: Channel) => void;
-  onClearFilters: () => void;
+interface ChannelCardProps {
+  channel: Channel;
+  index: number;
+  isFavorite?: boolean;
+  onToggleFavorite?: (channelName: string) => void;
+  onSelect?: (channel: Channel) => void;
+  density?: UiDensity;
 }
 
-const CATEGORY_ORDER: Record<string, number> = {
-  'FAVORITOS': 0,
-  'CANAL': 1,
-  'DOCUMENTÁRIOS': 2,
-  'FILMES & SÉRIES': 3,
-  'FILMES E SÉRIES': 3,
-  'VARIEDADES': 4,
-  'ESPORTES': 5,
-  'ESPN': 6,
-  'PREMIERE': 7,
-  'ESPORTES PPV': 8,
-  'HBO': 9,
-  'NOTÍCIAS': 10,
-  'INFANTIS': 11,
-  'MÚSICA': 12,
-  'RELIGIOSOS': 13,
-};
-
-const RowSection: React.FC<{
-  title: string;
-  isFavRow?: boolean;
-  channels: Channel[];
-  favorites: string[];
-  startIndex: number;
-  onToggleFavorite: (channelName: string) => void;
-  onSelectChannel: (channel: Channel) => void;
-}> = ({
-  title,
-  isFavRow = false,
-  channels,
-  favorites,
-  startIndex,
+const ChannelCard: React.FC<ChannelCardProps> = ({
+  channel,
+  index,
+  isFavorite = false,
   onToggleFavorite,
-  onSelectChannel,
+  onSelect,
+  density = 'compact',
 }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [imgError, setImgError] = useState(false);
 
-  const handleScroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === 'left' ? -380 : 380;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  // Fallback to official high-quality logo mapping
+  const fallbackLogo = getChannelLogo(channel.name);
+  const logoSrc = imgError || !channel.logo ? fallbackLogo : channel.logo;
+
+  // Ação 1: Abrir o canal com o som BotaoRadio.mp3 (Enter / OK / Clique)
+  const handleOpenChannel = () => {
+    soundService.playSelect();
+    try {
+      const channelId = channel.id || encodeURIComponent(channel.name);
+      localStorage.setItem('satv_last_focused_channel_name', channel.name);
+      localStorage.setItem('satv_last_focused_channel_id', channelId);
+      localStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+      localStorage.setItem('satv_should_restore_channel', 'true');
+      sessionStorage.setItem('satv_last_focused_channel_name', channel.name);
+      sessionStorage.setItem('satv_last_focused_channel_id', channelId);
+      sessionStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+      sessionStorage.setItem('satv_should_restore_channel', 'true');
+    } catch {
+      // ignore
+    }
+    if (onSelect) {
+      onSelect(channel);
+    }
+    window.open(channel.url, '_blank', 'noopener,noreferrer');
+  };
+
+  // Ação 2: Alternar Favorito
+  const handleToggleFavoriteAction = () => {
+    soundService.playSelect();
+    if (onToggleFavorite) {
+      onToggleFavorite(channel.name);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    const code = e.keyCode || e.which;
+    const key = e.key;
+
+    // 1. Botão Play / Pause do controle do Fire TV / Android TV (KeyCode 85 / MediaPlayPause)
+    // Favorita ou Desfavorita o canal instantaneamente com o botão Play/Pause!
+    const isPlayPauseKey =
+      code === 85 || // KEYCODE_MEDIA_PLAY_PAUSE
+      code === 126 || // KEYCODE_MEDIA_PLAY
+      code === 127 || // KEYCODE_MEDIA_PAUSE
+      key === 'MediaPlayPause' ||
+      e.code === 'MediaPlayPause' ||
+      key === 'Play' ||
+      key === 'Pause' ||
+      key === 'p' ||
+      key === 'P';
+
+    if (isPlayPauseKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleToggleFavoriteAction();
+      return;
+    }
+
+    // 2. Botão OK / ENTER no meio do D-Pad do controle:
+    // ABRE O CANAL IMEDIATAMENTE! Sem nenhum delay, sem popup de favoritos!
+    const isOkEnterKey =
+      key === 'Enter' ||
+      key === ' ' ||
+      code === 13 ||
+      code === 23 || // KEYCODE_DPAD_CENTER
+      code === 66; // KEYCODE_ENTER
+
+    if (isOkEnterKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleOpenChannel();
+      return;
+    }
+
+    // 3. Tecla 'f' / 'F' ou '0' para alternar favorito pelo teclado
+    if (key === 'f' || key === 'F' || key === '0' || code === 48 || code === 96) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleToggleFavoriteAction();
+      return;
     }
   };
 
   return (
-    <section className="space-y-2.5">
-      {/* Category Header with Scroll Arrows */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-2">
-        <div className="flex items-center space-x-2">
-          {isFavRow ? (
-            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-          ) : (
-            <span className="w-2 h-2 rounded-full bg-red-500 inline-block shadow-sm shadow-red-500/50" />
-          )}
-          <h2 className={`text-xs sm:text-sm font-bold tracking-wide uppercase ${isFavRow ? 'text-amber-300' : 'text-gray-100'}`}>
-            {title}
-          </h2>
-          <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full border ${
-            isFavRow
-              ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-              : 'bg-[#171a23] text-slate-400 border-white/5'
-          }`}>
-            {channels.length} {channels.length === 1 ? 'canal' : 'canais'}
-          </span>
-        </div>
-
-        {/* Horizontal Navigation Buttons */}
-        <div className="flex items-center space-x-1">
-          <button
-            type="button"
-            tabIndex={-1}
-            onClick={() => handleScroll('left')}
-            aria-label="Rolar para a esquerda"
-            className="p-1 rounded-lg bg-[#171a23] hover:bg-[#222736] text-slate-400 hover:text-white border border-white/10 transition cursor-pointer"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            tabIndex={-1}
-            onClick={() => handleScroll('right')}
-            aria-label="Rolar para a direita"
-            className="p-1 rounded-lg bg-[#171a23] hover:bg-[#222736] text-slate-400 hover:text-white border border-white/10 transition cursor-pointer"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Horizontal Carousel Track */}
-      <div
-        ref={scrollRef}
-        className="flex gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar scroll-smooth py-1 px-0.5"
-      >
-        {channels.map((channel, i) => (
-          <div
-            key={`${channel.name}-${channel.url}`}
-            className="w-24 sm:w-28 md:w-32 shrink-0"
-          >
-            <ChannelCard
-              channel={channel}
-              index={startIndex + i}
-              isFavorite={favorites.includes(channel.name)}
-              onToggleFavorite={onToggleFavorite}
-              onSelect={onSelectChannel}
-            />
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-const ChannelRows: React.FC<ChannelRowsProps> = ({
-  groupedChannels,
-  favorites,
-  onToggleFavorite,
-  onSelectChannel,
-  onClearFilters,
-}) => {
-  // Extract all channels for favorite lookup
-  const allChannels: Channel[] = (Object.values(groupedChannels) as Channel[][]).flat();
-  const favoriteChannels = allChannels.filter((c) => favorites.includes(c.name));
-
-  const sortedGroupNames = Object.keys(groupedChannels).sort((a, b) => {
-    const upperA = a.toUpperCase();
-    const upperB = b.toUpperCase();
-
-    const orderA = CATEGORY_ORDER[upperA] ?? 50;
-    const orderB = CATEGORY_ORDER[upperB] ?? 50;
-
-    if (orderA !== orderB) return orderA - orderB;
-    return a.localeCompare(b, 'pt-BR');
-  });
-
-  if (sortedGroupNames.length === 0 && favoriteChannels.length === 0) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-        <div className="w-16 h-16 bg-slate-800/80 rounded-2xl flex items-center justify-center mx-auto mb-4 text-slate-500 border border-slate-700/60">
-          <Tv className="w-8 h-8 text-red-400" />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-200 mb-1">
-          Nenhum canal encontrado
-        </h3>
-        <p className="text-sm text-slate-400 max-w-md mx-auto mb-5">
-          Tente buscar com outro nome de canal ou limpe os filtros de categoria.
-        </p>
+    <a
+      id={`channel-card-${channel.id || encodeURIComponent(channel.name)}`}
+      href={channel.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      tabIndex={0}
+      role="button"
+      aria-label={`Canal ${channel.name} - Abrir canal. Pressione Play/Pause para favoritar.`}
+      data-tv-card="true"
+      data-channel-name={channel.name}
+      data-channel-index={index}
+      onClick={(e) => {
+        e.preventDefault();
+        handleOpenChannel();
+      }}
+      onKeyDown={handleKeyDown}
+      onFocus={() => {
+        // SOM 1 (clicksan.mp3): ao andar com o cursor pelos canais
+        soundService.playNav();
+        try {
+          const channelId = channel.id || encodeURIComponent(channel.name);
+          localStorage.setItem('satv_last_focused_channel_name', channel.name);
+          localStorage.setItem('satv_last_focused_channel_id', channelId);
+          localStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+          sessionStorage.setItem('satv_last_focused_channel_name', channel.name);
+          sessionStorage.setItem('satv_last_focused_channel_id', channelId);
+          sessionStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+        } catch {
+          // ignore
+        }
+      }}
+      className={`group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1f2433] border rounded-lg sm:rounded-xl p-1 sm:p-1.5 flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-sm hover:shadow-md shrink-0 ${
+        isFavorite
+          ? 'border-amber-400/60 hover:border-amber-400 focus:border-amber-400 ring-1 ring-amber-400/30'
+          : 'border-white/10 hover:border-red-500 focus:border-red-500'
+      }`}
+    >
+      {/* Estrelinha indicadora de Favorito */}
+      {onToggleFavorite && (
         <button
-          onClick={onClearFilters}
-          className="px-4 py-2 rounded-xl text-xs font-semibold bg-red-600 hover:bg-red-700 text-white transition shadow-md cursor-pointer"
+          type="button"
+          tabIndex={-1}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleToggleFavoriteAction();
+          }}
+          aria-label={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+          title={isFavorite ? 'Favorito ativo' : 'Favoritar'}
+          className={`absolute top-1 right-1 z-10 p-0.5 sm:p-1 rounded-md transition-all ${
+            isFavorite
+              ? 'text-amber-400 bg-black/75 shadow-sm opacity-100 scale-100'
+              : 'text-white/40 hover:text-amber-300 bg-black/40 opacity-0 group-hover:opacity-100 group-focus:opacity-100'
+          }`}
         >
-          Limpar Filtros e Ver Todos
+          <Star className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${isFavorite ? 'fill-amber-400' : ''}`} />
         </button>
-      </div>
-    );
-  }
-
-  let globalIndex = 0;
-
-  return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 py-4 space-y-7">
-      {/* Top Favorite Row if any exist */}
-      {favoriteChannels.length > 0 && (
-        <RowSection
-          title="Meus Favoritos"
-          isFavRow
-          channels={favoriteChannels}
-          favorites={favorites}
-          startIndex={globalIndex}
-          onToggleFavorite={onToggleFavorite}
-          onSelectChannel={onSelectChannel}
-        />
       )}
 
-      {/* Category Rows */}
-      {sortedGroupNames.map((groupName) => {
-        const channels = groupedChannels[groupName];
-        if (!channels || channels.length === 0) return null;
+      {/* Auto-responsive Channel Logo Cradle */}
+      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center p-1 sm:p-1.5 channel-logo-cradle rounded-md sm:rounded-lg overflow-hidden transition">
+        <img
+          src={logoSrc}
+          alt={`${channel.name} logo`}
+          className="max-w-[85%] max-h-[75%] object-contain channel-logo-img drop-shadow-sm transition-transform duration-150 group-hover:scale-105 group-focus:scale-105"
+          onError={() => setImgError(true)}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+        />
+      </div>
 
-        const sectionStartIndex = globalIndex;
-        globalIndex += channels.length;
-
-        return (
-          <RowSection
-            key={groupName}
-            title={groupName}
-            channels={channels}
-            favorites={favorites}
-            startIndex={sectionStartIndex}
-            onToggleFavorite={onToggleFavorite}
-            onSelectChannel={onSelectChannel}
-          />
-        );
-      })}
-    </div>
+      {/* Auto-responsive Channel Title with Fluid Typography */}
+      <p
+        className={`w-full text-center font-bold truncate leading-tight transition-colors pt-0.5 sm:pt-1 px-0.5 text-[clamp(7px,1.9vw,10.5px)] sm:text-[clamp(8px,1.2vw,11.5px)] ${
+          isFavorite ? 'text-amber-200' : 'text-gray-100 group-hover:text-red-400 group-focus:text-red-400'
+        }`}
+        title={channel.name}
+      >
+        {channel.name}
+      </p>
+    </a>
   );
 };
 
-export default ChannelRows;
+export default ChannelCard;

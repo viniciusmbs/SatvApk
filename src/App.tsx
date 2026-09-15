@@ -12,7 +12,14 @@ import { MenuModal } from './components/MenuModal';
 import { useTvNavigation } from './services/useTvNavigation';
 
 export default function App() {
-  const [channels, setChannels] = useState<Channel[]>([]);
+  const [channels, setChannels] = useState<Channel[]>(() => {
+    try {
+      return parseM3U(m3uPlaylist);
+    } catch (err) {
+      console.error('Erro ao processar canais:', err);
+      return [];
+    }
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('TODOS');
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
