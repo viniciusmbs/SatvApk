@@ -49,7 +49,7 @@ const Footer: React.FC<FooterProps> = ({ totalChannels = 0, favoritesCount = 0 }
           <span className="text-red-300/40">&bull;</span>
           <span>Contato:</span>
           <a
-            href="mailto:vinicius@mail.bg"
+            href="mailto:vini©¿©ius@mail.bg"
             className="text-red-200/80 hover:text-white underline underline-offset-2 transition-colors"
           >
             vinicius@mail.bg
