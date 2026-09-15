@@ -76,39 +76,28 @@ const Header: React.FC<HeaderProps> = ({
     density === 'compact' ? 'Pequeno' : density === 'large' ? 'Grande' : 'Médio';
 
   return (
-    <header className="bg-gradient-to-r from-[#7f1d1d] via-[#991b1b] to-[#7f1d1d] text-white shadow-md border-b border-red-900/40 select-none">
-      <div className="max-w-[1920px] mx-auto px-1.5 sm:px-4 lg:px-6">
-        <div className="flex items-center justify-between h-10 sm:h-12">
-          {/* Logo & Brand */}
-          <div className="flex items-center space-x-1 sm:space-x-2 shrink-0">
-            <div className="relative flex items-center justify-center shrink-0">
-              <img
-                src="https://i.imgur.com/VWtF2t5.jpeg"
-                alt="SATV Logo"
-                className="w-5 h-5 sm:w-7 sm:h-7 rounded-full border border-white/80 shadow-md object-cover bg-black"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
-              />
-              <span className="sr-only">SATV</span>
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-1 sm:gap-1.5">
-                <span className="bg-white text-[#991b1b] text-[8.5px] sm:text-[10px] font-black px-1 sm:px-1.5 py-0.2 rounded shadow-sm tracking-wider">
-                  SATV
-                </span>
-                <h1 className="text-xs sm:text-sm font-bold tracking-wide text-white drop-shadow-sm truncate max-w-[85px] min-[380px]:max-w-[130px] sm:max-w-[220px] md:max-w-none">
-                  SATV - Vinicius Mendes ®
-                </h1>
-              </div>
-              <p className="text-[9px] text-red-200/90 hidden md:block">
-                Web IPTV &bull; {totalChannels} Canais
-              </p>
-            </div>
+    <header className="bg-gradient-to-r from-[#7f1d1d] via-[#991b1b] to-[#7f1d1d] text-white shadow-md border-b border-red-900/40 select-none pt-1 pb-1 sm:pt-1.5 sm:pb-1.5">
+      <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6">
+        <div className="flex items-center justify-between h-11 sm:h-14 relative">
+          {/* Logo & Signature Slogan (Left aligned with small tab space) */}
+          <div className="flex items-center space-x-2.5 sm:space-x-3.5 shrink-0">
+            <img
+              src="https://i.imgur.com/VWtF2t5.jpeg"
+              alt="SATV Logo"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/90 shadow-lg object-cover bg-black ring-2 ring-black/40"
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = 'none';
+              }}
+            />
+            <span
+              className="font-slogan-cursive text-white text-xl sm:text-2xl md:text-3xl font-normal tracking-wide drop-shadow-md select-none"
+            >
+              Aqui você é a nossa atração
+            </span>
           </div>
 
-          {/* Navigation Tabs & Controls */}
-          <div className="flex items-center gap-0.5 sm:gap-2">
+          {/* Navigation Tabs & Controls (Right) */}
+          <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
             {/* View Mode Switcher (Fileiras / Mosaico / Guia EPG) + Favoritos */}
             <div className="flex items-center p-0.5 bg-black/40 rounded-lg sm:rounded-xl border border-white/15 shadow-inner">
               {onOpenFavorites && (
@@ -220,7 +209,7 @@ const Header: React.FC<HeaderProps> = ({
               </div>
             )}
 
-            {/* Três Pontinhos / Três Tracinhos Button (Alterna diretamente o Guia de Canais EPG) */}
+            {/* Três Pontinhos Button (Menu de Opções e Configurações) */}
             {onOpenMenu && (
               <button
                 id="btn-three-dots-menu"
@@ -228,16 +217,11 @@ const Header: React.FC<HeaderProps> = ({
                 data-tv-nav="tab"
                 tabIndex={0}
                 onClick={onOpenMenu}
-                className={`tv-nav-focus flex items-center justify-center gap-1 px-2 py-1 rounded-lg sm:rounded-xl border border-white/20 shadow-inner transition cursor-pointer outline-none ${
-                  viewMode === 'epg'
-                    ? 'bg-amber-400 text-black font-extrabold shadow-md ring-2 ring-amber-300'
-                    : 'bg-black/40 hover:bg-black/60 active:bg-black/80 text-white'
-                }`}
-                title="Guia de Canais (EPG) • Botão de 3 pontinhos/3 tracinhos do Fire TV"
-                aria-label="Abrir Guia de Canais"
+                className="tv-nav-focus flex items-center justify-center p-1 sm:p-1.5 rounded-lg sm:rounded-xl bg-black/40 hover:bg-black/60 active:bg-black/80 text-white border border-white/15 shadow-inner transition cursor-pointer outline-none"
+                title="Mais Opções e Configurações"
+                aria-label="Menu de opções"
               >
-                <MoreVertical className="w-4 h-4" />
-                <span className="text-[10px] sm:text-xs font-bold hidden sm:inline">Guia</span>
+                <MoreVertical className="w-4 h-4 text-white" />
               </button>
             )}
           </div>

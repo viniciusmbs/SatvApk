@@ -51,25 +51,58 @@ export const MenuModal: React.FC<MenuModalProps> = ({
     if (isOpen) {
       // Auto-focus first button for Fire TV D-Pad control
       setTimeout(() => {
-        firstButtonRef.current?.focus();
-      }, 50);
+        const firstBtn = modalRef.current?.querySelector<HTMLElement>('button[tabindex="0"], button:not([disabled])');
+        firstBtn?.focus();
+      }, 60);
     }
   }, [isOpen]);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return;
+    if (!isOpen) return;
 
+    const handleKeyDown = (e: KeyboardEvent) => {
       // Close modal on Escape or Back button (Android KEYCODE_BACK = 4)
       if (e.key === 'Escape' || e.keyCode === 4) {
         e.preventDefault();
+        soundService.playNav();
         onClose();
         return;
       }
+
+      const key = e.key;
+      const code = e.keyCode;
+      const isUp = key === 'ArrowUp' || code === 38 || code === 19;
+      const isDown = key === 'ArrowDown' || code === 40 || code === 20;
+      const isLeft = key === 'ArrowLeft' || code === 37 || code === 21;
+      const isRight = key === 'ArrowRight' || code === 39 || code === 22;
+
+      if (!isUp && !isDown && !isLeft && !isRight) return;
+
+      const focusables = Array.from(
+        modalRef.current?.querySelectorAll<HTMLElement>('button, [tabindex="0"]') || []
+      ).filter((el) => el.offsetParent !== null && !el.hasAttribute('disabled'));
+
+      if (focusables.length === 0) return;
+
+      const activeEl = document.activeElement as HTMLElement | null;
+      const currentIndex = activeEl ? focusables.indexOf(activeEl) : -1;
+
+      e.preventDefault();
+      soundService.playNav();
+
+      if (isDown || isRight) {
+        const nextIndex = currentIndex < focusables.length - 1 ? currentIndex + 1 : 0;
+        focusables[nextIndex]?.focus();
+        focusables[nextIndex]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else if (isUp || isLeft) {
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : focusables.length - 1;
+        focusables[prevIndex]?.focus();
+        focusables[prevIndex]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;

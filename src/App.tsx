@@ -8,6 +8,7 @@ import ChannelRows from './components/ChannelRows';
 import ChannelGrid from './components/ChannelGrid';
 import EpgGrid from './components/EpgGrid';
 import Footer from './components/Footer';
+import { MenuModal } from './components/MenuModal';
 import { useTvNavigation } from './services/useTvNavigation';
 import { soundService } from './services/soundService';
 
@@ -16,6 +17,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('TODOS');
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -177,16 +179,24 @@ export default function App() {
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       const isGuideOrMenuKey =
-        e.keyCode === 82 || // Android KEYCODE_MENU
+        e.keyCode === 82 || // Android KEYCODE_MENU (Fire TV 3 Tracinhos)
         e.which === 82 ||
         e.keyCode === 172 || // Android KEYCODE_GUIDE
+        e.which === 172 ||
         e.keyCode === 165 || // Android KEYCODE_INFO
+        e.which === 165 ||
         e.keyCode === 458 || // Smart TV EPG Key
         e.keyCode === 93 || // ContextMenu
+        e.which === 93 ||
+        e.keyCode === 115 || // F4 (Mapped on some TV webviews)
+        e.keyCode === 209 || // KEYCODE_PROG_RED / KEYCODE_TV
+        e.keyCode === 170 || // KEYCODE_TV
         e.key === 'ContextMenu' ||
         e.code === 'ContextMenu' ||
         e.key === 'Menu' ||
+        e.code === 'Menu' ||
         e.key === 'Guide' ||
+        e.code === 'Guide' ||
         e.key === 'EPG' ||
         ((e.key === 'm' || e.key === 'M' || e.key === 'g' || e.key === 'G') &&
           document.activeElement?.tagName !== 'INPUT');
@@ -247,16 +257,7 @@ export default function App() {
           }}
           onOpenMenu={() => {
             soundService.playClick();
-            // Três tracinhos / três pontinhos: alterna diretamente para o Guia de Canais (EPG)
-            setViewMode((prev) => {
-              const nextMode: ViewMode = prev === 'epg' ? 'rows' : 'epg';
-              showToast(
-                nextMode === 'epg'
-                  ? '📺 Guia de Canais (EPG) Aberta!'
-                  : '📺 Modo Fileiras Aberto!'
-              );
-              return nextMode;
-            });
+            setIsMenuOpen(true);
           }}
           density={uiDensity}
           setDensity={handleSetUiDensity}
@@ -316,6 +317,29 @@ export default function App() {
 
       {/* Clean TV Footer */}
       <Footer totalChannels={channels.length} favoritesCount={favorites.length} />
+
+      {/* Three Dots / Menu List Modal */}
+      <MenuModal
+        isOpen={isMenuOpen}
+        onClose={() => {
+          soundService.playClick();
+          setIsMenuOpen(false);
+        }}
+        viewMode={viewMode}
+        setViewMode={(mode) => {
+          soundService.playClick();
+          setViewMode(mode);
+        }}
+        onOpenFavorites={() => {
+          soundService.playClick();
+          setSelectedCategory('FAVORITOS');
+          if (viewMode === 'epg') setViewMode('rows');
+        }}
+        favoritesCount={favorites.length}
+        totalChannels={channels.length}
+        density={uiDensity}
+        setDensity={handleSetUiDensity}
+      />
     </div>
   );
 }

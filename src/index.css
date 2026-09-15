@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Alex+Brush&family=Allura&display=swap');
+
+.font-slogan-cursive {
+  font-family: 'Great Vibes', 'Alex Brush', 'Allura', 'Dancing Script', cursive;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
 
 /* TV focus states and smooth OSD animations */
 .tv-card-focus:focus,
