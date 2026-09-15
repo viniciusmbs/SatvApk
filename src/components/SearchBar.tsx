@@ -56,10 +56,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-2 sm:py-2.5 shadow-md">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-2">
+    <div className="bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-1.5 sm:py-2 shadow-md">
+      <div className="tv-safe-container space-y-1.5 sm:space-y-2">
         {/* Search input bar */}
-        <div className="flex flex-col sm:flex-row gap-2.5 items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-2 items-center justify-between">
           <div className="relative w-full max-w-xl">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
               <Search className="h-3.5 w-3.5" />
@@ -91,15 +91,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
           </div>
         </div>
 
-        {/* Tabulated Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        {/* Tabulated Category Pills - Compact & Proportional to fit gracefully on TV and PC */}
+        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto pb-0.5 no-scrollbar">
           {/* Category: Todos */}
           <button
             data-tv-nav="category"
             data-category-index={0}
             tabIndex={0}
             onClick={() => handleSelectCategory('TODOS')}
-            className={`tv-nav-focus px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
+            className={`tv-nav-focus px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-[11px] md:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
               selectedCategory === 'TODOS'
                 ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
                 : 'bg-[#171a23] hover:bg-[#202533] text-slate-300 hover:text-white border border-white/10'
@@ -119,7 +119,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 data-category-index={catIndex}
                 tabIndex={0}
                 onClick={() => handleSelectCategory(category)}
-                className={`tv-nav-focus px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
+                className={`tv-nav-focus px-2 sm:px-2.5 md:px-3 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-[11px] md:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
                   isSelected
                     ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
                     : 'bg-[#171a23] hover:bg-[#202533] text-slate-300 hover:text-white border border-white/10'

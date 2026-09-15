@@ -1,10 +1,20 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Alex+Brush&family=Allura&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Allura&family=Marck+Script&family=Playball&family=Satisfy&display=swap');
 
 .font-slogan-cursive {
-  font-family: 'Great Vibes', 'Alex Brush', 'Allura', 'Dancing Script', cursive;
+  font-family: 'Satisfy', 'Playball', 'Marck Script', 'Alex Brush', cursive;
   font-weight: 400;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
+}
+
+.bg-satv-maroon {
+  background-color: #450101 !important;
+}
+.border-satv-maroon-dark {
+  border-color: #2d0000 !important;
+}
+.border-satv-maroon-light {
+  border-color: #5f0a0a !important;
 }
 
 /* TV focus states and smooth OSD animations */
@@ -56,17 +66,28 @@
   scrollbar-width: none;
 }
 
-/* Responsive typography and viewport calibration for Mobile & Fire TV Stick */
+/* Responsive typography and viewport calibration for Mobile, Tablet, PC & Fire TV Stick */
 @media screen and (max-width: 640px) {
   html {
-    font-size: 14px;
+    font-size: 13.5px;
     -webkit-text-size-adjust: 100%;
   }
 }
 
-/* Fire TV Stick Silk Browser & Android TV WebView scale normalization */
-@media screen and (min-width: 960px) and (max-width: 1440px) and (-webkit-min-device-pixel-ratio: 1.5) {
+/* Fire TV Stick Silk Browser, Android TV & 55" Smart TV scale normalization */
+@media screen and (min-width: 960px) {
   html {
-    font-size: 15px;
+    font-size: 14.5px;
   }
+}
+
+/* TV Overscan Safe Area & Auto-centering wrapper */
+.tv-safe-container {
+  width: 100%;
+  max-width: 1760px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(10px, 2.2vw, 32px);
+  padding-right: clamp(10px, 2.2vw, 32px);
+  box-sizing: border-box;
 }

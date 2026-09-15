@@ -15,6 +15,7 @@ class SoundService {
   private lastScrollPlayTime = 0;
   private lastNavPlayTime = 0;
   private isMuted = false;
+  private fallbackAudios: Record<string, HTMLAudioElement> = {};
 
   private constructor() {
     this.initAudio();
@@ -208,11 +209,15 @@ class SoundService {
         return;
       }
 
-      // If Web Audio buffer is not yet decoded, use new Audio() fallback directly for 100% instant sound
+      // If Web Audio buffer is not yet decoded, use cached Audio fallback directly
       if (audioFallbackPath && typeof Audio !== 'undefined') {
         try {
-          const snd = new Audio(audioFallbackPath);
+          if (!this.fallbackAudios[audioFallbackPath]) {
+            this.fallbackAudios[audioFallbackPath] = new Audio(audioFallbackPath);
+          }
+          const snd = this.fallbackAudios[audioFallbackPath];
           snd.volume = volume;
+          snd.currentTime = 0;
           snd.play().catch(() => {});
           return;
         } catch {

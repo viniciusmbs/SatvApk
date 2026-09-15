@@ -78,7 +78,7 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
   let globalIndex = 0;
 
   return (
-    <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-5 sm:space-y-6">
+    <div className="tv-safe-container py-3 sm:py-4 space-y-4 sm:space-y-5">
       {sortedGroupNames.map((groupName) => {
         const channels = groupedChannels[groupName];
         if (!channels || channels.length === 0) return null;

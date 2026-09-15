@@ -60,9 +60,13 @@ const RowSection: React.FC<{
     }
   };
 
-  // Fluid auto-scaling card width across mobile and TV screens
+  // Fluid auto-scaling card width across mobile and TV screens (calibrated to Photo 1 aesthetic)
   const cardWidthClass =
-    'w-[54px] min-[360px]:w-[60px] min-[420px]:w-[68px] sm:w-[74px] md:w-[80px] lg:w-[86px] xl:w-[92px] shrink-0';
+    density === 'large'
+      ? 'w-[64px] min-[360px]:w-[70px] sm:w-[78px] md:w-[84px] lg:w-[90px] xl:w-[96px] shrink-0'
+      : density === 'normal'
+      ? 'w-[56px] min-[360px]:w-[62px] sm:w-[70px] md:w-[76px] lg:w-[82px] xl:w-[86px] shrink-0'
+      : 'w-[50px] min-[360px]:w-[56px] sm:w-[64px] md:w-[70px] lg:w-[74px] xl:w-[78px] shrink-0';
 
   return (
     <section className="space-y-2">
@@ -178,7 +182,7 @@ const ChannelRows: React.FC<ChannelRowsProps> = ({
   let globalIndex = 0;
 
   return (
-    <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5">
+    <div className="tv-safe-container py-3 sm:py-4 space-y-3.5 sm:space-y-4">
       {sortedGroupNames.map((groupName) => {
         const channels = groupedChannels[groupName];
         if (!channels || channels.length === 0) return null;

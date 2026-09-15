@@ -95,7 +95,7 @@ const EpgGrid: React.FC<EpgGridProps> = ({
   let globalEpgIndex = 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-6">
+    <div className="tv-safe-container py-3 sm:py-4 space-y-3.5 sm:space-y-5">
       {/* Guia status header banner */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 bg-[#131620] border border-white/10 rounded-lg sm:rounded-xl px-3 py-2 text-[11px] sm:text-xs text-slate-300 shadow-md">
         <div className="flex items-center gap-2">
@@ -157,6 +157,19 @@ const EpgGrid: React.FC<EpgGridProps> = ({
 
                 const handleRowClick = () => {
                   soundService.playSelect();
+                  try {
+                    const channelId = channel.id || encodeURIComponent(channel.name);
+                    localStorage.setItem('satv_last_focused_channel_name', channel.name);
+                    localStorage.setItem('satv_last_focused_channel_id', channelId);
+                    localStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+                    localStorage.setItem('satv_should_restore_channel', 'true');
+                    sessionStorage.setItem('satv_last_focused_channel_name', channel.name);
+                    sessionStorage.setItem('satv_last_focused_channel_id', channelId);
+                    sessionStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+                    sessionStorage.setItem('satv_should_restore_channel', 'true');
+                  } catch {
+                    // ignore
+                  }
                   window.open(channel.url, '_blank', 'noopener,noreferrer');
                   onSelectChannel(channel);
                 };
@@ -188,6 +201,13 @@ const EpgGrid: React.FC<EpgGridProps> = ({
                     onKeyDown={handleKeyDown}
                     onFocus={() => {
                       soundService.playNav();
+                      try {
+                        sessionStorage.setItem('satv_last_focused_channel_name', channel.name);
+                        sessionStorage.setItem('satv_last_focused_channel_id', channel.id || encodeURIComponent(channel.name));
+                        sessionStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+                      } catch {
+                        // ignore
+                      }
                     }}
                     className="group tv-card-focus relative bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1b1f2c] border border-white/10 hover:border-red-500 focus:border-red-500 rounded-lg sm:rounded-xl p-2 sm:p-2.5 flex flex-col md:flex-row items-stretch md:items-center gap-2 sm:gap-3 transition-all duration-150 cursor-pointer outline-none select-none shadow-sm"
                   >

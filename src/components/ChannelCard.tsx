@@ -30,10 +30,23 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   // Ação 1: Abrir o canal com o som BotaoRadio.mp3 (Enter / OK / Clique)
   const handleOpenChannel = () => {
     soundService.playSelect();
-    window.open(channel.url, '_blank', 'noopener,noreferrer');
+    try {
+      const channelId = channel.id || encodeURIComponent(channel.name);
+      localStorage.setItem('satv_last_focused_channel_name', channel.name);
+      localStorage.setItem('satv_last_focused_channel_id', channelId);
+      localStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+      localStorage.setItem('satv_should_restore_channel', 'true');
+      sessionStorage.setItem('satv_last_focused_channel_name', channel.name);
+      sessionStorage.setItem('satv_last_focused_channel_id', channelId);
+      sessionStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+      sessionStorage.setItem('satv_should_restore_channel', 'true');
+    } catch {
+      // ignore
+    }
     if (onSelect) {
       onSelect(channel);
     }
+    window.open(channel.url, '_blank', 'noopener,noreferrer');
   };
 
   // Ação 2: Alternar Favorito
@@ -113,6 +126,17 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
       onFocus={() => {
         // SOM 1 (clicksan.mp3): ao andar com o cursor pelos canais
         soundService.playNav();
+        try {
+          const channelId = channel.id || encodeURIComponent(channel.name);
+          localStorage.setItem('satv_last_focused_channel_name', channel.name);
+          localStorage.setItem('satv_last_focused_channel_id', channelId);
+          localStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+          sessionStorage.setItem('satv_last_focused_channel_name', channel.name);
+          sessionStorage.setItem('satv_last_focused_channel_id', channelId);
+          sessionStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+        } catch {
+          // ignore
+        }
       }}
       className={`group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1f2433] border rounded-lg sm:rounded-xl p-1 sm:p-1.5 flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-sm hover:shadow-md shrink-0 ${
         isFavorite

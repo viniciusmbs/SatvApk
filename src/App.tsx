@@ -8,16 +8,21 @@ import ChannelRows from './components/ChannelRows';
 import ChannelGrid from './components/ChannelGrid';
 import EpgGrid from './components/EpgGrid';
 import Footer from './components/Footer';
-import { MenuModal } from './components/MenuModal';
 import { useTvNavigation } from './services/useTvNavigation';
 import { soundService } from './services/soundService';
 
 export default function App() {
-  const [channels, setChannels] = useState<Channel[]>([]);
+  const [channels, setChannels] = useState<Channel[]>(() => {
+    try {
+      return parseM3U(m3uPlaylist);
+    } catch (err) {
+      console.error('Erro ao processar canais:', err);
+      return [];
+    }
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('TODOS');
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -153,9 +158,25 @@ export default function App() {
   const { lastFocusedCardRef } = useTvNavigation({ enabled: true });
 
   const handleSelectChannel = (ch: Channel) => {
+    try {
+      const channelId = ch.id || encodeURIComponent(ch.name);
+      localStorage.setItem('satv_last_focused_channel_name', ch.name);
+      localStorage.setItem('satv_last_focused_channel_id', channelId);
+      localStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+      localStorage.setItem('satv_should_restore_channel', 'true');
+      sessionStorage.setItem('satv_last_focused_channel_name', ch.name);
+      sessionStorage.setItem('satv_last_focused_channel_id', channelId);
+      sessionStorage.setItem('satv_last_scroll_y', String(window.scrollY));
+      sessionStorage.setItem('satv_should_restore_channel', 'true');
+    } catch {
+      // ignore
+    }
+
     const cardEl =
       document.getElementById(`channel-card-${ch.id || encodeURIComponent(ch.name)}`) ||
-      document.getElementById(`epg-card-${ch.id || encodeURIComponent(ch.name)}`);
+      document.getElementById(`epg-card-${ch.id || encodeURIComponent(ch.name)}`) ||
+      document.querySelector<HTMLElement>(`[data-channel-name="${ch.name}"]`);
+
     if (cardEl) {
       lastFocusedCardRef.current = cardEl;
     }
@@ -255,10 +276,6 @@ export default function App() {
             soundService.playClick();
             setViewMode((prev) => (prev === 'epg' ? 'rows' : 'epg'));
           }}
-          onOpenMenu={() => {
-            soundService.playClick();
-            setIsMenuOpen(true);
-          }}
           density={uiDensity}
           setDensity={handleSetUiDensity}
         />
@@ -317,29 +334,6 @@ export default function App() {
 
       {/* Clean TV Footer */}
       <Footer totalChannels={channels.length} favoritesCount={favorites.length} />
-
-      {/* Three Dots / Menu List Modal */}
-      <MenuModal
-        isOpen={isMenuOpen}
-        onClose={() => {
-          soundService.playClick();
-          setIsMenuOpen(false);
-        }}
-        viewMode={viewMode}
-        setViewMode={(mode) => {
-          soundService.playClick();
-          setViewMode(mode);
-        }}
-        onOpenFavorites={() => {
-          soundService.playClick();
-          setSelectedCategory('FAVORITOS');
-          if (viewMode === 'epg') setViewMode('rows');
-        }}
-        favoritesCount={favorites.length}
-        totalChannels={channels.length}
-        density={uiDensity}
-        setDensity={handleSetUiDensity}
-      />
     </div>
   );
 }
