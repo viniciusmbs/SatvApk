@@ -220,7 +220,7 @@ const Header: React.FC<HeaderProps> = ({
               </div>
             )}
 
-            {/* Três Pontinhos Button (Menu List) */}
+            {/* Três Pontinhos / Três Tracinhos Button (Alterna diretamente o Guia de Canais EPG) */}
             {onOpenMenu && (
               <button
                 id="btn-three-dots-menu"
@@ -228,11 +228,16 @@ const Header: React.FC<HeaderProps> = ({
                 data-tv-nav="tab"
                 tabIndex={0}
                 onClick={onOpenMenu}
-                className="tv-nav-focus flex items-center justify-center p-1 sm:p-1.5 rounded-lg sm:rounded-xl bg-black/40 hover:bg-black/60 active:bg-black/80 text-white border border-white/15 shadow-inner transition cursor-pointer outline-none"
-                title="Mais Opções e Configurações"
-                aria-label="Menu de opções"
+                className={`tv-nav-focus flex items-center justify-center gap-1 px-2 py-1 rounded-lg sm:rounded-xl border border-white/20 shadow-inner transition cursor-pointer outline-none ${
+                  viewMode === 'epg'
+                    ? 'bg-amber-400 text-black font-extrabold shadow-md ring-2 ring-amber-300'
+                    : 'bg-black/40 hover:bg-black/60 active:bg-black/80 text-white'
+                }`}
+                title="Guia de Canais (EPG) • Botão de 3 pontinhos/3 tracinhos do Fire TV"
+                aria-label="Abrir Guia de Canais"
               >
-                <MoreVertical className="w-4 h-4 text-white" />
+                <MoreVertical className="w-4 h-4" />
+                <span className="text-[10px] sm:text-xs font-bold hidden sm:inline">Guia</span>
               </button>
             )}
           </div>

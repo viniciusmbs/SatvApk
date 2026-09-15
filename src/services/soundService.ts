@@ -152,7 +152,7 @@ class SoundService {
     if (now - this.lastNavPlayTime < 40) return;
     this.lastNavPlayTime = now;
 
-    this.playBuffer(this.navBuffer, volume, 800, 140);
+    this.playBuffer(this.navBuffer, volume, 800, 140, '/clicksan.mp3');
   }
 
   /**
@@ -164,7 +164,7 @@ class SoundService {
     if (now - this.lastScrollPlayTime < 80) return;
     this.lastScrollPlayTime = now;
 
-    this.playBuffer(this.navBuffer, volume, 800, 140);
+    this.playBuffer(this.navBuffer, volume, 800, 140, '/clicksan.mp3');
   }
 
   /**
@@ -172,7 +172,14 @@ class SoundService {
    */
   public playSelect(volume = 0.65) {
     if (this.isMuted) return;
-    this.playBuffer(this.selectBuffer, volume, 520, 220);
+    this.playBuffer(this.selectBuffer, volume, 520, 220, '/BotaoRadio.mp3');
+  }
+
+  /**
+   * Alias para playSelect (clique / confirmação com BotaoRadio.mp3)
+   */
+  public playClick(volume = 0.65) {
+    this.playSelect(volume);
   }
 
   /**
@@ -182,13 +189,13 @@ class SoundService {
     buffer: AudioBuffer | null,
     volume: number,
     synthFreqStart: number,
-    synthFreqEnd: number
+    synthFreqEnd: number,
+    audioFallbackPath?: string
   ) {
     try {
       const ctx = this.getAudioContext();
-      if (!ctx) return;
 
-      if (buffer) {
+      if (ctx && buffer) {
         const source = ctx.createBufferSource();
         source.buffer = buffer;
 
@@ -200,6 +207,20 @@ class SoundService {
         source.start(0);
         return;
       }
+
+      // If Web Audio buffer is not yet decoded, use new Audio() fallback directly for 100% instant sound
+      if (audioFallbackPath && typeof Audio !== 'undefined') {
+        try {
+          const snd = new Audio(audioFallbackPath);
+          snd.volume = volume;
+          snd.play().catch(() => {});
+          return;
+        } catch {
+          // fallback to synth
+        }
+      }
+
+      if (!ctx) return;
 
       // Synth fallback if audio file still downloading
       const osc = ctx.createOscillator();

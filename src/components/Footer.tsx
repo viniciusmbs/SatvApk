@@ -22,23 +22,19 @@ const Footer: React.FC<FooterProps> = ({ totalChannels = 0, favoritesCount = 0 }
 
           <div className="flex items-center gap-1.5 text-slate-300">
             <span className="px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 font-mono font-bold text-[11px] border border-red-500/30">
-              Menu ☰
+              Menu (3 tracinhos / 3 pontinhos)
             </span>
-            <span>Abre Guia EPG</span>
+            <span>Abre Guia de Canais (EPG)</span>
           </div>
 
           <span className="hidden sm:inline text-white/20">&bull;</span>
 
           <div className="flex items-center gap-1.5 text-slate-300">
             <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[11px] border border-amber-500/30">
-              Segurar OK (1s)
-            </span>
-            <span>ou</span>
-            <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[11px] border border-amber-500/30">
-              Play/Pause ▶||
+              Botão Play/Pause ▶||
             </span>
             <span className="text-amber-300 font-medium flex items-center gap-1">
-              Favoritar Canal <Star className="w-3 h-3 fill-amber-400 text-amber-400 inline" />
+              Favoritar / Desfavoritar Canal <Star className="w-3 h-3 fill-amber-400 text-amber-400 inline" />
             </span>
           </div>
 
@@ -46,9 +42,9 @@ const Footer: React.FC<FooterProps> = ({ totalChannels = 0, favoritesCount = 0 }
 
           <div className="flex items-center gap-1.5 text-slate-300">
             <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-mono font-bold text-[11px] border border-blue-500/30">
-              OK Rápido
+              OK no meio
             </span>
-            <span>Assistir Canal</span>
+            <span>Abrir Canal</span>
           </div>
         </div>
 
