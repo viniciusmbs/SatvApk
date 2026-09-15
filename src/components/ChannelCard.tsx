@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Star } from 'lucide-react';
-import { Channel } from '../types';
+import { Channel, UiDensity } from '../types';
 import { getChannelLogo } from '../data/channelLogos';
 
 interface ChannelCardProps {
@@ -9,6 +9,7 @@ interface ChannelCardProps {
   isFavorite?: boolean;
   onToggleFavorite?: (channelName: string) => void;
   onSelect?: (channel: Channel) => void;
+  density?: UiDensity;
 }
 
 const ChannelCard: React.FC<ChannelCardProps> = ({
@@ -17,6 +18,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   isFavorite = false,
   onToggleFavorite,
   onSelect,
+  density = 'compact',
 }) => {
   const [imgError, setImgError] = useState(false);
   const [isHoldingOk, setIsHoldingOk] = useState(false);
@@ -136,6 +138,27 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
     triggerFavorite();
   };
 
+  const cardPadding =
+    density === 'compact'
+      ? 'p-1 sm:p-1.5'
+      : density === 'large'
+      ? 'p-2 sm:p-2.5'
+      : 'p-1.5 sm:p-2';
+
+  const logoMaxHeight =
+    density === 'compact'
+      ? 'max-h-8 sm:max-h-9 md:max-h-10'
+      : density === 'large'
+      ? 'max-h-11 sm:max-h-13 md:max-h-14'
+      : 'max-h-9 sm:max-h-10 md:max-h-12';
+
+  const titleFontSize =
+    density === 'compact'
+      ? 'text-[8.5px] sm:text-[9.5px] md:text-[10.5px]'
+      : density === 'large'
+      ? 'text-[10px] sm:text-[11px] md:text-[12px]'
+      : 'text-[9.5px] sm:text-[10px] md:text-[11px]';
+
   return (
     <a
       id={`channel-card-${channel.id || encodeURIComponent(channel.name)}`}
@@ -166,7 +189,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
         e.preventDefault();
         triggerFavorite();
       }}
-      className={`group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1b1f2c] border rounded-xl p-1.5 sm:p-2 flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-md shrink-0 ${
+      className={`group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1b1f2c] border rounded-lg sm:rounded-xl ${cardPadding} flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-sm hover:shadow-md shrink-0 ${
         isHoldingOk
           ? 'border-amber-400 ring-2 ring-amber-400/80 scale-95'
           : isFavorite
@@ -176,36 +199,36 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
     >
       {/* Visual Indicator when holding OK on Fire TV remote */}
       {isHoldingOk && (
-        <div className="absolute inset-0 bg-amber-500/20 rounded-xl z-20 flex items-center justify-center pointer-events-none backdrop-blur-[1px]">
-          <span className="text-[10px] font-bold text-amber-300 bg-black/80 px-2 py-0.5 rounded-full shadow-lg border border-amber-400/50">
+        <div className="absolute inset-0 bg-amber-500/20 rounded-lg sm:rounded-xl z-20 flex items-center justify-center pointer-events-none backdrop-blur-[1px]">
+          <span className="text-[9px] sm:text-[10px] font-bold text-amber-300 bg-black/80 px-1.5 py-0.5 rounded-full shadow-lg border border-amber-400/50">
             Segure... ⭐
           </span>
         </div>
       )}
 
-      {/* Favorite Star Badge */}
+      {/* Favorite Star Badge - Small, elegant and discreet */}
       {onToggleFavorite && (
         <button
           type="button"
           tabIndex={-1}
           onClick={handleFavoriteClick}
           aria-label={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
-          className={`absolute top-1.5 right-1.5 z-10 p-1 rounded-md transition-all ${
+          className={`absolute top-1 right-1 z-10 p-0.5 sm:p-1 rounded-md transition-all ${
             isFavorite
-              ? 'text-amber-400 bg-black/70 shadow-sm opacity-100 scale-105'
+              ? 'text-amber-400 bg-black/75 shadow-sm opacity-100 scale-100'
               : 'text-white/40 hover:text-amber-300 bg-black/40 opacity-0 group-hover:opacity-100 group-focus:opacity-100'
           }`}
         >
-          <Star className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isFavorite ? 'fill-amber-400' : ''}`} />
+          <Star className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${isFavorite ? 'fill-amber-400' : ''}`} />
         </button>
       )}
 
       {/* Square-proportioned Channel Logo Box with contrasting cradle */}
-      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center p-2 channel-logo-cradle rounded-lg overflow-hidden transition">
+      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center p-1 sm:p-1.5 channel-logo-cradle rounded-md sm:rounded-lg overflow-hidden transition">
         <img
           src={logoSrc}
           alt={`${channel.name} logo`}
-          className="max-w-full max-h-full object-contain channel-logo-img"
+          className={`max-w-[85%] ${logoMaxHeight} object-contain channel-logo-img`}
           onError={() => setImgError(true)}
           loading="lazy"
           referrerPolicy="no-referrer"
@@ -214,7 +237,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
 
       {/* Channel Name */}
       <p
-        className={`text-[10px] sm:text-[11px] font-bold truncate w-full leading-tight transition-colors pt-1 px-0.5 ${
+        className={`${titleFontSize} font-bold truncate w-full leading-tight transition-colors pt-0.5 sm:pt-1 px-0.5 ${
           isFavorite ? 'text-amber-200' : 'text-gray-100 group-hover:text-red-400 group-focus:text-red-400'
         }`}
         title={channel.name}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, Tv } from 'lucide-react';
-import { Channel, GroupedChannels } from '../types';
+import { Channel, GroupedChannels, UiDensity } from '../types';
 import ChannelCard from './ChannelCard';
 
 interface ChannelGridProps {
@@ -9,6 +9,7 @@ interface ChannelGridProps {
   onToggleFavorite?: (channelName: string) => void;
   onSelectChannel: (channel: Channel) => void;
   onClearFilters: () => void;
+  density?: UiDensity;
 }
 
 const CATEGORY_ORDER: Record<string, number> = {
@@ -34,6 +35,7 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
   onToggleFavorite,
   onSelectChannel,
   onClearFilters,
+  density = 'compact',
 }) => {
   const allChannels: Channel[] = (Object.values(groupedChannels) as Channel[][]).flat();
   const favoriteChannels = allChannels.filter((c) => favorites.includes(c.name));
@@ -48,6 +50,14 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
     if (orderA !== orderB) return orderA - orderB;
     return a.localeCompare(b, 'pt-BR');
   });
+
+  // Responsive grid classes based on density
+  const gridClasses =
+    density === 'compact'
+      ? 'grid grid-cols-4 min-[420px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-9 xl:grid-cols-11 2xl:grid-cols-12 gap-1.5 sm:gap-2'
+      : density === 'large'
+      ? 'grid grid-cols-2 min-[420px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9 gap-2.5 sm:gap-3'
+      : 'grid grid-cols-3 min-[420px]:grid-cols-4 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-11 gap-2 sm:gap-2.5';
 
   if (sortedGroupNames.length === 0 && favoriteChannels.length === 0) {
     return (
@@ -75,22 +85,22 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
   let globalIndex = 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-6 py-4 space-y-6">
+    <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-5 sm:space-y-6">
       {/* Top Favorite Row if any exist */}
       {favoriteChannels.length > 0 && (
-        <section className="space-y-2.5">
-          <div className="flex items-center justify-between border-b border-amber-500/20 pb-2">
+        <section className="space-y-2">
+          <div className="flex items-center justify-between border-b border-amber-500/20 pb-1.5">
             <div className="flex items-center space-x-2">
               <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
               <h2 className="text-xs sm:text-sm font-bold text-amber-300 tracking-wide uppercase">
                 Meus Favoritos
               </h2>
-              <span className="text-[11px] text-amber-300/80 font-medium px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-                {favoriteChannels.length} canais
+              <span className="text-[10px] sm:text-[11px] text-amber-300/90 font-medium px-2 py-0.2 rounded-full bg-amber-500/10 border border-amber-500/20">
+                {favoriteChannels.length} {favoriteChannels.length === 1 ? 'canal' : 'canais'}
               </span>
             </div>
           </div>
-          <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-2 sm:gap-2.5">
+          <div className={gridClasses}>
             {favoriteChannels.map((channel) => {
               const currentIndex = globalIndex++;
               return (
@@ -101,6 +111,7 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
                   isFavorite={true}
                   onToggleFavorite={onToggleFavorite}
                   onSelect={onSelectChannel}
+                  density={density}
                 />
               );
             })}
@@ -113,22 +124,22 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
         if (!channels || channels.length === 0) return null;
 
         return (
-          <section key={groupName} className="space-y-2.5">
+          <section key={groupName} className="space-y-2">
             {/* Category Header */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-2">
+            <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
               <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 rounded-full bg-red-500 inline-block shadow-sm shadow-red-500/50" />
                 <h2 className="text-xs sm:text-sm font-bold text-gray-100 tracking-wide uppercase">
                   {groupName}
                 </h2>
-                <span className="text-[11px] text-slate-400 font-medium px-2 py-0.5 rounded-full bg-[#171a23] border border-white/5">
+                <span className="text-[10px] sm:text-[11px] text-slate-400 font-medium px-2 py-0.2 rounded-full bg-[#171a23] border border-white/5">
                   {channels.length} canais
                 </span>
               </div>
             </div>
 
             {/* Channels Grid (Square Tiles) */}
-            <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-2 sm:gap-2.5">
+            <div className={gridClasses}>
               {channels.map((channel) => {
                 const currentIndex = globalIndex++;
                 return (
@@ -139,6 +150,7 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
                     isFavorite={favorites.includes(channel.name)}
                     onToggleFavorite={onToggleFavorite}
                     onSelect={onSelectChannel}
+                    density={density}
                   />
                 );
               })}

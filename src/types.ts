@@ -37,3 +37,5 @@ export interface ChannelEpg {
 }
 
 export type ViewMode = 'grid' | 'rows' | 'epg';
+
+export type UiDensity = 'compact' | 'normal' | 'large';

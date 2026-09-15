@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import type { Channel, GroupedChannels, ViewMode } from './types';
+import type { Channel, GroupedChannels, ViewMode, UiDensity } from './types';
 import { parseM3U } from './services/m3uParser';
 import { m3uPlaylist } from './data/playlist';
 import Header from './components/Header';
@@ -7,6 +7,8 @@ import SearchBar from './components/SearchBar';
 import ChannelRows from './components/ChannelRows';
 import ChannelGrid from './components/ChannelGrid';
 import EpgGrid from './components/EpgGrid';
+import Footer from './components/Footer';
+import { MenuModal } from './components/MenuModal';
 import { useTvNavigation } from './services/useTvNavigation';
 
 export default function App() {
@@ -14,6 +16,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('TODOS');
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -24,6 +27,31 @@ export default function App() {
       return [];
     }
   });
+
+  // UI Density state (compact by default for optimal Fire TV Stick & Mobile rendering)
+  const [uiDensity, setUiDensity] = useState<UiDensity>(() => {
+    try {
+      const saved = localStorage.getItem('satv_ui_density');
+      if (saved === 'compact' || saved === 'normal' || saved === 'large') {
+        return saved;
+      }
+      return 'compact';
+    } catch {
+      return 'compact';
+    }
+  });
+
+  const handleSetUiDensity = (newDensity: UiDensity) => {
+    setUiDensity(newDensity);
+    try {
+      localStorage.setItem('satv_ui_density', newDensity);
+    } catch {
+      // ignore
+    }
+    const label =
+      newDensity === 'compact' ? 'Pequeno (Compacto)' : newDensity === 'large' ? 'Grande' : 'Médio';
+    showToast(`📐 Tamanho dos Ícones: ${label}`);
+  };
 
   const showToast = (msg: string) => {
     if (toastTimeoutRef.current) {
@@ -130,8 +158,8 @@ export default function App() {
   };
 
   // Global D-Pad / remote shortcut:
-  // - Menu button (3 tracinhos no Fire TV = KeyCode 82 / ContextMenu):
-  //    * Abre diretamente o Guia (EPG) ou retorna para Canais (Modo padrão do controle)
+  // - Menu button (3 tracinhos / 3 pontinhos no Fire TV = KeyCode 82 / ContextMenu):
+  //    * Abre o Menu Principal com a lista de opções e modos de exibição
   // - Favoritar no controle:
   //    * Basta SEGURAR o botão central (OK) por 1 segundo no canal, ou apertar Play/Pause!
   // - Tecla '/' ou 's' para ir direto na busca
@@ -148,8 +176,7 @@ export default function App() {
 
       if (isMenuKey) {
         e.preventDefault();
-        // Menu alterna direto para o Guia EPG e volta para Canais
-        setViewMode((current) => (current === 'epg' ? 'rows' : 'epg'));
+        setIsMenuOpen((prev) => !prev);
         return;
       }
 
@@ -178,6 +205,9 @@ export default function App() {
             setSelectedCategory('FAVORITOS');
             if (viewMode === 'epg') setViewMode('rows');
           }}
+          onOpenMenu={() => setIsMenuOpen(true)}
+          density={uiDensity}
+          setDensity={handleSetUiDensity}
         />
         <SearchBar
           searchQuery={searchQuery}
@@ -199,6 +229,7 @@ export default function App() {
             onToggleFavorite={handleToggleFavorite}
             onSelectChannel={handleSelectChannel}
             onClearFilters={handleClearFilters}
+            density={uiDensity}
           />
         )}
         {viewMode === 'grid' && (
@@ -208,6 +239,7 @@ export default function App() {
             onToggleFavorite={handleToggleFavorite}
             onSelectChannel={handleSelectChannel}
             onClearFilters={handleClearFilters}
+            density={uiDensity}
           />
         )}
         {viewMode === 'epg' && (
@@ -228,14 +260,23 @@ export default function App() {
       )}
 
       {/* Clean TV Footer */}
-      <footer className="bg-[#08090d] border-t border-white/5 py-4 text-center text-xs text-slate-500 space-y-1">
-        <p className="font-semibold text-slate-400">
-          SATV &bull; Vinicius Mendes ® &copy; {new Date().getFullYear()}
-        </p>
-        <p className="text-[11px] text-slate-400">
-          No controle do Fire Stick: Botão <span className="text-red-400 font-semibold">Menu [☰]</span> abre o <span className="text-white font-semibold">Guia EPG</span> &bull; Para favoritar canal: <span className="text-amber-300 font-semibold">Segure OK por 1s</span> ou aperte <span className="text-amber-300 font-semibold">Play/Pause [▶||]</span>
-        </p>
-      </footer>
+      <Footer totalChannels={channels.length} favoritesCount={favorites.length} />
+
+      {/* Three Dots / Menu List Modal */}
+      <MenuModal
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        onOpenFavorites={() => {
+          setSelectedCategory('FAVORITOS');
+          if (viewMode === 'epg') setViewMode('rows');
+        }}
+        favoritesCount={favorites.length}
+        totalChannels={channels.length}
+        density={uiDensity}
+        setDensity={handleSetUiDensity}
+      />
     </div>
   );
 }
