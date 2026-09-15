@@ -1,5 +1,6 @@
 import React from 'react';
-import { Search, X, Star } from 'lucide-react';
+import { Search, X } from 'lucide-react';
+import { soundService } from '../services/soundService';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -35,7 +36,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
   selectedCategory,
   setSelectedCategory,
   filteredCount,
-  favoritesCount = 0,
 }) => {
   // Sort categories strictly: CANAL, DOCUMENTÁRIOS, etc.
   const sortedCategories = [...categories].sort((a, b) => {
@@ -45,9 +45,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
     return a.localeCompare(b, 'pt-BR');
   });
 
+  const handleSelectCategory = (cat: string) => {
+    soundService.playSelect();
+    setSelectedCategory(cat);
+  };
+
+  const handleClearSearch = () => {
+    soundService.playSelect();
+    setSearchQuery('');
+  };
+
   return (
     <div className="bg-[#10121a]/95 backdrop-blur-md border-b border-white/5 py-2 sm:py-2.5 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 space-y-2">
         {/* Search input bar */}
         <div className="flex flex-col sm:flex-row gap-2.5 items-center justify-between">
           <div className="relative w-full max-w-xl">
@@ -65,7 +75,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={handleClearSearch}
                 tabIndex={-1}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-white cursor-pointer"
                 title="Limpar busca"
@@ -88,7 +98,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             data-tv-nav="category"
             data-category-index={0}
             tabIndex={0}
-            onClick={() => setSelectedCategory('TODOS')}
+            onClick={() => handleSelectCategory('TODOS')}
             className={`tv-nav-focus px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
               selectedCategory === 'TODOS'
                 ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'
@@ -108,7 +118,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 data-tv-nav="category"
                 data-category-index={catIndex}
                 tabIndex={0}
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => handleSelectCategory(category)}
                 className={`tv-nav-focus px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-all outline-none cursor-pointer ${
                   isSelected
                     ? 'bg-red-600 text-white shadow-md ring-1 ring-red-400'

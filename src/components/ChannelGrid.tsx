@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Tv } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Channel, GroupedChannels, UiDensity } from '../types';
 import ChannelCard from './ChannelCard';
 
@@ -48,13 +48,9 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
     return a.localeCompare(b, 'pt-BR');
   });
 
-  // Responsive grid classes based on density
+  // Fully automatic responsive grid: adapts dynamically to screen width without requiring manual intervention
   const gridClasses =
-    density === 'compact'
-      ? 'grid grid-cols-4 min-[360px]:grid-cols-5 min-[440px]:grid-cols-6 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-1 sm:gap-2'
-      : density === 'large'
-      ? 'grid grid-cols-2 min-[420px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-9 gap-2.5 sm:gap-3'
-      : 'grid grid-cols-3 min-[420px]:grid-cols-4 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-11 gap-2 sm:gap-2.5';
+    'grid grid-cols-4 min-[360px]:grid-cols-5 min-[440px]:grid-cols-6 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-1 sm:gap-2';
 
   if (sortedGroupNames.length === 0) {
     return (
@@ -66,7 +62,7 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
           Nenhum canal encontrado
         </h3>
         <p className="text-sm text-slate-400 max-w-md mx-auto mb-5">
-          Se estiver na aba Favoritos, segure o botão OK no controle ou clique na estrelinha de qualquer canal para favoritá-lo.
+          Para favoritar um canal, clique na estrelinha no canto superior de qualquer canal.
         </p>
         <button
           onClick={onClearFilters}

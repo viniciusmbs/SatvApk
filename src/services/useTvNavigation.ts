@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { soundService } from './soundService';
 
 interface UseTvNavigationOptions {
   enabled?: boolean;
@@ -50,6 +51,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
       // Handle TAB key explicitly for Android TV remote tab sequence
       if (isTab) {
         e.preventDefault();
+        soundService.playNav();
         let currIdx = activeEl ? navElements.indexOf(activeEl) : -1;
         let nextIdx = 0;
 
@@ -76,6 +78,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
       if (activeEl?.getAttribute('data-tv-nav') === 'tab') {
         if (isDown) {
           e.preventDefault();
+          soundService.playNav();
           const searchInput = document.getElementById('channel-search-input');
           const firstCategory = document.querySelector<HTMLElement>('[data-tv-nav="category"]');
           const firstCard = document.querySelector<HTMLElement>('[data-tv-card="true"]');
@@ -92,6 +95,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
       if (activeEl?.id === 'channel-search-input') {
         if (isDown) {
           e.preventDefault();
+          soundService.playNav();
           const firstCategory = document.querySelector<HTMLElement>('[data-tv-nav="category"]');
           const firstCard = document.querySelector<HTMLElement>('[data-tv-card="true"]');
           const target = firstCategory || firstCard;
@@ -105,6 +109,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
           return;
         } else if (isUp) {
           e.preventDefault();
+          soundService.playNav();
           const currentTab = document.querySelector<HTMLElement>('[data-tv-nav="tab"]');
           if (currentTab) {
             currentTab.focus();
@@ -117,6 +122,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
       // If nothing is focused yet, activate the first target
       if (!activeEl || activeEl === document.body || !navElements.includes(activeEl)) {
         e.preventDefault();
+        soundService.playNav();
         const target =
           lastFocusedCardRef.current && document.contains(lastFocusedCardRef.current)
             ? lastFocusedCardRef.current
@@ -137,6 +143,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
           activeEl.getAttribute('data-tv-nav') === 'tab'
         ) {
           e.preventDefault();
+          soundService.playSelect();
           activeEl.click();
           if (activeEl.getAttribute('data-tv-card') === 'true') {
             lastFocusedCardRef.current = activeEl;
@@ -210,6 +217,7 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
 
       if (bestCandidate) {
         e.preventDefault();
+        soundService.playNav();
         bestCandidate.focus();
         bestCandidate.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
         if (bestCandidate.getAttribute('data-tv-card') === 'true') {

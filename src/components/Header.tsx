@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutGrid, CalendarDays, Rows3, Clock, Star, MoreVertical, SlidersHorizontal } from 'lucide-react';
+import {
+  LayoutGrid,
+  CalendarDays,
+  Rows3,
+  Clock,
+  Star,
+  Menu as MenuIcon,
+  Volume2,
+  VolumeX,
+  SlidersHorizontal,
+  MoreVertical,
+} from 'lucide-react';
 import { ViewMode, UiDensity } from '../types';
+import { soundService } from '../services/soundService';
 
 interface HeaderProps {
   totalChannels: number;
@@ -9,6 +21,7 @@ interface HeaderProps {
   favoritesCount?: number;
   isFavoritesActive?: boolean;
   onOpenFavorites?: () => void;
+  onToggleChannelGuide?: () => void;
   onOpenMenu?: () => void;
   density?: UiDensity;
   setDensity?: (density: UiDensity) => void;
@@ -21,11 +34,13 @@ const Header: React.FC<HeaderProps> = ({
   favoritesCount = 0,
   isFavoritesActive = false,
   onOpenFavorites,
+  onToggleChannelGuide,
   onOpenMenu,
   density = 'compact',
   setDensity,
 }) => {
   const [timeStr, setTimeStr] = useState('');
+  const [isMuted, setIsMuted] = useState(() => soundService.getIsMuted());
 
   useEffect(() => {
     const updateTime = () => {
@@ -41,6 +56,14 @@ const Header: React.FC<HeaderProps> = ({
     const interval = setInterval(updateTime, 15000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleToggleMute = () => {
+    const muted = soundService.toggleMute();
+    setIsMuted(muted);
+    if (!muted) {
+      soundService.playClick();
+    }
+  };
 
   const cycleDensity = () => {
     if (!setDensity) return;
@@ -148,44 +171,46 @@ const Header: React.FC<HeaderProps> = ({
                 <span className="hidden min-[480px]:inline">Mosaico</span>
               </button>
 
+              {/* Botão Guia de Canais (Três Tracinhos / Menu) */}
               <button
                 id="tab-btn-guia-epg"
                 type="button"
                 data-tv-nav="tab"
                 tabIndex={0}
-                onClick={() => setViewMode('epg')}
+                onClick={() => {
+                  if (onToggleChannelGuide) {
+                    onToggleChannelGuide();
+                  } else {
+                    setViewMode(viewMode === 'epg' ? 'rows' : 'epg');
+                  }
+                }}
                 className={`tv-nav-focus flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-bold transition-all cursor-pointer outline-none ${
                   viewMode === 'epg'
                     ? 'bg-white text-[#991b1b] shadow-md ring-2 ring-white/70'
                     : 'text-red-100 hover:text-white hover:bg-white/10'
                 }`}
-                title="Guia EPG com programação ao vivo (ou pressione Menu no controle)"
+                title="Guia de Canais (EPG) • Atalho no controle: botão com três tracinhos (Menu)"
               >
-                <CalendarDays className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                <span className="hidden min-[480px]:inline">Guia</span>
-                <span className="inline-flex sm:hidden">Guia</span>
-                <span className="hidden sm:inline-flex items-center px-1 py-0.2 text-[8.5px] bg-red-600/90 text-white rounded font-bold">
-                  ☰
-                </span>
+                <MenuIcon className="w-3.5 h-3.5 text-amber-300" />
+                <span>Guia</span>
               </button>
             </div>
 
-            {/* Quick Icon Size / Density Toggle */}
-            {setDensity && (
-              <button
-                id="btn-toggle-density"
-                type="button"
-                data-tv-nav="tab"
-                tabIndex={0}
-                onClick={cycleDensity}
-                className="tv-nav-focus hidden min-[620px]:flex items-center gap-1 px-2 py-1 rounded-lg sm:rounded-xl bg-black/40 hover:bg-black/60 text-white/90 hover:text-white border border-white/15 text-[10.5px] sm:text-xs font-semibold shadow-inner transition cursor-pointer outline-none"
-                title={`Alternar tamanho dos ícones (Atual: ${densityLabel}). Clique para mudar!`}
-              >
-                <SlidersHorizontal className="w-3 h-3 text-red-300" />
-                <span className="hidden sm:inline">Ícones:</span>
-                <span className="font-bold text-amber-300">{densityLabel}</span>
-              </button>
-            )}
+            {/* Audio Feedback Toggle Button (Som de Clique) */}
+            <button
+              id="btn-toggle-sound"
+              type="button"
+              data-tv-nav="tab"
+              tabIndex={0}
+              onClick={handleToggleMute}
+              className={`tv-nav-focus flex items-center justify-center p-1 sm:p-1.5 rounded-lg sm:rounded-xl bg-black/40 hover:bg-black/60 text-white border border-white/15 shadow-inner transition cursor-pointer outline-none ${
+                isMuted ? 'text-white/40' : 'text-amber-300'
+              }`}
+              title={isMuted ? 'Som de clique desativado (Clique para ativar som)' : 'Som de clique ativado (clicksan.mp3)'}
+              aria-label="Som de clique de navegação"
+            >
+              {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+            </button>
 
             {/* Smart TV Real-Time Clock */}
             {timeStr && (
@@ -204,7 +229,7 @@ const Header: React.FC<HeaderProps> = ({
                 tabIndex={0}
                 onClick={onOpenMenu}
                 className="tv-nav-focus flex items-center justify-center p-1 sm:p-1.5 rounded-lg sm:rounded-xl bg-black/40 hover:bg-black/60 active:bg-black/80 text-white border border-white/15 shadow-inner transition cursor-pointer outline-none"
-                title="Abrir Menu com lista de opções, escala de ícones e modos de exibição"
+                title="Mais Opções e Configurações"
                 aria-label="Menu de opções"
               >
                 <MoreVertical className="w-4 h-4 text-white" />

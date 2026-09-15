@@ -15,6 +15,7 @@ import {
   SlidersHorizontal,
 } from 'lucide-react';
 import { ViewMode, UiDensity } from '../types';
+import { soundService } from '../services/soundService';
 
 interface MenuModalProps {
   isOpen: boolean;

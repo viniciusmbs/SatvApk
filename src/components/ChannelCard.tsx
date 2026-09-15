@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import { Channel, UiDensity } from '../types';
 import { getChannelLogo } from '../data/channelLogos';
+import { soundService } from '../services/soundService';
 
 interface ChannelCardProps {
   channel: Channel;
@@ -21,143 +22,76 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   density = 'compact',
 }) => {
   const [imgError, setImgError] = useState(false);
-  const [isHoldingOk, setIsHoldingOk] = useState(false);
-  const longPressTimerRef = useRef<number | null>(null);
-  const isLongPressTriggeredRef = useRef(false);
 
   // Fallback to official high-quality logo mapping
   const fallbackLogo = getChannelLogo(channel.name);
   const logoSrc = imgError || !channel.logo ? fallbackLogo : channel.logo;
 
+  // Ação 1: Abrir o canal com o som BotaoRadio.mp3 (Enter / OK / Clique)
   const handleOpenChannel = () => {
+    soundService.playSelect();
     window.open(channel.url, '_blank', 'noopener,noreferrer');
     if (onSelect) {
       onSelect(channel);
     }
   };
 
-  const triggerFavorite = () => {
+  // Ação 2: Alternar Favorito
+  const handleToggleFavoriteAction = () => {
+    soundService.playSelect();
     if (onToggleFavorite) {
       onToggleFavorite(channel.name);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // 1. Fire TV Stick Play/Pause button (KeyCode 85 / MediaPlayPause)
-    if (
-      (e.keyCode === 85 ||
-        e.key === 'MediaPlayPause' ||
-        e.code === 'MediaPlayPause' ||
-        e.key === 'Play' ||
-        e.key === 'Pause') &&
-      onToggleFavorite
-    ) {
+    const code = e.keyCode || e.which;
+    const key = e.key;
+
+    // 1. Botão Play / Pause do controle do Fire TV / Android TV (KeyCode 85 / MediaPlayPause)
+    // Favorita ou Desfavorita o canal instantaneamente com o botão Play/Pause!
+    const isPlayPauseKey =
+      code === 85 || // KEYCODE_MEDIA_PLAY_PAUSE
+      code === 126 || // KEYCODE_MEDIA_PLAY
+      code === 127 || // KEYCODE_MEDIA_PAUSE
+      key === 'MediaPlayPause' ||
+      e.code === 'MediaPlayPause' ||
+      key === 'Play' ||
+      key === 'Pause' ||
+      key === 'p' ||
+      key === 'P';
+
+    if (isPlayPauseKey) {
       e.preventDefault();
       e.stopPropagation();
-      triggerFavorite();
+      handleToggleFavoriteAction();
       return;
     }
 
-    // 3. Keyboard shortcut 'f' / 'F'
-    if ((e.key === 'f' || e.key === 'F') && onToggleFavorite) {
+    // 2. Botão OK / ENTER no meio do D-Pad do controle:
+    // ABRE O CANAL IMEDIATAMENTE! Sem nenhum delay, sem popup de favoritos!
+    const isOkEnterKey =
+      key === 'Enter' ||
+      key === ' ' ||
+      code === 13 ||
+      code === 23 || // KEYCODE_DPAD_CENTER
+      code === 66; // KEYCODE_ENTER
+
+    if (isOkEnterKey) {
       e.preventDefault();
       e.stopPropagation();
-      triggerFavorite();
-      return;
-    }
-
-    // 4. Center OK button (Enter / Space / Android DPAD_CENTER = 23 / Android ENTER = 66)
-    const isActivationKey =
-      e.key === 'Enter' ||
-      e.key === ' ' ||
-      e.keyCode === 13 ||
-      e.keyCode === 23 ||
-      e.keyCode === 66;
-
-    if (isActivationKey) {
-      // If user holds OK for 650ms, trigger FAVORITE instead of opening channel!
-      if (!longPressTimerRef.current && !isLongPressTriggeredRef.current) {
-        setIsHoldingOk(true);
-        longPressTimerRef.current = window.setTimeout(() => {
-          isLongPressTriggeredRef.current = true;
-          setIsHoldingOk(false);
-          triggerFavorite();
-        }, 650);
-      }
-    }
-  };
-
-  const handleKeyUp = (e: React.KeyboardEvent) => {
-    const isActivationKey =
-      e.key === 'Enter' ||
-      e.key === ' ' ||
-      e.keyCode === 13 ||
-      e.keyCode === 23 ||
-      e.keyCode === 66;
-
-    if (isActivationKey) {
-      setIsHoldingOk(false);
-      if (longPressTimerRef.current) {
-        clearTimeout(longPressTimerRef.current);
-        longPressTimerRef.current = null;
-      }
-
-      // If it was a long press, do NOT open the channel (already favorited)
-      if (isLongPressTriggeredRef.current) {
-        e.preventDefault();
-        e.stopPropagation();
-        isLongPressTriggeredRef.current = false;
-        return;
-      }
-
-      // Quick tap/press (< 650ms): open channel normally
-      e.preventDefault();
       handleOpenChannel();
+      return;
+    }
+
+    // 3. Tecla 'f' / 'F' para alternar favorito pelo teclado
+    if (key === 'f' || key === 'F') {
+      e.preventDefault();
+      e.stopPropagation();
+      handleToggleFavoriteAction();
+      return;
     }
   };
-
-  // Touch & Pointer Long Press support for mobile / tablet
-  const handlePointerDown = () => {
-    isLongPressTriggeredRef.current = false;
-    longPressTimerRef.current = window.setTimeout(() => {
-      isLongPressTriggeredRef.current = true;
-      triggerFavorite();
-    }, 650);
-  };
-
-  const handlePointerUp = () => {
-    if (longPressTimerRef.current) {
-      clearTimeout(longPressTimerRef.current);
-      longPressTimerRef.current = null;
-    }
-  };
-
-  const handleFavoriteClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    triggerFavorite();
-  };
-
-  const cardPadding =
-    density === 'compact'
-      ? 'p-0.5 min-[360px]:p-1 sm:p-1.5'
-      : density === 'large'
-      ? 'p-2 sm:p-2.5'
-      : 'p-1 sm:p-2';
-
-  const logoMaxHeight =
-    density === 'compact'
-      ? 'max-h-5 min-[360px]:max-h-6 min-[420px]:max-h-7 sm:max-h-8 md:max-h-9'
-      : density === 'large'
-      ? 'max-h-11 sm:max-h-13 md:max-h-14'
-      : 'max-h-7 min-[360px]:max-h-8 sm:max-h-9 md:max-h-10';
-
-  const titleFontSize =
-    density === 'compact'
-      ? 'text-[6.5px] min-[360px]:text-[7.5px] min-[420px]:text-[8px] sm:text-[9px] md:text-[9.5px]'
-      : density === 'large'
-      ? 'text-[10px] sm:text-[11px] md:text-[12px]'
-      : 'text-[7.5px] min-[360px]:text-[8.5px] sm:text-[9.5px] md:text-[10.5px]';
 
   return (
     <a
@@ -167,52 +101,37 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
       rel="noopener noreferrer"
       tabIndex={0}
       role="button"
-      aria-label={`Canal ${channel.name} - Abrir em nova aba`}
+      aria-label={`Canal ${channel.name} - Abrir canal. Pressione Play/Pause para favoritar.`}
       data-tv-card="true"
       data-channel-name={channel.name}
       data-channel-index={index}
       onClick={(e) => {
         e.preventDefault();
-        if (isLongPressTriggeredRef.current) {
-          isLongPressTriggeredRef.current = false;
-          return;
-        }
         handleOpenChannel();
       }}
       onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-      onContextMenu={(e) => {
-        // Prevent default browser context menu and toggle favorite
-        e.preventDefault();
-        triggerFavorite();
+      onFocus={() => {
+        // SOM 1 (clicksan.mp3): ao andar com o cursor pelos canais
+        soundService.playNav();
       }}
-      className={`group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1b1f2c] border rounded-lg sm:rounded-xl ${cardPadding} flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-sm hover:shadow-md shrink-0 ${
-        isHoldingOk
-          ? 'border-amber-400 ring-2 ring-amber-400/80 scale-95'
-          : isFavorite
-          ? 'border-amber-400/50 hover:border-amber-400 focus:border-amber-400'
+      className={`group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1f2433] border rounded-lg sm:rounded-xl p-1 sm:p-1.5 flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-sm hover:shadow-md shrink-0 ${
+        isFavorite
+          ? 'border-amber-400/60 hover:border-amber-400 focus:border-amber-400 ring-1 ring-amber-400/30'
           : 'border-white/10 hover:border-red-500 focus:border-red-500'
       }`}
     >
-      {/* Visual Indicator when holding OK on Fire TV remote */}
-      {isHoldingOk && (
-        <div className="absolute inset-0 bg-amber-500/20 rounded-lg sm:rounded-xl z-20 flex items-center justify-center pointer-events-none backdrop-blur-[1px]">
-          <span className="text-[9px] sm:text-[10px] font-bold text-amber-300 bg-black/80 px-1.5 py-0.5 rounded-full shadow-lg border border-amber-400/50">
-            Segure... ⭐
-          </span>
-        </div>
-      )}
-
-      {/* Favorite Star Badge - Small, elegant and discreet */}
+      {/* Estrelinha indicadora de Favorito (clique do mouse ou toque na tela) */}
       {onToggleFavorite && (
         <button
           type="button"
           tabIndex={-1}
-          onClick={handleFavoriteClick}
-          aria-label={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleToggleFavoriteAction();
+          }}
+          aria-label={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos (Botão Play/Pause)'}
+          title={isFavorite ? 'Favorito ativo (Pressione Play/Pause no controle)' : 'Favoritar (Pressione Play/Pause no controle)'}
           className={`absolute top-1 right-1 z-10 p-0.5 sm:p-1 rounded-md transition-all ${
             isFavorite
               ? 'text-amber-400 bg-black/75 shadow-sm opacity-100 scale-100'
@@ -223,21 +142,21 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
         </button>
       )}
 
-      {/* Square-proportioned Channel Logo Box with contrasting cradle */}
+      {/* Auto-responsive Channel Logo Cradle */}
       <div className="relative w-full flex-1 min-h-0 flex items-center justify-center p-1 sm:p-1.5 channel-logo-cradle rounded-md sm:rounded-lg overflow-hidden transition">
         <img
           src={logoSrc}
           alt={`${channel.name} logo`}
-          className={`max-w-[85%] ${logoMaxHeight} object-contain channel-logo-img`}
+          className="max-w-[85%] max-h-[75%] object-contain channel-logo-img drop-shadow-sm transition-transform duration-150 group-hover:scale-105 group-focus:scale-105"
           onError={() => setImgError(true)}
           loading="lazy"
           referrerPolicy="no-referrer"
         />
       </div>
 
-      {/* Channel Name */}
+      {/* Auto-responsive Channel Title with Fluid Typography */}
       <p
-        className={`${titleFontSize} font-bold truncate w-full leading-tight transition-colors pt-0.5 sm:pt-1 px-0.5 ${
+        className={`w-full text-center font-bold truncate leading-tight transition-colors pt-0.5 sm:pt-1 px-0.5 text-[clamp(7px,1.9vw,10.5px)] sm:text-[clamp(8px,1.2vw,11.5px)] ${
           isFavorite ? 'text-amber-200' : 'text-gray-100 group-hover:text-red-400 group-focus:text-red-400'
         }`}
         title={channel.name}

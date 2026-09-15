@@ -3,6 +3,7 @@ import { Play, Clock, ChevronRight, Tv, Radio } from 'lucide-react';
 import { Channel, GroupedChannels } from '../types';
 import { getChannelLogo } from '../data/channelLogos';
 import { EpgService } from '../services/epgService';
+import { soundService } from '../services/soundService';
 
 interface EpgGridProps {
   groupedChannels: GroupedChannels;
@@ -155,6 +156,7 @@ const EpgGrid: React.FC<EpgGridProps> = ({
                 const logoSrc = channel.logo || getChannelLogo(channel.name);
 
                 const handleRowClick = () => {
+                  soundService.playSelect();
                   window.open(channel.url, '_blank', 'noopener,noreferrer');
                   onSelectChannel(channel);
                 };
@@ -184,6 +186,9 @@ const EpgGrid: React.FC<EpgGridProps> = ({
                     data-channel-index={currentIndex}
                     onClick={handleRowClick}
                     onKeyDown={handleKeyDown}
+                    onFocus={() => {
+                      soundService.playNav();
+                    }}
                     className="group tv-card-focus relative bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1b1f2c] border border-white/10 hover:border-red-500 focus:border-red-500 rounded-xl p-3 sm:p-3.5 flex flex-col md:flex-row items-stretch md:items-center gap-3.5 transition-all duration-150 cursor-pointer outline-none select-none shadow-md"
                   >
                     {/* Channel Column (Logo & Name) */}

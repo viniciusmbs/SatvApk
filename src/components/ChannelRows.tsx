@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
-import { ChevronLeft, ChevronRight, Star, Tv } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { Channel, GroupedChannels, UiDensity } from '../types';
 import ChannelCard from './ChannelCard';
+import { soundService } from '../services/soundService';
 
 interface ChannelRowsProps {
   groupedChannels: GroupedChannels;
@@ -52,18 +53,16 @@ const RowSection: React.FC<{
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = (direction: 'left' | 'right') => {
+    soundService.playNav();
     if (scrollRef.current) {
       const scrollAmount = direction === 'left' ? -320 : 320;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
+  // Fluid auto-scaling card width across mobile and TV screens
   const cardWidthClass =
-    density === 'compact'
-      ? 'w-[52px] min-[360px]:w-[58px] min-[420px]:w-[64px] sm:w-[72px] md:w-[78px] lg:w-[84px] shrink-0'
-      : density === 'large'
-      ? 'w-20 min-[360px]:w-24 sm:w-28 md:w-32 shrink-0'
-      : 'w-[60px] min-[360px]:w-[66px] min-[420px]:w-[72px] sm:w-[78px] md:w-[84px] lg:w-[90px] shrink-0';
+    'w-[54px] min-[360px]:w-[60px] min-[420px]:w-[68px] sm:w-[74px] md:w-[80px] lg:w-[86px] xl:w-[92px] shrink-0';
 
   return (
     <section className="space-y-2">
@@ -164,7 +163,7 @@ const ChannelRows: React.FC<ChannelRowsProps> = ({
           Nenhum canal encontrado
         </h3>
         <p className="text-sm text-slate-400 max-w-md mx-auto mb-5">
-          Se estiver na aba Favoritos, segure o botão OK no controle ou clique na estrelinha de qualquer canal para favoritá-lo.
+          Para favoritar um canal, clique na estrelinha no canto superior de qualquer canal.
         </p>
         <button
           onClick={onClearFilters}
@@ -179,22 +178,23 @@ const ChannelRows: React.FC<ChannelRowsProps> = ({
   let globalIndex = 0;
 
   return (
-    <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-5 sm:space-y-6">
-      {/* Category Rows */}
+    <div className="max-w-[1920px] mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4 space-y-4 sm:space-y-5">
       {sortedGroupNames.map((groupName) => {
         const channels = groupedChannels[groupName];
         if (!channels || channels.length === 0) return null;
 
-        const sectionStartIndex = globalIndex;
+        const isFavRow = groupName === 'FAVORITOS';
+        const startIndex = globalIndex;
         globalIndex += channels.length;
 
         return (
           <RowSection
             key={groupName}
             title={groupName}
+            isFavRow={isFavRow}
             channels={channels}
             favorites={favorites}
-            startIndex={sectionStartIndex}
+            startIndex={startIndex}
             onToggleFavorite={onToggleFavorite}
             onSelectChannel={onSelectChannel}
             density={density}
