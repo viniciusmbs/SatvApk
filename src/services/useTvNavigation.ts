@@ -183,6 +183,12 @@ export function useTvNavigation({ enabled = true }: UseTvNavigationOptions = {})
         return;
       }
 
+      // If a modal or dialog is open, let the modal handle its own navigation
+      const isModalOpen = document.querySelector('[role="dialog"]') !== null;
+      if (isModalOpen) {
+        return;
+      }
+
       const activeEl = document.activeElement as HTMLElement | null;
 
       // 1. Enter Key Handler

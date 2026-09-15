@@ -127,8 +127,8 @@ export default function App() {
     setSelectedCategory('TODOS');
   };
 
-  // Active TV tabulation navigation hook
-  const { lastFocusedCardRef } = useTvNavigation({ enabled: true });
+  // Active TV tabulation navigation hook (disabled while menu modal is open)
+  const { lastFocusedCardRef } = useTvNavigation({ enabled: !isMenuOpen });
 
   const handleSelectChannel = (ch: Channel) => {
     const cardEl =

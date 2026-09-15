@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutGrid, Menu, Rows3, Clock, Star, MoreVertical, Volume2, VolumeX } from 'lucide-react';
+import { LayoutGrid, Menu, Rows3, Clock, MoreVertical, Volume2, VolumeX } from 'lucide-react'; // Removi o 'Star' daqui pois não será mais usado no header
 import { ViewMode } from '../types';
 
 interface HeaderProps {
@@ -7,7 +7,7 @@ interface HeaderProps {
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
   favoritesCount?: number;
-  onOpenFavorites?: () => void;
+  onOpenFavorites?: () => void; // Você pode manter ou remover das props se não for mais usar aqui
   onOpenMenu?: () => void;
 }
 
@@ -39,7 +39,6 @@ const Header: React.FC<HeaderProps> = ({
 
   const toggleSound = () => {
     setIsMuted((prev) => !prev);
-    // Mute or unmute any media elements on page if present
     document.querySelectorAll('video, audio').forEach((el) => {
       (el as HTMLMediaElement).muted = !isMuted;
     });
@@ -47,9 +46,9 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="bg-gradient-to-r from-[#5f0d0d] via-[#851616] to-[#4e0909] text-white shadow-lg border-b border-black/30 select-none">
-      <div className="w-full px-3 sm:px-5 lg:px-6">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-5 lg:px-6">
         <div className="flex items-center justify-between h-13 sm:h-14">
-          {/* Logo & Calligraphic Slogan ("Aqui você é a nossa atração") */}
+          {/* Logo & Calligraphic Slogan */}
           <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
             <div className="relative flex items-center justify-center shrink-0">
               <img
@@ -63,7 +62,6 @@ const Header: React.FC<HeaderProps> = ({
               <span className="sr-only">SATV</span>
             </div>
 
-            {/* Slogan cursivo clássico e refinado */}
             <div className="flex items-baseline gap-2 min-w-0">
               <h1
                 style={{ fontFamily: "'Alex Brush', 'Great Vibes', cursive" }}
@@ -76,29 +74,8 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Navigation Tabs, Audio, Clock & Guia Button */}
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-            {/* View Mode Switcher (Favoritos, Fileiras, Mosaico, Guia) */}
+            {/* View Mode Switcher (Fileiras, Mosaico, Guia) - O Favoritos foi removido DAQUI */}
             <div className="flex items-center p-0.5 sm:p-1 bg-black/50 rounded-full border border-white/15 shadow-inner">
-              {/* Favoritos */}
-              {onOpenFavorites && (
-                <button
-                  id="tab-btn-favoritos"
-                  type="button"
-                  data-tv-nav="tab"
-                  tabIndex={0}
-                  onClick={onOpenFavorites}
-                  className="tv-nav-focus flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.2 rounded-full text-xs font-bold transition-all cursor-pointer outline-none text-amber-400 hover:text-amber-300 hover:bg-amber-500/20"
-                  title="Acessar canais favoritos (tecla 0 no controle)"
-                >
-                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                  <span className="hidden xs:inline font-bold">Favoritos</span>
-                  {favoritesCount > 0 && (
-                    <span className="px-1.5 py-0.2 text-[9px] bg-amber-400 text-black rounded-full font-black ml-0.5">
-                      {favoritesCount}
-                    </span>
-                  )}
-                </button>
-              )}
-
               {/* Fileiras */}
               <button
                 id="tab-btn-fileiras"
@@ -180,7 +157,7 @@ const Header: React.FC<HeaderProps> = ({
               </div>
             )}
 
-            {/* Botão Guia / Menu Amarelo Destacado com Três Pontinhos (⋮ Guia) */}
+            {/* Botão Guia / Menu Amarelo Destacado */}
             {onOpenMenu && (
               <button
                 id="btn-three-dots-menu"
@@ -189,7 +166,7 @@ const Header: React.FC<HeaderProps> = ({
                 tabIndex={0}
                 onClick={onOpenMenu}
                 className="tv-nav-focus flex items-center gap-1 px-3 sm:px-4 py-1.5 rounded-full bg-[#eab308] hover:bg-[#facc15] active:bg-[#ca8a04] text-black font-extrabold text-xs shadow-md shadow-amber-950/40 transition cursor-pointer outline-none border border-amber-300/60"
-                title="Abrir Menu Principal e Modos de Exibição (ou aperte Menu no controle)"
+                title="Abrir Menu Principal e Modos de Exibição"
                 aria-label="Menu e Guia de Opções"
               >
                 <MoreVertical className="w-4 h-4 text-black stroke-[2.5]" />

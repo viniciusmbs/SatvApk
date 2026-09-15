@@ -6,6 +6,14 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Anti-cache headers so preview always reflects the latest code immediately
+  app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+  });
+
   // Basic health check
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', time: new Date().toISOString() });

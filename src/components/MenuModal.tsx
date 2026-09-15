@@ -10,6 +10,7 @@ import {
   Check,
 } from 'lucide-react';
 import { ViewMode } from '../types';
+import { soundService } from '../services/soundService';
 
 interface MenuModalProps {
   isOpen: boolean;
@@ -31,31 +32,114 @@ export const MenuModal: React.FC<MenuModalProps> = ({
   totalChannels,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const firstButtonRef = useRef<HTMLButtonElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Focus inicial inteligente ao abrir o menu
   useEffect(() => {
-    if (isOpen) {
-      // Auto-focus no primeiro item para navegação direta no controle do Fire TV
-      const timer = setTimeout(() => {
-        firstButtonRef.current?.focus();
-      }, 50);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
+    if (!isOpen) return;
 
+    const timer = setTimeout(() => {
+      // Tenta focar no botão do modo atual ou no primeiro item do menu
+      let targetToFocus: HTMLElement | null = null;
+      if (viewMode === 'rows') {
+        targetToFocus = document.getElementById('menu-opt-rows');
+      } else if (viewMode === 'grid') {
+        targetToFocus = document.getElementById('menu-opt-grid');
+      } else if (viewMode === 'epg') {
+        targetToFocus = document.getElementById('menu-opt-epg');
+      }
+
+      if (!targetToFocus) {
+        targetToFocus = modalRef.current?.querySelector<HTMLElement>('[data-menu-item="true"]') || null;
+      }
+
+      if (targetToFocus) {
+        targetToFocus.focus();
+        targetToFocus.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }, 60);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, viewMode]);
+
+  // Navegação D-Pad (Cima / Baixo / Enter / Voltar) exclusiva do Fire TV e Controle Remoto
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return;
+      const key = e.key;
+      const code = e.keyCode || e.which;
 
-      // Fechar modal no Escape ou Voltar do controle (KEYCODE_BACK = 4)
-      if (e.key === 'Escape' || e.keyCode === 27 || e.keyCode === 4 || e.keyCode === 10009) {
+      const isUp = key === 'ArrowUp' || code === 38 || code === 19;
+      const isDown = key === 'ArrowDown' || code === 40 || code === 20;
+      const isEnter =
+        key === 'Enter' ||
+        key === ' ' ||
+        code === 13 ||
+        code === 23 || // KEYCODE_DPAD_CENTER
+        code === 66; // KEYCODE_ENTER
+      const isBack =
+        key === 'Escape' ||
+        code === 27 ||
+        code === 4 || // KEYCODE_BACK no Android / Fire TV
+        code === 10009; // Samsung Tizen Return
+
+      // 1. Fechar modal no Voltar do controle ou ESC
+      if (isBack) {
         e.preventDefault();
+        e.stopPropagation();
         onClose();
+        // Devolve o foco para o botão de Menu da barra superior
+        setTimeout(() => {
+          document.getElementById('btn-three-dots-menu')?.focus();
+        }, 50);
+        return;
+      }
+
+      // 2. Navegação vertical (Cima / Baixo) entre os itens do menu
+      if (isUp || isDown) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const elements = (modalRef.current ? Array.from(modalRef.current.querySelectorAll('[data-menu-item="true"]')) : []) as HTMLElement[];
+        const menuItems = elements.filter((el) => el.offsetParent !== null && !el.hasAttribute('disabled'));
+
+        if (menuItems.length === 0) return;
+
+        const currentActive = document.activeElement as HTMLElement | null;
+        let currentIndex = currentActive ? menuItems.indexOf(currentActive) : -1;
+
+        let nextIndex = 0;
+        if (isDown) {
+          nextIndex = currentIndex >= 0 && currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0;
+        } else if (isUp) {
+          nextIndex = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1;
+        }
+
+        const nextTarget = menuItems[nextIndex];
+        if (nextTarget) {
+          soundService.playNav();
+          nextTarget.focus();
+          nextTarget.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+        return;
+      }
+
+      // 3. Enter / OK no controle remoto
+      if (isEnter) {
+        const currentActive = document.activeElement as HTMLElement | null;
+        if (currentActive && currentActive.getAttribute('data-menu-item') === 'true') {
+          e.preventDefault();
+          e.stopPropagation();
+          soundService.playSelect();
+          currentActive.click();
+          return;
+        }
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown, { capture: true });
+    return () => window.removeEventListener('keydown', handleKeyDown, { capture: true });
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -64,13 +148,13 @@ export const MenuModal: React.FC<MenuModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-fadeIn select-none"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fadeIn select-none"
       onClick={onClose}
     >
       <div
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm bg-[#11141c] border border-white/10 rounded-2xl shadow-2xl overflow-hidden text-gray-200 flex flex-col text-sm"
+        className="w-full max-w-sm bg-[#11141c] border border-white/15 rounded-2xl shadow-2xl overflow-hidden text-gray-200 flex flex-col text-sm"
       >
         {/* Cabeçalho Minimalista e Compacto */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#161a24]">
@@ -83,45 +167,52 @@ export const MenuModal: React.FC<MenuModalProps> = ({
               <h2 className="text-xs sm:text-sm font-bold text-white tracking-wide">
                 Menu Principal
               </h2>
-              <span className="text-[11px] text-emerald-400/90 font-medium">
+              <span className="text-[11px] text-emerald-400 font-semibold">
                 {totalChannels > 0 ? `${totalChannels} canais online` : '131 canais online'}
               </span>
             </div>
           </div>
           <button
+            id="menu-btn-close-top"
+            data-menu-item="true"
             type="button"
+            tabIndex={0}
             onClick={onClose}
             aria-label="Fechar menu"
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer outline-none"
+            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 focus:ring-2 focus:ring-amber-400 focus:bg-white/20 focus:text-white transition cursor-pointer outline-none"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Conteúdo do Menu */}
-        <div className="p-4 space-y-4 max-h-[80vh] overflow-y-auto no-scrollbar">
+        {/* Conteúdo do Menu com Scroll suave */}
+        <div
+          ref={scrollContainerRef}
+          className="p-4 space-y-4 max-h-[75vh] overflow-y-auto no-scrollbar scroll-smooth"
+        >
           {/* 1. Modo de Exibição */}
           <div className="space-y-1.5">
             <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">
               Modo de Exibição
             </span>
-            <div className="grid grid-cols-1 gap-1.5 pt-0.5">
+            <div className="grid grid-cols-1 gap-2 pt-0.5">
               {/* Fileiras Horizontais (TV) */}
               <button
-                ref={firstButtonRef}
+                id="menu-opt-rows"
+                data-menu-item="true"
                 type="button"
                 tabIndex={0}
                 onClick={() => {
                   setViewMode('rows');
                   onClose();
                 }}
-                className={`tv-nav-focus flex items-center justify-between p-2.5 rounded-xl border transition text-left cursor-pointer outline-none ${
+                className={`flex items-center justify-between p-3 rounded-xl border transition-all text-left cursor-pointer outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#222838] ${
                   viewMode === 'rows'
-                    ? 'bg-red-600/15 border-red-500/80 text-white'
-                    : 'bg-[#171a23] hover:bg-[#1f2330] focus:bg-[#1f2330] border-white/5 text-slate-300'
+                    ? 'bg-red-600/20 border-red-500/80 text-white font-bold'
+                    : 'bg-[#171a23] hover:bg-[#1f2330] border-white/10 text-slate-300'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
                   <Rows3
                     className={`w-4 h-4 shrink-0 ${
                       viewMode === 'rows' ? 'text-red-400' : 'text-slate-400'
@@ -139,19 +230,21 @@ export const MenuModal: React.FC<MenuModalProps> = ({
 
               {/* Mosaico (Grade Vertical) */}
               <button
+                id="menu-opt-grid"
+                data-menu-item="true"
                 type="button"
                 tabIndex={0}
                 onClick={() => {
                   setViewMode('grid');
                   onClose();
                 }}
-                className={`tv-nav-focus flex items-center justify-between p-2.5 rounded-xl border transition text-left cursor-pointer outline-none ${
+                className={`flex items-center justify-between p-3 rounded-xl border transition-all text-left cursor-pointer outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#222838] ${
                   viewMode === 'grid'
-                    ? 'bg-red-600/15 border-red-500/80 text-white'
-                    : 'bg-[#171a23] hover:bg-[#1f2330] focus:bg-[#1f2330] border-white/5 text-slate-300'
+                    ? 'bg-red-600/20 border-red-500/80 text-white font-bold'
+                    : 'bg-[#171a23] hover:bg-[#1f2330] border-white/10 text-slate-300'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
                   <LayoutGrid
                     className={`w-4 h-4 shrink-0 ${
                       viewMode === 'grid' ? 'text-red-400' : 'text-slate-400'
@@ -169,19 +262,21 @@ export const MenuModal: React.FC<MenuModalProps> = ({
 
               {/* Guia de Programação (EPG) */}
               <button
+                id="menu-opt-epg"
+                data-menu-item="true"
                 type="button"
                 tabIndex={0}
                 onClick={() => {
                   setViewMode('epg');
                   onClose();
                 }}
-                className={`tv-nav-focus flex items-center justify-between p-2.5 rounded-xl border transition text-left cursor-pointer outline-none ${
+                className={`flex items-center justify-between p-3 rounded-xl border transition-all text-left cursor-pointer outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#222838] ${
                   viewMode === 'epg'
-                    ? 'bg-red-600/15 border-red-500/80 text-white'
-                    : 'bg-[#171a23] hover:bg-[#1f2330] focus:bg-[#1f2330] border-white/5 text-slate-300'
+                    ? 'bg-red-600/20 border-red-500/80 text-white font-bold'
+                    : 'bg-[#171a23] hover:bg-[#1f2330] border-white/10 text-slate-300'
                 }`}
               >
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
                   <CalendarDays
                     className={`w-4 h-4 shrink-0 ${
                       viewMode === 'epg' ? 'text-red-400' : 'text-slate-400'
@@ -205,15 +300,17 @@ export const MenuModal: React.FC<MenuModalProps> = ({
               Favoritos
             </span>
             <button
+              id="menu-opt-favorites"
+              data-menu-item="true"
               type="button"
               tabIndex={0}
               onClick={() => {
                 onOpenFavorites();
                 onClose();
               }}
-              className="tv-nav-focus w-full flex items-center justify-between p-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 focus:bg-amber-500/20 border border-amber-500/30 transition text-left cursor-pointer outline-none"
+              className="w-full flex items-center justify-between p-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all text-left cursor-pointer outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:bg-amber-500/25"
             >
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-3">
                 <Star className="w-4 h-4 text-amber-400 fill-amber-400 shrink-0" />
                 <div>
                   <div className="text-xs font-bold text-amber-300">Meus Favoritos</div>
@@ -229,32 +326,36 @@ export const MenuModal: React.FC<MenuModalProps> = ({
           </div>
 
           {/* 3. Programa para Baixar (MX Player Pro) - Posicionado embaixo */}
-          <div className="p-3 rounded-xl bg-[#151924] border border-white/10 space-y-2">
+          <div className="p-3.5 rounded-xl bg-[#151924] border border-white/15 space-y-2.5">
             <p className="text-[11px] text-slate-300 leading-relaxed">
-              Para visualizar certos canais IPTV (como transmissões em formato <strong className="text-white">.TS</strong>), é necessário ter o aplicativo <strong className="text-blue-300">MX Player Pro v3.1.1</strong> instalado. Basta clicar no link abaixo:
+              Para visualizar certos canais IPTV (como transmissões em formato <strong className="text-white">.TS</strong>), é necessário ter o aplicativo <strong className="text-blue-300">MX Player Pro v3.1.1</strong> instalado. Basta clicar no botão abaixo para baixar o APK:
             </p>
             <a
-              id="btn-download-mx-player-minimal"
+              id="menu-opt-download-mx"
+              data-menu-item="true"
               href="https://files-2.modyolo.com/MX%20Player%20Pro/MX%20Player%20Pro_v3_1_1.apk"
               target="_blank"
               rel="noopener noreferrer"
               tabIndex={0}
-              className="tv-nav-focus flex items-center justify-center gap-2 w-full py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 text-white text-xs font-bold transition outline-none cursor-pointer shadow"
+              className="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all outline-none cursor-pointer shadow-lg focus:ring-2 focus:ring-amber-400 focus:border-white focus:bg-blue-500"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-4 h-4" />
               <span>Baixar MX Player Pro v3.1.1 (APK)</span>
-              <ExternalLink className="w-3 h-3 text-blue-200" />
+              <ExternalLink className="w-3.5 h-3.5 text-blue-200" />
             </a>
           </div>
         </div>
 
         {/* Rodapé com Fechar */}
-        <div className="px-4 py-2.5 bg-[#0e1118] border-t border-white/10 flex items-center justify-end">
+        <div className="px-4 py-2.5 bg-[#0e1118] border-t border-white/10 flex items-center justify-between">
+          <span className="text-[10px] text-slate-500">D-Pad / OK / Voltar</span>
           <button
+            id="menu-opt-close-bottom"
+            data-menu-item="true"
             type="button"
             tabIndex={0}
             onClick={onClose}
-            className="tv-nav-focus px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 focus:bg-red-600 text-white text-xs font-semibold transition cursor-pointer outline-none"
+            className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition cursor-pointer outline-none focus:ring-2 focus:ring-amber-400 focus:bg-red-600"
           >
             Fechar
           </button>
