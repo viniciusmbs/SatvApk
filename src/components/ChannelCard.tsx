@@ -62,11 +62,10 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
     const key = e.key;
 
     // 1. Botão Play / Pause do controle do Fire TV / Android TV (KeyCode 85 / MediaPlayPause)
-    // Favorita ou Desfavorita o canal instantaneamente com o botão Play/Pause!
     const isPlayPauseKey =
-      code === 85 || // KEYCODE_MEDIA_PLAY_PAUSE
-      code === 126 || // KEYCODE_MEDIA_PLAY
-      code === 127 || // KEYCODE_MEDIA_PAUSE
+      code === 85 ||
+      code === 126 ||
+      code === 127 ||
       key === 'MediaPlayPause' ||
       e.code === 'MediaPlayPause' ||
       key === 'Play' ||
@@ -81,14 +80,13 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
       return;
     }
 
-    // 2. Botão OK / ENTER no meio do D-Pad do controle:
-    // ABRE O CANAL IMEDIATAMENTE! Sem nenhum delay, sem popup de favoritos!
+    // 2. Botão OK / ENTER no meio do D-Pad do controle
     const isOkEnterKey =
       key === 'Enter' ||
       key === ' ' ||
       code === 13 ||
-      code === 23 || // KEYCODE_DPAD_CENTER
-      code === 66; // KEYCODE_ENTER
+      code === 23 ||
+      code === 66;
 
     if (isOkEnterKey) {
       e.preventDefault();
@@ -124,7 +122,6 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
       }}
       onKeyDown={handleKeyDown}
       onFocus={() => {
-        // SOM 1 (clicksan.mp3): ao andar com o cursor pelos canais
         soundService.playNav();
         try {
           const channelId = channel.id || encodeURIComponent(channel.name);
@@ -138,9 +135,9 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
           // ignore
         }
       }}
-      className={`group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1f2433] border rounded-lg sm:rounded-xl p-1 sm:p-1.5 flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-sm hover:shadow-md shrink-0 ${
+      className={`group tv-card-focus relative aspect-square bg-[#131620] hover:bg-[#1b1f2c] focus:bg-[#1b1f2c] border rounded-lg sm:rounded-xl p-1 sm:p-1.5 flex flex-col items-center justify-between text-center transition-all duration-150 cursor-pointer outline-none select-none shadow-sm hover:shadow-md shrink-0 ${
         isFavorite
-          ? 'border-amber-400/60 hover:border-amber-400 focus:border-amber-400 ring-1 ring-amber-400/30'
+          ? 'border-amber-400/60 hover:border-amber-400 focus:border-amber-400'
           : 'border-white/10 hover:border-red-500 focus:border-red-500'
       }`}
     >
