@@ -29,7 +29,6 @@ export default function App() {
   
   // Estado para controlar a trava de segurança de saída
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  const [hasExited, setHasExited] = useState(false);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
@@ -401,47 +400,20 @@ export default function App() {
       // ignore
     }
 
-    // 2. Tenta fechar a janela do navegador
+    // 2. Tenta fechar a janela/aba do navegador imediatamente
     try {
       window.close();
     } catch {
       // ignore
     }
 
-    // 3. Fallback visual seguro caso o ambiente restrinja window.close()
-    setHasExited(true);
+    // 3. Se o navegador não fechar window.close(), tenta voltar o histórico ou redirecionar para tela em branco
+    try {
+      window.location.href = 'about:blank';
+    } catch {
+      // ignore
+    }
   };
-
-  if (hasExited) {
-    return (
-      <div className="min-h-screen bg-[#0c0e14] text-white flex flex-col items-center justify-center p-6 select-none text-center animate-in fade-in duration-300">
-        <div className="max-w-md w-full bg-[#151923] border border-white/15 rounded-2xl p-8 shadow-2xl space-y-6">
-          <img
-            src="https://i.imgur.com/VWtF2t5.jpeg"
-            alt="SATV Logo"
-            className="w-16 h-16 mx-auto rounded-full border-2 border-white/80 shadow-lg object-cover bg-black"
-          />
-          <div className="space-y-2">
-            <h1 className="text-2xl font-black text-white">Aplicativo Encerrado</h1>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Você saiu do SATV com segurança. Pode desligar a TV ou apertar a tecla <strong>Início (Home)</strong> no controle remoto do Fire TV.
-            </p>
-          </div>
-          <button
-            autoFocus
-            type="button"
-            onClick={() => {
-              soundService.playSelect();
-              setHasExited(false);
-            }}
-            className="w-full py-3 px-5 rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold text-sm transition cursor-pointer outline-none shadow-xl focus:ring-4 focus:ring-white"
-          >
-            Reabrir SATV
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#0c0e14] text-gray-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
