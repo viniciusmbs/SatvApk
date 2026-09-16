@@ -23,9 +23,10 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
 }) => {
   const [imgError, setImgError] = useState(false);
 
-  // Fallback to official high-quality logo mapping
-  const fallbackLogo = getChannelLogo(channel.name);
-  const logoSrc = imgError || !channel.logo ? fallbackLogo : channel.logo;
+  // Fallback to official high-quality logo mapping or styled SVG badge
+  const officialLogo = getChannelLogo(channel.name);
+  const genericBadge = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 90" width="100%" height="100%"><rect width="160" height="90" rx="12" fill="%23131b2c"/><rect x="8" y="8" width="144" height="74" rx="8" fill="%231a2438" stroke="%23334155" stroke-width="2"/><text x="80" y="52" font-family="system-ui, sans-serif" font-weight="900" font-size="14" fill="%23e2e8f0" text-anchor="middle" letter-spacing="1">${encodeURIComponent(channel.name.slice(0, 10).toUpperCase())}</text></svg>`;
+  const logoSrc = imgError ? genericBadge : (channel.logo || officialLogo);
 
   // Ação 1: Abrir o canal com o som BotaoRadio.mp3 (Enter / OK / Clique)
   const handleOpenChannel = () => {

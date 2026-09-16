@@ -3,6 +3,9 @@ import { CustomLogosMap } from '../types';
 const TV_LOGO_BR = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/brazil/';
 const TV_LOGO_US = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/united-states/';
 const TV_LOGO_CA = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/canada/';
+const TV_LOGO_LAM = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/world-latin-america/';
+const TV_LOGO_AR = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/argentina/';
+const TV_LOGO_INT = 'https://raw.githubusercontent.com/tv-logo/tv-logos/main/countries/international/';
 
 // SVG Data URIs for channels without external image files or requiring 100% reliable local rendering
 const CAZE_TV_SVG = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="100%" height="100%"><rect width="120" height="120" rx="20" fill="%23182234"/><rect x="12" y="12" width="96" height="96" rx="14" fill="%230f172a" stroke="%2338bdf8" stroke-width="4"/><text x="60" y="74" font-family="system-ui, sans-serif" font-weight="900" font-size="44" fill="%23ffffff" text-anchor="middle" letter-spacing="-1">CT</text></svg>`;
@@ -53,6 +56,12 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'GLOBO INTEGRAÇÃO': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO ES TV GAZETA VITÓRIA': `${TV_LOGO_BR}globo-br.png`,
   'GLOBO MG TV INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
+  'INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
+  'INTEGRAÇÃO': `${TV_LOGO_BR}globo-br.png`,
+  'INTEGRACAO': `${TV_LOGO_BR}globo-br.png`,
+  'TV INTEGRAÇÃO': `${TV_LOGO_BR}globo-br.png`,
+  'TV INTEGRACAO': `${TV_LOGO_BR}globo-br.png`,
+  'TV INTEGRAÇÃO JUIZ DE FORA': `${TV_LOGO_BR}globo-br.png`,
   'SBT': `${TV_LOGO_BR}sbt-br.png`,
   'SBT SP': `${TV_LOGO_BR}sbt-br.png`,
   'SBT RJ': `${TV_LOGO_BR}sbt-br.png`,
@@ -198,7 +207,8 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'NICKELODEON': `${TV_LOGO_US}nickelodeon-us.png`,
   'NICK JR': `${TV_LOGO_US}nick-jr-us.png`,
   'DISNEY CHANNEL': `${TV_LOGO_US}disney-channel-us.png`,
-  'DISNEY JUNIOR': `${TV_LOGO_US}disney-junior-us.png`,
+  'DISNEY JUNIOR': `${TV_LOGO_US}disney-jr-us.png`,
+  'DISNEY JR': `${TV_LOGO_US}disney-jr-us.png`,
   'TOONCAST': `${TV_LOGO_BR}tooncast-br.png`,
   'WOOHOO': `${TV_LOGO_BR}woohoo-br.png`,
   'ZOOMOO': `${TV_LOGO_BR}zoomoo-br.png`,
@@ -219,9 +229,10 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'DISCOVERY': `${TV_LOGO_US}discovery-channel-us.png`,
   'DISCOVERY TURBO': `${TV_LOGO_BR}discovery-turbo-br.png`,
   'DISCOVERY SCIENCE': `${TV_LOGO_US}discovery-science-us.png`,
-  'DISCOVERY THEATER': `${TV_LOGO_US}discovery-theater-us.png`,
-  'DISCOVERY WORLD': `${TV_LOGO_US}discovery-world-us.png`,
-  'DISCOVERY H&H': `${TV_LOGO_US}tlc-us.png`,
+  'DISCOVERY THEATER': `${TV_LOGO_LAM}discovery-theater-hd-lam.png`,
+  'DISCOVERY WORLD': `${TV_LOGO_AR}discovery-world-hd-ar.png`,
+  'DISCOVERY H&H': `${TV_LOGO_LAM}discovery-home-and-health-lam.png`,
+  'DISCOVERY HOME & HEALTH': `${TV_LOGO_LAM}discovery-home-and-health-lam.png`,
   'ANIMAL PLANET': `${TV_LOGO_US}animal-planet-us.png`,
   'ANIMAL PLANE': `${TV_LOGO_US}animal-planet-us.png`,
   'HISTORY': `${TV_LOGO_US}history-channel-us.png`,
@@ -239,7 +250,8 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'FOOD NETWORK': `${TV_LOGO_US}food-network-us.png`,
   'LOVE NATURE': `${TV_LOGO_CA}love-nature-ca.png`,
   'NHK': NHK_SVG,
-  'RED BULL TV': RED_BULL_TV_SVG,
+  'RED BULL TV': `${TV_LOGO_INT}red-bull-tv-int.png`,
+  'RED BULL': `${TV_LOGO_INT}red-bull-tv-int.png`,
   'TRAVEL BOX BRASIL': TRAVEL_BOX_SVG,
 
   // MÚSICA & VARIEDADES
@@ -252,8 +264,8 @@ export const DEFAULT_LOGOS_MAP: Record<string, string> = {
   'MTV LIVE': `${TV_LOGO_US}mtv-live-us.png`,
   'VH1': `${TV_LOGO_US}vh1-us.png`,
   'MUSIC BOX BRASIL': `${TV_LOGO_BR}prime-box-brazil-br.png`,
-  'E!': E_ENTERTAINMENT_SVG,
-  'E! ENTERTAINMENT': E_ENTERTAINMENT_SVG,
+  'E!': `${TV_LOGO_US}e-entertainment-us.png`,
+  'E! ENTERTAINMENT': `${TV_LOGO_US}e-entertainment-us.png`,
 
   // RELIGIOSOS
   'TV APARECIDA': `${TV_LOGO_BR}tv-aparecida-br.png`,
@@ -303,11 +315,11 @@ export const getChannelLogo = (
 
   // 3. Correspondências parciais inteligentes
   if (upper.includes('CURTA')) return CURTA_SVG;
-  if (upper.includes('RED BULL')) return RED_BULL_TV_SVG;
+  if (upper.includes('RED BULL')) return `${TV_LOGO_INT}red-bull-tv-int.png`;
   if (upper.includes('NHK')) return NHK_SVG;
   if (upper.includes('PLUTO')) return PLUTO_TV_SVG;
   if (upper.includes('TRAVEL BOX')) return TRAVEL_BOX_SVG;
-  if (upper.includes('E!') || upper === 'E') return E_ENTERTAINMENT_SVG;
+  if (upper.includes('E!') || upper === 'E' || upper.includes('ENTERTAINMENT')) return `${TV_LOGO_US}e-entertainment-us.png`;
   if (upper.includes('GOSPEL MOVIES')) return GOSPEL_MOVIES_SVG;
   if (upper.includes('SUPER') && upper.includes('REDE')) return REDE_SUPER_SVG;
   if (upper.includes('DOG')) return `${TV_LOGO_US}dog-tv-us.png`;
@@ -317,6 +329,25 @@ export const getChannelLogo = (
   if (upper.includes('ANIMAL PLAN')) return `${TV_LOGO_US}animal-planet-us.png`;
   if (upper === 'ART 1' || upper === 'ARTE 1') return `${TV_LOGO_BR}arte1-br.png`;
   if (upper === 'VIVA') return VIVA_SVG;
+
+  // Discovery (todos os canais da família)
+  if (upper.includes('DISCOVERY')) {
+    if (upper.includes('THEATER')) return `${TV_LOGO_LAM}discovery-theater-hd-lam.png`;
+    if (upper.includes('WORLD')) return `${TV_LOGO_AR}discovery-world-hd-ar.png`;
+    if (upper.includes('H&H') || upper.includes('HOME') || upper.includes('HEALTH')) {
+      return `${TV_LOGO_LAM}discovery-home-and-health-lam.png`;
+    }
+    if (upper.includes('SCIENCE')) return `${TV_LOGO_US}discovery-science-us.png`;
+    if (upper.includes('TURBO')) return `${TV_LOGO_BR}discovery-turbo-br.png`;
+    if (upper.includes('KIDS')) return `${TV_LOGO_BR}discovery-kids-br.png`;
+    return `${TV_LOGO_US}discovery-channel-us.png`;
+  }
+
+  // Disney
+  if (upper.includes('DISNEY')) {
+    if (upper.includes('JR') || upper.includes('JUNIOR')) return `${TV_LOGO_US}disney-jr-us.png`;
+    return `${TV_LOGO_US}disney-channel-us.png`;
+  }
 
   // ESPN
   if (upper.startsWith('ESPN 2')) return `${TV_LOGO_US}espn-2-us.png`;
@@ -361,8 +392,13 @@ export const getChannelLogo = (
   if (upper.includes('PREMIUM')) return `${TV_LOGO_BR}tele-cine-premium-br.png`;
   if (upper.includes('TOUCH')) return `${TV_LOGO_BR}tele-cine-touch-br.png`;
 
-  // TV Aberta
-  if (upper.includes('GLOBO') && !upper.includes('NEWS') && !upper.includes('GLOOB')) return `${TV_LOGO_BR}globo-br.png`;
+  // TV Aberta & Regionais
+  if (
+    (upper.includes('GLOBO') && !upper.includes('NEWS') && !upper.includes('GLOOB')) ||
+    upper.includes('INTEGRA')
+  ) {
+    return `${TV_LOGO_BR}globo-br.png`;
+  }
   if (upper.includes('SBT')) return `${TV_LOGO_BR}sbt-br.png`;
   if (upper.includes('BAND') && !upper.includes('NEWS') && !upper.includes('SPORTS')) return `${TV_LOGO_BR}band-br.png`;
   if (upper.includes('RECORD') && !upper.includes('NEWS')) return `${TV_LOGO_BR}record-br.png`;

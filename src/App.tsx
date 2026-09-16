@@ -27,7 +27,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('rows');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // Estado para controlar a confirmação de saída
+  // Estado para controlar a trava de segurança de saída
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [hasExited, setHasExited] = useState(false);
 
@@ -98,6 +98,7 @@ export default function App() {
     const q = searchQuery.trim().toLowerCase();
 
     return channels.filter((channel) => {
+      // Category filter (handles FAVORITOS filter explicitly)
       if (selectedCategory === 'FAVORITOS') {
         if (!favorites.includes(channel.name)) {
           return false;
@@ -106,6 +107,7 @@ export default function App() {
         return false;
       }
 
+      // Search query filter (matches channel name or group)
       if (q) {
         const nameMatch = channel.name.toLowerCase().includes(q);
         const groupMatch = channel.group.toLowerCase().includes(q);
@@ -132,6 +134,7 @@ export default function App() {
     setSelectedCategory('TODOS');
   };
 
+  // Active TV tabulation navigation hook (disabled while menu modal or exit modal is open)
   const { lastFocusedCardRef } = useTvNavigation({ enabled: !isMenuOpen && !showExitConfirm });
 
   const handleSelectChannel = (ch: Channel) => {
@@ -143,56 +146,188 @@ export default function App() {
     }
   };
 
-  // Trava de segurança no histórico do navegador (botão voltar físico)
+  // Referência de estado em tempo real para evitar problemas de stale closure
+  // e permitir listeners de histórico e controle remoto estáveis
+  const stateRef = useRef({
+    isMenuOpen,
+    showExitConfirm,
+    searchQuery,
+    selectedCategory,
+  });
+
   useEffect(() => {
-    try {
-      window.history.pushState({ satvState: 'main' }, '');
-    } catch {
-      // ignore
+    stateRef.current = {
+      isMenuOpen,
+      showExitConfirm,
+      searchQuery,
+      selectedCategory,
+    };
+  }, [isMenuOpen, showExitConfirm, searchQuery, selectedCategory]);
+
+  const lastBackTimestampRef = useRef<number>(0);
+
+  // Despachante unificado da ação Voltar (Fire TV Remote, Teclado, Popstate, Android Back, WebView)
+  const executeBackStep = () => {
+    const now = Date.now();
+    // Debounce de 300ms para evitar disparos duplicados entre keydown, keyup e popstate
+    if (now - lastBackTimestampRef.current < 300) {
+      return;
+    }
+    lastBackTimestampRef.current = now;
+
+    const current = stateRef.current;
+
+    // 1. Se o menu lateral estiver aberto, fecha o menu primeiro
+    if (current.isMenuOpen) {
+      soundService.playNav();
+      setIsMenuOpen(false);
+      return;
     }
 
-    const handlePopState = () => {
+    // 2. Se a confirmação de saída já estiver na tela e o usuário apertar Voltar de novo, cancela e continua
+    if (current.showExitConfirm) {
+      soundService.playSelect();
+      setShowExitConfirm(false);
+      return;
+    }
+
+    // 3. Se tiver texto ou busca ativa, o primeiro Voltar limpa a busca e foca no primeiro canal
+    if (current.searchQuery) {
+      soundService.playNav();
+      setSearchQuery('');
+      const firstCard = document.querySelector<HTMLElement>('[data-channel-name]');
+      firstCard?.focus();
+      return;
+    }
+
+    // 4. Se estiver navegando em uma categoria específica (Filmes, Esportes, etc.), volta para 'TODOS'
+    if (current.selectedCategory !== 'TODOS') {
+      soundService.playNav();
+      setSelectedCategory('TODOS');
+      return;
+    }
+
+    // 5. Está na tela inicial (TODOS, sem busca ativa e sem menu):
+    // ABRE A CONFIRMAÇÃO DE SAÍDA ("Você deseja sair do SATV?")
+    soundService.playNav();
+    setShowExitConfirm(true);
+  };
+
+  // Trava de segurança no histórico do navegador e WebView (Android / Celular / Firestick Silk)
+  useEffect(() => {
+    // 1. Inicializa o Sentinela de Histórico com hash dedicado
+    const ensureHistoryGuard = () => {
       try {
-        window.history.pushState({ satvState: 'main' }, '');
+        if (window.location.hash !== '#app') {
+          window.history.replaceState({ satv: 'root' }, '', window.location.pathname + window.location.search + '#root');
+          window.history.pushState({ satv: 'app' }, '', window.location.pathname + window.location.search + '#app');
+        }
       } catch {
         // ignore
       }
+    };
 
-      if (isMenuOpen) {
-        setIsMenuOpen(false);
-        return;
+    ensureHistoryGuard();
+
+    // 2. Garante o registro de gesto do usuário para contornar a "History Intervention" do Chrome/Chromium
+    const primeUserGesture = () => {
+      try {
+        if (window.location.hash !== '#app') {
+          window.history.pushState({ satv: 'app' }, '', window.location.pathname + window.location.search + '#app');
+        }
+      } catch {
+        // ignore
       }
+    };
+    window.addEventListener('click', primeUserGesture, { capture: true, passive: true });
+    window.addEventListener('keydown', primeUserGesture, { capture: true, passive: true });
+    window.addEventListener('touchstart', primeUserGesture, { capture: true, passive: true });
 
-      if (showExitConfirm) {
-        soundService.playSelect();
-        setShowExitConfirm(false);
-        return;
+    // 3. Ao voltar no histórico (botão Voltar do celular, gesto do Android, ou botão voltar do navegador)
+    const handlePopState = () => {
+      // Re-injeta imediatamente o estado '#app' para que a trava permaneça armada
+      try {
+        window.history.pushState({ satv: 'app' }, '', window.location.pathname + window.location.search + '#app');
+      } catch {
+        // ignore
       }
+      executeBackStep();
+    };
 
-      if (searchQuery) {
-        soundService.playNav();
-        setSearchQuery('');
-        return;
+    const handleHashChange = () => {
+      if (window.location.hash !== '#app') {
+        try {
+          window.history.pushState({ satv: 'app' }, '', window.location.pathname + window.location.search + '#app');
+        } catch {
+          // ignore
+        }
+        executeBackStep();
       }
-
-      if (selectedCategory !== 'TODOS') {
-        soundService.playNav();
-        setSelectedCategory('TODOS');
-        return;
-      }
-
-      // Última tela: pergunta se quer sair
-      soundService.playNav();
-      setShowExitConfirm(true);
     };
 
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [isMenuOpen, showExitConfirm, searchQuery, selectedCategory]);
+    window.addEventListener('hashchange', handleHashChange);
 
-  // Interceptação pelo controle remoto do Fire TV Stick
+    // 4. Suporte nativo para Cordova / Capacitor / WebView APK (evento 'backbutton' no document)
+    const handleCordovaBack = (e: Event) => {
+      e.preventDefault();
+      e.stopPropagation();
+      executeBackStep();
+    };
+    document.addEventListener('backbutton', handleCordovaBack, false);
+
+    // 5. Suporte para WebView Android que chama bridges JavaScript
+    (window as unknown as { onBackPressed?: () => boolean }).onBackPressed = () => {
+      executeBackStep();
+      return true;
+    };
+    (window as unknown as { onBack?: () => boolean }).onBack = () => {
+      executeBackStep();
+      return true;
+    };
+    (window as unknown as { handleAndroidBack?: () => boolean }).handleAndroidBack = () => {
+      executeBackStep();
+      return true;
+    };
+
+    return () => {
+      window.removeEventListener('click', primeUserGesture, { capture: true });
+      window.removeEventListener('keydown', primeUserGesture, { capture: true });
+      window.removeEventListener('touchstart', primeUserGesture, { capture: true });
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handleHashChange);
+      document.removeEventListener('backbutton', handleCordovaBack, false);
+      delete (window as unknown as { onBackPressed?: () => boolean }).onBackPressed;
+      delete (window as unknown as { onBack?: () => boolean }).onBack;
+      delete (window as unknown as { handleAndroidBack?: () => boolean }).handleAndroidBack;
+    };
+  }, []);
+
+  // Interceptação pelo controle remoto do Fire TV Stick, Android TV e Teclado Físico
   useEffect(() => {
-    const handleGlobalKey = (e: KeyboardEvent) => {
+    const isBackKeyEvent = (e: KeyboardEvent) => {
+      const code = e.keyCode || e.which;
+      const key = e.key;
+
+      return (
+        code === 4 || // KEYCODE_BACK (Fire TV, Android TV, TV Box)
+        code === 27 || // Escape
+        key === 'Escape' ||
+        key === 'Back' ||
+        key === 'GoBack' ||
+        key === 'BrowserBack' ||
+        e.code === 'BrowserBack' ||
+        code === 10009 || // Samsung Tizen Return
+        code === 461 || // LG webOS Back
+        code === 216 || // Amazon Fire TV Silk Back
+        code === 166 || // Browser Back
+        ((key === 'Backspace' || code === 8) &&
+          document.activeElement?.tagName !== 'INPUT' &&
+          document.activeElement?.tagName !== 'TEXTAREA')
+      );
+    };
+
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
       const isMenuKey =
         e.keyCode === 82 ||
         e.which === 82 ||
@@ -210,63 +345,10 @@ export default function App() {
         return;
       }
 
-      const isBackKey =
-        e.keyCode === 4 ||
-        e.key === 'GoBack' ||
-        e.key === 'BrowserBack' ||
-        e.key === 'Back' ||
-        e.code === 'BrowserBack' ||
-        e.key === 'Escape' ||
-        e.keyCode === 27 ||
-        e.keyCode === 10009 ||
-        e.keyCode === 461 ||
-        ((e.key === 'Backspace' || e.keyCode === 8) &&
-          document.activeElement?.tagName !== 'INPUT' &&
-          document.activeElement?.tagName !== 'TEXTAREA');
-
-      if (isBackKey) {
-        // 1. Se o menu estiver aberto, fecha o menu
-        if (isMenuOpen) {
-          e.preventDefault();
-          e.stopPropagation();
-          setIsMenuOpen(false);
-          return;
-        }
-
-        // 2. Se a confirmação já estiver aberta, fecha ela e cancela
-        if (showExitConfirm) {
-          e.preventDefault();
-          e.stopPropagation();
-          soundService.playSelect();
-          setShowExitConfirm(false);
-          return;
-        }
-
-        // 3. Se estiver pesquisando, limpa a pesquisa
-        if (searchQuery) {
-          e.preventDefault();
-          e.stopPropagation();
-          soundService.playNav();
-          setSearchQuery('');
-          const firstCard = document.querySelector<HTMLElement>('[data-channel-name]');
-          firstCard?.focus();
-          return;
-        }
-
-        // 4. Se estiver em uma categoria, volta para TODOS
-        if (selectedCategory !== 'TODOS') {
-          e.preventDefault();
-          e.stopPropagation();
-          soundService.playNav();
-          setSelectedCategory('TODOS');
-          return;
-        }
-
-        // 5. CHEGOU NA ÚLTIMA TELA: Pergunta se deseja sair
+      if (isBackKeyEvent(e)) {
         e.preventDefault();
         e.stopPropagation();
-        soundService.playNav();
-        setShowExitConfirm(true);
+        executeBackStep();
         return;
       }
 
@@ -279,18 +361,54 @@ export default function App() {
       }
     };
 
-    window.addEventListener('keydown', handleGlobalKey, true);
-    return () => window.removeEventListener('keydown', handleGlobalKey, true);
-  }, [isMenuOpen, showExitConfirm, searchQuery, selectedCategory]);
+    const handleGlobalKeyUp = (e: KeyboardEvent) => {
+      if (isBackKeyEvent(e)) {
+        e.preventDefault();
+        e.stopPropagation();
+        executeBackStep();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown, { capture: true });
+    window.addEventListener('keyup', handleGlobalKeyUp, { capture: true });
+
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeyDown, { capture: true });
+      window.removeEventListener('keyup', handleGlobalKeyUp, { capture: true });
+    };
+  }, []);
 
   const handleConfirmExit = () => {
     soundService.playSelect();
     setShowExitConfirm(false);
+
+    // 1. Tenta encerrar o aplicativo nativo se estiver em APK Android / Cordova / Capacitor
+    try {
+      if ((navigator as unknown as { app?: { exitApp: () => void } }).app?.exitApp) {
+        (navigator as unknown as { app?: { exitApp: () => void } }).app.exitApp();
+        return;
+      }
+    } catch {
+      // ignore
+    }
+
+    try {
+      if ((window as unknown as { Android?: { exitApp: () => void } }).Android?.exitApp) {
+        (window as unknown as { Android?: { exitApp: () => void } }).Android.exitApp();
+        return;
+      }
+    } catch {
+      // ignore
+    }
+
+    // 2. Tenta fechar a janela do navegador
     try {
       window.close();
     } catch {
       // ignore
     }
+
+    // 3. Fallback visual seguro caso o ambiente restrinja window.close()
     setHasExited(true);
   };
 
@@ -351,7 +469,7 @@ export default function App() {
         />
       </div>
 
-      {/* Main View: Fileiras, Mosaico ou Guia EPG */}
+      {/* Main View: Fileiras (Carrossel TV), Mosaico (Grid) ou Guia (EPG) */}
       <main className="flex-1">
         {viewMode === 'rows' && (
           <ChannelRows
@@ -382,7 +500,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Toast Notification */}
+      {/* Floating Smart TV Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 bg-[#171a23]/95 border border-amber-400/60 rounded-xl shadow-2xl text-amber-300 text-xs sm:text-sm font-bold flex items-center gap-2 backdrop-blur-md transition-all">
           <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping" />
@@ -390,17 +508,17 @@ export default function App() {
         </div>
       )}
 
-      {/* Modal de Confirmação de Saída */}
+      {/* Trava de Segurança: Modal de Confirmação de Saída */}
       <ExitConfirmModal
         isOpen={showExitConfirm}
         onCancel={() => setShowExitConfirm(false)}
         onConfirmExit={handleConfirmExit}
       />
 
-      {/* Rodapé */}
+      {/* Clean TV Footer */}
       <Footer totalChannels={channels.length} favoritesCount={favorites.length} />
 
-      {/* Menu Modal (três pontinhos) */}
+      {/* Three Dots / Menu List Modal */}
       <MenuModal
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
