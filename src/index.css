@@ -71,11 +71,21 @@ html {
   font-size: 14px;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 135px;
+}
+
+section {
+  scroll-margin-top: 135px;
 }
 
 @media screen and (max-width: 640px) {
   html {
     font-size: 13px;
+    scroll-padding-top: 130px;
+  }
+  section {
+    scroll-margin-top: 130px;
   }
 }
 

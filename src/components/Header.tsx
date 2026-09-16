@@ -67,8 +67,8 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="bg-gradient-to-r from-[#5f0d0d] via-[#851616] to-[#4e0909] text-white shadow-lg border-b border-black/30 select-none">
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-5 lg:px-6">
+    <header className="w-full bg-gradient-to-r from-[#5f0d0d] via-[#851616] to-[#4e0909] text-white shadow-lg border-b border-black/30 select-none">
+      <div className="tv-safe-container">
         <div className="flex items-center justify-between h-13 sm:h-14">
           {/* Logo & Calligraphic Slogan */}
           <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">

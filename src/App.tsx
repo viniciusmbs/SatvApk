@@ -445,8 +445,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0c0e14] text-gray-100 flex flex-col font-sans selection:bg-red-600 selection:text-white">
-      {/* Sticky Top Navigation & Filter Bar */}
-      <div className="sticky top-0 z-40 shadow-xl">
+      {/* Sticky Top Navigation & Filter Bar - Layer fixa do programa (100% sólida e isolada para não transpassar) */}
+      <div className="sticky top-0 z-50 w-full shadow-2xl bg-[#0c0e14] isolate [transform:translateZ(0)]">
         <Header
           totalChannels={channels.length}
           viewMode={viewMode}
