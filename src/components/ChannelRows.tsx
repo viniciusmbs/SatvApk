@@ -60,13 +60,13 @@ const RowSection: React.FC<{
     }
   };
 
-  // Fluid auto-scaling card width across mobile and TV screens (calibrated to Photo 1 aesthetic)
+  // Fluid auto-scaling card width across mobile and TV screens with comfortable spacing
   const cardWidthClass =
     density === 'large'
-      ? 'w-[64px] min-[360px]:w-[70px] sm:w-[78px] md:w-[84px] lg:w-[90px] xl:w-[96px] shrink-0'
+      ? 'w-[82px] min-[360px]:w-[90px] sm:w-[102px] md:w-[112px] lg:w-[122px] xl:w-[130px] shrink-0'
       : density === 'normal'
-      ? 'w-[56px] min-[360px]:w-[62px] sm:w-[70px] md:w-[76px] lg:w-[82px] xl:w-[86px] shrink-0'
-      : 'w-[50px] min-[360px]:w-[56px] sm:w-[64px] md:w-[70px] lg:w-[74px] xl:w-[78px] shrink-0';
+      ? 'w-[72px] min-[360px]:w-[80px] sm:w-[90px] md:w-[100px] lg:w-[108px] xl:w-[116px] shrink-0'
+      : 'w-[66px] min-[360px]:w-[74px] sm:w-[84px] md:w-[92px] lg:w-[100px] xl:w-[108px] shrink-0';
 
   return (
     <section className="space-y-2">

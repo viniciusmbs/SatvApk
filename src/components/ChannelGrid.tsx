@@ -50,7 +50,7 @@ const ChannelGrid: React.FC<ChannelGridProps> = ({
 
   // Fully automatic responsive grid: adapts dynamically to screen width without requiring manual intervention
   const gridClasses =
-    'grid grid-cols-4 min-[360px]:grid-cols-5 min-[440px]:grid-cols-6 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 2xl:grid-cols-14 gap-1 sm:gap-2';
+    'grid grid-cols-3 min-[360px]:grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 xl:grid-cols-9 2xl:grid-cols-10 gap-1.5 sm:gap-2.5';
 
   if (sortedGroupNames.length === 0) {
     return (

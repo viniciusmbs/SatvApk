@@ -13,6 +13,36 @@ interface ChannelCardProps {
   density?: UiDensity;
 }
 
+// Normalização inteligente de títulos de canais para caberem perfeitamente nos botões
+export function formatChannelDisplayName(name: string): string {
+  if (!name) return '';
+  const trimmed = name.trim();
+  const upper = trimmed.toUpperCase();
+
+  // Caso específico apontado: Integração Juiz de Fora -> TV Integração
+  if (upper.includes('INTEGRAÇÃO') || upper.includes('INTEGRACAO')) {
+    return 'TV Integração';
+  }
+
+  // Caso específico: SBT MG Alterosa -> SBT Alterosa
+  if (upper.includes('ALTEROSA')) {
+    return 'SBT Alterosa';
+  }
+
+  // Record: padroniza nomes como Record TV, Record News, etc.
+  if (upper === 'RECORD' || upper === 'RECORD TV') {
+    return 'Record TV';
+  }
+
+  // Limpeza de ruídos técnicos de M3U como [FHD], (HD), etc.
+  return trimmed
+    .replace(/\s*\[(FHD|HD|SD|4K|HEVC|H\.265)\]/gi, '')
+    .replace(/\s*\((FHD|HD|SD|4K|HEVC|H\.265)\)/gi, '')
+    .replace(/\s*-\s*(FHD|HD|SD|4K)/gi, '')
+    .replace(/\s+(FHD|HD|SD|4K)$/gi, '')
+    .trim();
+}
+
 const ChannelCard: React.FC<ChannelCardProps> = ({
   channel,
   index,
@@ -22,6 +52,7 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
   density = 'compact',
 }) => {
   const [imgError, setImgError] = useState(false);
+  const displayName = formatChannelDisplayName(channel.name);
 
   // Fallback to official high-quality logo mapping or styled SVG badge
   const officialLogo = getChannelLogo(channel.name);
@@ -176,15 +207,17 @@ const ChannelCard: React.FC<ChannelCardProps> = ({
         />
       </div>
 
-      {/* Auto-responsive Channel Title with Fluid Typography */}
-      <p
-        className={`w-full text-center font-bold truncate leading-tight transition-colors pt-0.5 sm:pt-1 px-0.5 text-[clamp(7px,1.9vw,10.5px)] sm:text-[clamp(8px,1.2vw,11.5px)] ${
-          isFavorite ? 'text-amber-200' : 'text-gray-100 group-hover:text-red-400 group-focus:text-red-400'
-        }`}
-        title={channel.name}
-      >
-        {channel.name}
-      </p>
+      {/* Auto-responsive Channel Title with 2-line standardized alignment */}
+      <div className="w-full h-[2.5em] flex items-center justify-center px-1 pb-0.5 overflow-hidden">
+        <p
+          className={`w-full text-center font-bold leading-tight line-clamp-2 break-words transition-colors text-[clamp(8px,1.9vw,11px)] sm:text-[clamp(9px,1.1vw,12px)] ${
+            isFavorite ? 'text-amber-200' : 'text-gray-100 group-hover:text-red-400 group-focus:text-red-400'
+          }`}
+          title={channel.name}
+        >
+          {displayName}
+        </p>
+      </div>
     </a>
   );
 };
