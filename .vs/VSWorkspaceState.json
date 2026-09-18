@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\public",
+    "\\src",
+    "\\src\\components",
+    "\\src\\data",
+    "\\src\\services"
+  ],
+  "SelectedNode": "\\.env.example",
+  "PreviewInSolutionExplorer": true
+}
