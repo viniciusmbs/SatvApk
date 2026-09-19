@@ -99,7 +99,7 @@ const RowSection: React.FC<{
           {channels.map((channel, idx) => {
             const isFav = favorites.includes(channel.name);
             return (
-              <div key={`${channel.name}-${idx}`} className="snap-start shrink-0">
+              <div key={`${channel.name}-${idx}`} className={`snap-start shrink-0 ${getCardWidthClass(density)}`}>
                 <ChannelCard
                   channel={channel}
                   isFavorite={isFav}
@@ -140,7 +140,6 @@ const ChannelRows: React.FC<ChannelRowsProps> = ({
     );
   }
 
-  // Ordena categorias de acordo com CATEGORY_ORDER
   const sortedCategories = categories.sort((a, b) => {
     const orderA = CATEGORY_ORDER[a.toUpperCase()] ?? 99;
     const orderB = CATEGORY_ORDER[b.toUpperCase()] ?? 99;
