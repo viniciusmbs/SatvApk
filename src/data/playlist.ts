@@ -391,6 +391,9 @@ https://rdcanais.net/multishow
 https://rdcanais.net/tntnovelas
 
 #EXTINF:-1 group-title="VARIEDADES",Viva
-https://rdcanais.net/globoplaynovelas`;
+https://rdcanais.net/globoplaynovelas
+
+#EXTINF:-1 group-title="VARIEDADES",Woohoo
+https://v1.rdse.rest/woohoo`;
 
 export const DEFAULT_PLAYLIST = m3uPlaylist;
